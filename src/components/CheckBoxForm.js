@@ -1,27 +1,33 @@
 import React from 'react';
-import {View, StyleSheet, Text, FlatList, ScrollView} from 'react-native'
+import {View, StyleSheet, Text, FlatList, ScrollView} from 'react-native';
+import PickerCheckBox from 'react-native-picker-checkbox';
 
-const CheckBox = ({data, onSubmit})=>{
+
+const CheckBoxForm = ({data, onSubmit})=>{
+
+
+   const handleConfirm = (pItems)=> {
+       pItems.status = true;
+       onSubmit(data);
+   }
+
+
     return(
-        <FlatList
-                center
-                horizontal={true}
-                data={data}
-                keyExtractor = {item=> item.type}
-                renderItem={({item})=>{
-                    return <CheckBox
-                        center
-                        size={8}
-                        title={item.type}
-                        value={item.status}
-                        onIconPress={onSubmit}
-
-                    />
-                }}
-            />
+        <PickerCheckBox
+            data={data}
+            headerComponent={<Text style={{fontSize:25}} >items</Text>}
+            OnConfirm={(pItems) => handleConfirm(pItems)}
+            ConfirmButtonTitle='OK'
+            DescriptionField={item=>item.type}
+            KeyField='itemKey'
+            placeholder='select your status'
+            arrowColor='#FFD740'
+            arrowSize={6}
+            placeholderSelectedItems ='$count selected item(s)'
+        />
     );
 };
 
 const styles = StyleSheet.create({});
 
-export default CheckBox;
+export default CheckBoxForm;
