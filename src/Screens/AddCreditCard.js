@@ -2,11 +2,12 @@ import React, { useState } from 'react';
 import {View, StyleSheet, Text, Button} from 'react-native';
 import { CreditCardInput } from "react-native-credit-card-input";
 
-const AddCreditCard = ({navigation})=>{
+
+
+const AddCreditCard = ()=>{
     const [isValid, setIsValid] = useState(false);
-    const _saveCreditCard = function () {
-        // TODO: Add credit card to db
-        navigation.goBack();
+    this._saveCreditCard = function () {
+        return undefined;
     };
     this.data = {};
 
@@ -24,7 +25,7 @@ const AddCreditCard = ({navigation})=>{
             <Button   title="Save"
                       color="#841584"
                       disabled={!isValid}
-                      onPress={_saveCreditCard}/>
+                      onPress={this._saveCreditCard}/>
 
         </View>
     );
