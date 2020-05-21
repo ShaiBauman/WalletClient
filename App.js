@@ -13,6 +13,7 @@ import RegistrationScreen from "./src/Screens/RegistrationScreen";
 import WalletProfileScreen from "./src/Screens/WalletProfileScreen";
 import {setNavigator} from "./src/navigationRef";
 import AddCreditCard from "./src/Screens/AddCreditCard";
+import ChooseCreditCard from "./src/Screens/ChooseCreditCard";
 
 
 const navigator = createStackNavigator({
@@ -25,6 +26,7 @@ const navigator = createStackNavigator({
       //walletMainFlow: {
         indexWallet: IndexWalletScreen,
         makePurchase: PurchaseScreen,
+        chooseCreditCard: ChooseCreditCard,
         addCreditCard: AddCreditCard,
         Settings: SettingsScreen,
       //},
@@ -34,7 +36,7 @@ const navigator = createStackNavigator({
       //}
     },
     {
-      initialRouteName: "addCreditCard",
+      initialRouteName: "chooseCreditCard",
       defaultNavigationOptions: {
         title: "Wall-let"
       }
