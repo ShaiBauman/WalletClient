@@ -22,7 +22,8 @@
     "react-native-screens": "^2.2.0",
     "react-native-settings-components": "0.0.2",
     "react-native-web": "~0.11.7",
-    "react-navigation": "^4.3.9"
+    "react-navigation": "^4.3.9",
+    "react-native-credit-card-input": "latest"
   },
   "devDependencies": {
     "@babel/core": "^7.8.6",
