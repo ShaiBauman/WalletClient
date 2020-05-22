@@ -1,37 +1,36 @@
-import React, {useContext, useState} from 'react';
-import {View, StyleSheet, Text} from 'react-native'
-import {Context as UserContext} from "../context/UserContext";
+import React, {Component, useContext, useState} from 'react';
 import DatePicker from "react-native-datepicker";
 
-const DateForm = (data, onSubmit)=>{
+const DateForm = ({onSubmit}) =>{
 
-    return(
-        <DatePicker
-            style={{width: 200}}
-            date={data} //initial date from state
-            mode="date" //The enum of date, datetime and time
-            placeholder="Select Your Birth Date"
-            format="DD-MM-YYYY"
-            minDate="01-01-1900"
-            maxDate="01-01-2020"
-            confirmBtnText="Confirm"
-            cancelBtnText="Cancel"
-            customStyles={{
-                dateIcon: {
-                    position: 'absolute',
-                    left: 0,
-                    top: 4,
-                    marginLeft: 0
-                },
-                dateInput: {
-                    marginLeft: 36
-                }
-            }}
-            onDateChange={onSubmit}
-        />
-    );
-};
+     let date ='1920-01-01';
 
-const styles = StyleSheet.create({});
+        return (
+            <DatePicker
+                style={{width: 328, marginLeft: 10}}
+                date={date}
+                mode="date"
+                placeholder="select date"
+                format="YYYY-MM-DD"
+                minDate="1920-01-01"
+                maxDate="2020-01-01"
+                confirmBtnText="Confirm"
+                cancelBtnText="Cancel"
+                customStyles={{
+                    dateIcon: {
+                        position: 'absolute',
+                        left: 0,
+                        top: 4,
+                        marginLeft: 80
+                    },
+                    dateInput: {
+                        alignItems: 'center'
+                    }
+
+                }}
+                onDateChange={(date) => {onSubmit(date)}}
+            />
+        )
+    };
 
 export default DateForm;
