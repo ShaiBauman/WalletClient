@@ -36,7 +36,11 @@ const navigator = createStackNavigator({
       //}
     },
     {
+<<<<<<< Updated upstream
       initialRouteName: "chooseCreditCard",
+=======
+      initialRouteName: "indexWallet",
+>>>>>>> Stashed changes
       defaultNavigationOptions: {
         title: "Wall-let"
       }
