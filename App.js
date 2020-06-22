@@ -12,48 +12,44 @@ import IndexFriendScreen from "./src/Screens/IndexFriendScreen";
 import RegistrationScreen from "./src/Screens/RegistrationScreen";
 import WalletProfileScreen from "./src/Screens/WalletProfileScreen";
 import {setNavigator} from "./src/navigationRef";
-import AddCreditCard from "./src/Screens/AddCreditCard";
-import ChooseCreditCard from "./src/Screens/ChooseCreditCard";
+import AssistanceStatisticsScreen from "./src/Screens/AssistanceStatisticsScreen";
+
 
 
 const navigator = createStackNavigator({
-    //  loginFlow: {
+        //  loginFlow: {
         Signup: SignUpScreen,
         Signin: SignInScreen,
         Registration: RegistrationScreen,
         Profile: WalletProfileScreen,
-      //},
-      //walletMainFlow: {
+        //},
+        //walletMainFlow: {
         indexWallet: IndexWalletScreen,
         makePurchase: PurchaseScreen,
-        chooseCreditCard: ChooseCreditCard,
-        addCreditCard: AddCreditCard,
+
         Settings: SettingsScreen,
-      //},
-      //friendMainFlow: {
+        //},
+        //friendMainFlow: {
         indexFriend: IndexFriendScreen,
-       // Settings: SettingsScreen,
-      //}
+
+        assistanceStatistics:AssistanceStatisticsScreen
+        //}
     },
     {
-<<<<<<< Updated upstream
-      initialRouteName: "chooseCreditCard",
-=======
-      initialRouteName: "indexWallet",
->>>>>>> Stashed changes
-      defaultNavigationOptions: {
-        title: "Wall-let"
-      }
+        initialRouteName: "indexFriend",
+        defaultNavigationOptions: {
+            title: "Wall-let"
+        }
     }
 );
 
 const App = createAppContainer(navigator);
 
 export default ()=>{
-  return(
-      <Provider>
-          <App ref={(navigator)=>{setNavigator(navigator)}}/>
-      </Provider>
-  );
+    return(
+        <Provider>
+            <App ref={(navigator)=>{setNavigator(navigator)}}/>
+        </Provider>
+    );
 };
 

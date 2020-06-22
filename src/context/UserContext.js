@@ -87,6 +87,7 @@ const addUser = dispatch =>async ({firstName,lastName,phoneNumber,email,password
         dispatch({type:'add_error', payload:'Something went wrong with registration'});
 
     }
+
 };
 
 const updateUser = dispatch => async ({

@@ -108,11 +108,11 @@ const PurchaseScreen = ()=>{
                             onPress={()=>updateReq(price)}
                         >
 
-                            <Text style={styles.button}>{"Than myself"}</Text>
+                            <Text style={styles.button}>{"Self-approval"}</Text>
                         </TouchableOpacity>
 
                         <TouchableOpacity
-                            onPress={()=>updateReq(category, necessaryMeasure, description,price, remark)}
+                           // onPress={()=>updateReq(category, necessaryMeasure, description,price, remark)}
                         >
 
                             <Text style={styles.button}>{"Send to approval"}</Text>
