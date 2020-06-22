@@ -1,4 +1,4 @@
-import {NavigationAction, NavigationActions} from "react-navigation";
+import {NavigationActions} from "react-navigation";
 
 let navigator;
 

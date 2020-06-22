@@ -13,25 +13,6 @@ const financialReducer = (state, action)=>{
     }
 };
 
-const navigateAccordingKindOfUser = (userType) =>{
-    if(userType === 'both') //the user is a wallet and a friend
-    {
-        dispatch({type: 'add_type_wallet'});
-        dispatch({type: 'add_type_friend'});
-        navigate('Profile');
-    }
-    else if(userType === 'wallet') //the user is a wallet
-    {
-        dispatch({type: 'add_type_wallet'});
-        navigate('Profile');
-    }
-    else //the user is a friend
-    {
-        dispatch({type: 'add_type_friend'});
-        navigate('indexMember');
-    }
-
-};
 /*
 const login = dispatch => async ({email, password, confirmPassword}) =>{
 

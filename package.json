@@ -31,6 +31,7 @@
     "react-native-settings-components": "0.0.2",
     "react-native-svg": "^12.1.0",
     "react-native-svg-charts": "^5.4.0",
+    "react-native-table-component": "^1.2.1",
     "react-native-web": "~0.11.7",
     "react-navigation": "^4.3.9"
   },
@@ -38,9 +39,12 @@
     "@babel/core": "^7.8.6",
     "axios": "^0.19.2",
     "babel-preset-expo": "~8.1.0",
+    "galio-framework": "^0.6.3",
     "react-native-checkbox-form": "^1.1.5",
+    "react-native-dashboard": "0.0.4",
     "react-native-datepicker": "^1.7.2",
     "react-native-table-component": "^1.2.1",
+    "react-native-mp-android-chart": "^0.2.0",
     "react-navigation-stack": "^2.4.0"
   },
   "private": true

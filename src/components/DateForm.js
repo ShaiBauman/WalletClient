@@ -7,7 +7,7 @@ const DateForm = ({onSubmit}) =>{
 
         return (
             <DatePicker
-                style={{width: 328, marginLeft: 10}}
+                style={{width: 170, marginLeft: 10, alignSelf: 'center'}}
                 date={date}
                 mode="date"
                 placeholder="select date"
@@ -21,7 +21,7 @@ const DateForm = ({onSubmit}) =>{
                         position: 'absolute',
                         left: 0,
                         top: 4,
-                        marginLeft: 80
+                        padding: 10
                     },
                     dateInput: {
                         alignItems: 'center'

@@ -5,36 +5,18 @@ import Spacer from "../components/Spacer";
 import DropDownForm from "../components/DropDownForm";
 import DateForm from "../components/DateForm";
 import {Context as UserContext} from "../context/UserContext";
-import DialogInput from "react-native-dialog-input";
 import DialogForm from "../components/DialogForm";
-import GroupButtonForm from "../components/GroupButtonForm";
-import {Dropdown} from "react-native-material-dropdown";
+import { NavigationActions } from 'react-navigation';
 
 
-const WalletProfileScreen = ()=>{
+const WalletProfileScreen = ({navigation})=>{
 
     const {state, updateUser } = useContext(UserContext);
 
-    const fixedIncomesState=[];
-    const fixedExpensesState=[];
+    const fixedIncomesState={title:'', price:0};
+    const fixedExpensesState={title:'', price:0};
     let maritalStatusState =[
     {value: "Bachelor"},{value: "Married"}, {value:"Divorcee"},{value:"Widower"}];
-
-    const func1 = ()=>{
-        console.log("func 1");
-    };
-    const func2 = ()=>{
-        console.log("func 2");
-    };    const func3 = ()=>{
-        console.log("func 3");
-    };
-
-
-    const buttonList1 = [
-        {title: "Add One Time Income", id:1, func:{func1}},
-        {title: "My Expenses",id:2, func: {func2}},
-        {title: "Make A Purchase",id:3, func: {func3}}
-    ];
 
     const [target, setTarget] = useState(0);
     const [avgExpensesLastThreeMonths, setAvgExpensesLastThreeMonths] = useState(0);
@@ -45,6 +27,7 @@ const WalletProfileScreen = ()=>{
     const [fixedExpenses, setFixedExpenses] = useState(fixedExpenses);
 
     console.log(maritalStatus);
+    console.log(fixedExpenses);
 
     return(
         <View style={styles.container}>
@@ -100,36 +83,29 @@ const WalletProfileScreen = ()=>{
                 onSubmit={setMaritalStatus}
                 />
 
-            <View style={styles.buttonContainer}>
-                <TouchableOpacity
-                    onPress={func1}
-                >
-                    <Text style={styles.button}>{"Edit Fixed Income"}</Text>
-                </TouchableOpacity>
-                <TouchableOpacity
-                    onPress={func2}
-                >
-                    <Text style={styles.button}>{"Edit Fixed Expenses"}</Text>
-                </TouchableOpacity>
 
-            </View>
-
-
+                <DialogForm
+                    title={"Edit Fixed Expenses"}
+                    setFunc={setFixedExpenses}
+                />
+                <DialogForm
+                    title={"Edit Fixed Income"}
+                    setFunc={setFixedIncomes}
+                />
+            </ScrollView>
+            <View style={styles.container}>
             <TouchableOpacity
-                onPress={()=>updateUser(addictedStatus, avgExpensesLastThreeMonths, target,
-                    dateOfBirth, maritalStatus, fixedIncomes, fixedExpenses)}
+                onPress={()=>navigation.navigate('dashbord')}
             >
                 <Text style={styles.buttonGoOn}>{"Go On!"}</Text>
             </TouchableOpacity>
-            </ScrollView>
+            </View>
         </View>
     );
 };
 
 const styles = StyleSheet.create({
     container:{
-        flex: 1,
-        margin:5,
         backgroundColor:'#CEB386',
         borderColor:'#CEB386',
     },
@@ -143,9 +119,6 @@ const styles = StyleSheet.create({
         flex: 1,
         marginLeft:20,
         marginRight:10,
-        flexDirection: 'row',
-        justifyContent: 'center',
-        alignItems: 'center',
         backgroundColor: '#CEB386'
     },
     textStyle:{
@@ -153,7 +126,7 @@ const styles = StyleSheet.create({
         textAlign: "center",
         fontWeight: "bold",
         marginTop: 4,
-        marginBottom: 4
+        marginBottom: 0
     },
     inputStyle:{
         textAlign: "center",
@@ -181,7 +154,6 @@ const styles = StyleSheet.create({
     },
     buttonGoOn: {
         textAlign: "center",
-        padding: 10,
         borderColor: '#80B28B',
         borderWidth:3,
         flex:1,
@@ -189,9 +161,8 @@ const styles = StyleSheet.create({
         paddingVertical:20,
         paddingLeft:12,
         backgroundColor:'#2F4730',
-
         borderRadius:8,
-        fontSize: 20,
+        fontSize: 15,
         fontWeight: 'bold',
         overflow: 'hidden',
         color: '#80B28B',

@@ -7,7 +7,7 @@ const userReducer = (state, action)=>{
     switch(action.type)
     {
         case 'add_user':
-            return {errorMessage: '', id: action.payload};
+            return {errorMessage: '', myUser: action.payload};
         case 'add_error':
             return {...state, errorMessage: action.payload};
         case 'add_type_wallet':
@@ -18,18 +18,26 @@ const userReducer = (state, action)=>{
             return{...state, firstName: action.payload};
         case 'add_lastName':
             return{...state, lastName: action.payload};
+        case 'add_email':
+            return{...state, lastName: action.payload};
         case 'add_target':
             return{...state, target: action.payload};
         case 'add_fixExpenses':
             return {...state, myFixedExpenses: [...state.myFixedExpenses, action.payload]};
         case 'add_fixIncomes':
             return {...state, myFixedExpenses: [...state.myFixedIncomes, action.payload]};
+        case 'clear_error_message':
+            return {...state, errorMessage: ''};
         default:
             return state;
     }
 };
 
-const navigateAccordingKindOfUser = (userType) =>{
+const clearErrorMessage = dispatch=>()=>{
+    dispatch({type: 'clear_error_message'});
+};
+
+const navigateAccordingKindOfUser = dispatch=> (userType) =>{
     if(userType === 'both') //the user is a wallet and a friend
     {
         dispatch({type: 'add_type_wallet'});
@@ -48,6 +56,8 @@ else //the user is a friend
         }
 
 };
+
+
 /*
 const login = dispatch => async ({email, password, confirmPassword}) =>{
 
@@ -60,34 +70,23 @@ const passwordRecovery = dispatch=> ()=>{
 
 };
 */
-/*id:'', firstName:'',lastName:'',phoneNumber:'',email:'',password:'',answerPassword:'',
-    target:0, myWalletMembers: [], myFixedExpenses: [], myFixedIncomes: [], addictedStatus:0,
-    avgExpensesLastThreeMonths:0, avgExpenses:0, dateOfBirth:'', maritalStatus:'',
-    walletMember: false, friendMember: false,
-    passes:0,
-*/
 
-
-const addUser = dispatch =>async ({firstName,lastName,phoneNumber,email,password,confirmPassword, userType})=>{
+const addUser = dispatch=> async ({firstName,lastName,phoneNumber,email,password,confirmPassword})=>{
 
     try {
-        await AsyncStorage.setItem('firstName', firstName);
-        await AsyncStorage.setItem('lastName', lastName);
-      //  const response = await serverApi.post('/XXX', {firstName,lastName,phoneNumber,email,password,confirmPassword});
-     //   await AsyncStorage.setItem('id', response.data.id);
-
-        dispatch({type: 'add_user', payload: ''/*response.data.id*/});
+        const response = await serverApi.post('/user', {firstName,lastName,phoneNumber,email,password,confirmPassword});
+        await AsyncStorage.setItem('user', response.data.user);
+        dispatch({type: 'add_user', payload: response.data.user});
         dispatch({type: 'add_firstName', payload: firstName});
-        dispatch({type: 'add_lastName', payload: lastName});
+        dispatch({type: 'add_firstName', payload:lastName});
+        dispatch({type: 'add_email', payload:email});
 
-        navigateAccordingKindOfUser(userType);
     }
-    catch (err)
+      catch (err)
     {
         dispatch({type:'add_error', payload:'Something went wrong with registration'});
-
+        console.log(this.myUser);
     }
-
 };
 
 const updateUser = dispatch => async ({
@@ -103,25 +102,29 @@ dateOfBirth, maritalStatus, fixedIncomes, fixedExpenses}) =>{
         dispatch({type: 'add_fixedIncomes', payload: fixedIncomes});
         dispatch({type: 'add_fixedExpenses', payload: fixedIncomes});
 
-       // const response = await serverApi.post('/XXX', {firstName,lastName,phoneNumber,email,password,confirmPassword});
-      //  await AsyncStorage.setItem('id', response.data.id);
+       const response = await serverApi.patch('/user', {addictedStatus, avgExpensesLastThreeMonths, target,
+           dateOfBirth, maritalStatus, fixedIncomes, fixedExpenses});
+        await AsyncStorage.setItem('user', response.data.user);
 
-        dispatch({type: 'update_user', payload:'' /*response.data.id*/});
+        dispatch({type: 'add_user', payload: response.data.user});
+        console.log(this.myUser);
         navigate('indexWallet');
+
     }
     catch (err)
     {
-        dispatch({type:'add_error', payload:'Something went wrong try again'});
-        navigate('Profile');
+        dispatch({type:'add_error', payload:'Something went wrong with update profile'});
+        console.log(this.errorMessage);
+
     }
 
 };
-
+/*
 const getImageById = dispatch=> ()=>{
 
 };
 
-/*
+
 const addFriend = dispatch =>async ()=>{
 
 };
@@ -172,9 +175,9 @@ const signOut = dispatch=>async ()=>{
 */
 export const {Provider, Context} = createDataContext(
     userReducer,
-    { /*login, logOut, passwordRecovery,*/ addUser, updateUser, getImageById/*, addFriend, navigateAccordingKindOfUser*/ },
+    { addUser, updateUser, clearErrorMessage,navigateAccordingKindOfUser },
     {
-        id:'', firstName:'XXX',lastName:'YYY',
+        id:'', firstName:'XXX',lastName:'YYY', email:'', myUser: null,
         target:0, myWalletMembers: [], myFixedExpenses: [], myFixedIncomes: [], avgExpenses:0,
         walletMember: false, friendMember: false,
         passes:0,

@@ -2,7 +2,7 @@ import React from 'react';
 import { createAppContainer, createSwitchNavigator } from 'react-navigation';
 import { createStackNavigator } from 'react-navigation-stack';
 //import { createBottomTabNavigator } from 'react-navigation-tabs';
-import {Provider} from "./src/context/UserContext";
+import {Provider as UserProvider} from "./src/context/UserContext";
 import SettingsScreen from "./src/Screens/SettingsScreen";
 import PurchaseScreen from "./src/Screens/PurchaseScreen";
 import SignUpScreen from "./src/Screens/SignUpScreen";
@@ -12,33 +12,42 @@ import IndexFriendScreen from "./src/Screens/IndexFriendScreen";
 import RegistrationScreen from "./src/Screens/RegistrationScreen";
 import WalletProfileScreen from "./src/Screens/WalletProfileScreen";
 import {setNavigator} from "./src/navigationRef";
+import AddCreditCard from "./src/Screens/AddCreditCard";
+import ChooseCreditCard from "./src/Screens/ChooseCreditCard";
+import DashbordScreen from "./src/Screens/DashbordScreen";
+import StatisticsScreen from "./src/Screens/StatisticsScreen";
+import TransactionScreen from "./src/Screens/TransactionsScreen";
+import FriendsScreen from "./src/Screens/FriendsScreen";
 import AssistanceStatisticsScreen from "./src/Screens/AssistanceStatisticsScreen";
 
 
-
 const navigator = createStackNavigator({
-        //  loginFlow: {
+    //  loginFlow: {
         Signup: SignUpScreen,
         Signin: SignInScreen,
         Registration: RegistrationScreen,
         Profile: WalletProfileScreen,
-        //},
-        //walletMainFlow: {
+      //},
+      //walletMainFlow: {
         indexWallet: IndexWalletScreen,
         makePurchase: PurchaseScreen,
-
+        chooseCreditCard: ChooseCreditCard,
+        addCreditCard: AddCreditCard,
         Settings: SettingsScreen,
-        //},
-        //friendMainFlow: {
+      //},
+      //friendMainFlow: {
         indexFriend: IndexFriendScreen,
-
-        assistanceStatistics:AssistanceStatisticsScreen
-        //}
+       assistanceStatistics:AssistanceStatisticsScreen,
+       dashbord: DashbordScreen,
+        statistics: StatisticsScreen,
+    transactions: TransactionScreen,
+    walletFriends: FriendsScreen
+      //}
     },
     {
-        initialRouteName: "indexFriend",
+        initialRouteName: "Registration",
         defaultNavigationOptions: {
-            title: "Wall-let"
+            title: "WLT"
         }
     }
 );
@@ -46,10 +55,12 @@ const navigator = createStackNavigator({
 const App = createAppContainer(navigator);
 
 export default ()=>{
-    return(
-        <Provider>
-            <App ref={(navigator)=>{setNavigator(navigator)}}/>
-        </Provider>
-    );
+  return(
+
+      <UserProvider>
+          <App ref={(navigator)=>{setNavigator(navigator)}}/>
+      </UserProvider>
+
+  );
 };
 

@@ -1,14 +1,13 @@
 import React, {useContext, useState} from 'react';
-import {View, StyleSheet, FlatList,TouchableOpacity} from 'react-native'
-import {Text, Input, Button, CheckBox, Avatar} from "react-native-elements";
+import {View, StyleSheet, FlatList,TouchableOpacity, TextInput} from 'react-native'
+import {Text, Button, CheckBox, Avatar} from "react-native-elements";
 import {Context as UserContext} from "../context/UserContext";
 import DropDownForm from "../components/DropDownForm";
-import Spacer from "../components/Spacer";
-import ScrollView from "react-native-web/dist/exports/ScrollView";
+import {NavigationEvents} from "react-navigation";
 
-const RegistrationScreen = ()=>{
+const RegistrationScreen = ({navigation})=>{
 
-    const {addUser, addUserPhoto} = useContext(UserContext);
+    const {state, addUser, clearErrorMessage, navigateAccordingKindOfUser} = useContext(UserContext);
 
     const userTypeState = [
         {value: 'wallet'},
@@ -26,74 +25,103 @@ const RegistrationScreen = ()=>{
     const [userType, setUserType] = useState('');
 
 
+
     return(
     <View style={styles.container}>
             <Text style={styles.title}>Registration Screen</Text>
         <Text style={styles.subtitle}>Insert your details, please...</Text>
+        <View>
+            <DropDownForm
+                data={userTypeState}
+                title={"Select User Type"}
+                onSubmit={setUserType}
+            />
+                <TextInput
+                    autoCapitalize="none"
+                    placeholder="First Name"
+                    value={firstName}
+                    onChangeText={setFirstName}
+                    autoCorrect={false}
+                    selectionColor={"red"}
+                    style={styles.inputStyle}
+                    placeholderTextColor={"#2F4730"}
+                    contextMenuHidden={true}
 
-        <DropDownForm
-            data={userTypeState}
-            title={"Select User Type"}
-            onSubmit={setUserType}
-        />
-            <Input
-                autoCapitalize="none"
-                autoCorrect={false}
-                inputStyle={styles.inputStyle}
-                placeholder="First Name"
-                value={firstName}
-                onChangeText={setFirstName}
+                  />
+                <TextInput
+                    autoCapitalize="none"
+                    placeholder="Last Name"
+                    value={lastName}
+                    onChangeText={setLastName}
+                    autoCorrect={false}
+                    selectionColor={"red"}
+                    style={styles.inputStyle}
+                    placeholderTextColor={"#2F4730"}
+                    contextMenuHidden={true}
+                />
+                <TextInput
+                    autoCapitalize="none"
+                    placeholder="Phone Number"
+                    autoCompleteType='tel'
+                    keyboardType = 'numeric'
+                    value={phoneNumber}
+                    onChangeText={setPhoneNumber}
+                    autoCorrect={false}
+                    selectionColor={"red"}
+                    style={styles.inputStyle}
+                    placeholderTextColor={"#2F4730"}
+                    contextMenuHidden={true}
+                />
+                <TextInput
+                    autoCapitalize="none"
+                    textContentType='email'
+                    placeholder="Email"
+                    value={email}
+                    onChangeText={setEmail}
+                    autoCorrect={false}
+                    selectionColor={"red"}
+                    style={styles.inputStyle}
+                    placeholderTextColor={"#2F4730"}
+                    contextMenuHidden={true}
+                 />
+                <TextInput
+                    autoCapitalize="none"
+                    placeholder="Password"
+                    value={password}
+                    onChangeText={setPassword}
+                    autoCorrect={false}
+                    selectionColor={"red"}
+                    style={styles.inputStyle}
+                    placeholderTextColor={"#2F4730"}
+                    contextMenuHidden={true}
+               />
+                <TextInput
+                    autoCapitalize="none"
+                    placeholder="Confirm Password"
+                    value={confirmPassword}
+                    onChangeText={setConfirmPassword}
+                    autoCorrect={false}
+                    selectionColor={"red"}
+                    style={styles.inputStyle}
+                    placeholderTextColor={"#2F4730"}
+                    contextMenuHidden={true}
+                />
+            <NavigationEvents
+                onWillBlur={clearErrorMessage}
             />
-            <Input
-                autoCapitalize="none"
-                autoCorrect={false}
-                inputStyle={styles.inputStyle}
-                placeholder="Last Name"
-                value={lastName}
-                onChangeText={setLastName}
-            />
-            <Input
-                autoCapitalize="none"
-                autoCorrect={false}
-                inputStyle={styles.inputStyle}
-                placeholder="Phone Number"
-                keyboardType = 'numeric'
-                value={phoneNumber}
-                onChangeText={setPhoneNumber}
-            />
-            <Input
-                autoCapitalize="none"
-                autoCorrect={false}
-                inputStyle={styles.inputStyle}
-                dataDetectorType='email'
-                placeholder="Email"
-                value={email}
-                onChangeText={setEmail}
-             />
-            <Input
-                autoCapitalize="none"
-                autoCorrect={false}
-                inputStyle={styles.inputStyle}
-                placeholder="Password"
-                value={password}
-                onChangeText={setPassword}
-           />
-            <Input
-                autoCapitalize="none"
-                autoCorrect={false}
-                inputStyle={styles.inputStyle}
-                placeholder="Confirm Password"
-                value={confirmPassword}
-                onChangeText={setConfirmPassword}
-            />
-
-           <TouchableOpacity
+        </View>
+          <TouchableOpacity
                 title="Sign Up"
-                onPress={()=>{addUser(firstName,lastName,phoneNumber,email,password,confirmPassword, userType), addUserPhoto}}
+                onPress={()=>{
+                    addUser(firstName,lastName,phoneNumber,email,password,confirmPassword);
+                    navigateAccordingKindOfUser(userType);
+                }}
                 >
                <Text style={styles.buttonSingUp}>{"Sign up"}</Text>
           </TouchableOpacity>
-
+        {state.errorMessage ?
+            (<Text style={styles.errorMessage}>{state.errorMessage}</Text>)
+            :null}
         </View>
     );
 };
@@ -108,7 +136,7 @@ const styles = StyleSheet.create({
     fontSize:35,
         textAlign: "center",
         borderColor: 'black',
-        marginBottom:10
+        marginBottom:0
     },
     subtitle:{
         fontSize:20,
@@ -128,7 +156,6 @@ const styles = StyleSheet.create({
         fontWeight: 'bold'
     },
     buttonContainer: {
-        flex: 1,
         marginLeft:20,
         marginRight:10,
         flexDirection: 'row',
@@ -140,16 +167,10 @@ const styles = StyleSheet.create({
         fontSize: 12,
         textAlign: "center",
         fontWeight: "bold",
-        marginTop: 4,
-        marginBottom: 4
+        marginTop:0,
+        marginBottom: 0
     },
-    inputStyle:{
-        textAlign: "center",
-        alignItems: "center",
-        borderColor: '#2F4730',
-
-
-    },
+    inputStyle:{height: 30,fontSize:16, marginRight:23,marginLeft:10,marginBottom:10,borderBottomWidth:0.3,borderColor:'black'},
     button: {
         alignItems: "center",
         padding: 10,
@@ -170,15 +191,13 @@ const styles = StyleSheet.create({
     },
     buttonSingUp: {
         textAlign: "center",
-        padding: 10,
         borderColor: '#80B28B',
         borderWidth:3,
-        flex:10,
         paddingVertical:10,
         paddingLeft:12,
         backgroundColor:'#2F4730',
         borderRadius:8,
-        fontSize: 10,
+        fontSize: 18,
         fontWeight: 'bold',
         overflow: 'hidden',
         color: '#80B28B',
@@ -186,8 +205,10 @@ const styles = StyleSheet.create({
         marginLeft: 8,
         marginTop:0,
         marginRight:8,
-        justifyContent:'center'
-    }
+
+    },
+    errorMessage:{color: 'red', textAlign:'center',marginTop:10}
+
 
 });
 
