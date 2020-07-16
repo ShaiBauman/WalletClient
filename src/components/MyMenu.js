@@ -30,6 +30,7 @@ const MyMenu = ({navigation, children})=>{
                     <Menu.Item onPress={() => {return navigation.navigate('Profile')}} title="Update Profile" />
                     <Menu.Item onPress={() => {navigation.navigate('Settings')}} title="Settings" />
                     <Menu.Item onPress={() => {navigation.navigate('indexFriend')}} title="Change to Friend" />
+                    <Menu.Item onPress={() => {navigation.navigate('addCreditCard')}} title="Edit credit card" />
                     <Divider />
                     <Menu.Item onPress={() => {}} title="Log Out" />
 

@@ -56,7 +56,7 @@ const DashbordScreen = ({navigation})=>{
     <Portal>
         <View style={styles.container}>
 
-            <MyMenu/>
+            <MyMenu navigation={navigation}/>
 
             <Text style={styles.header}>Hello {firstName} {lastName},</Text>
         <View style={styles.container}>

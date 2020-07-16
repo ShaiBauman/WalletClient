@@ -3,6 +3,7 @@ import { createAppContainer, createSwitchNavigator } from 'react-navigation';
 import { createStackNavigator } from 'react-navigation-stack';
 //import { createBottomTabNavigator } from 'react-navigation-tabs';
 import {Provider as UserProvider} from "./src/context/UserContext";
+import {Provider as FinancialProvider} from "./src/context/FinancialContext";
 import SettingsScreen from "./src/Screens/SettingsScreen";
 import PurchaseScreen from "./src/Screens/PurchaseScreen";
 import SignUpScreen from "./src/Screens/SignUpScreen";
@@ -13,7 +14,6 @@ import RegistrationScreen from "./src/Screens/RegistrationScreen";
 import WalletProfileScreen from "./src/Screens/WalletProfileScreen";
 import {setNavigator} from "./src/navigationRef";
 import AddCreditCard from "./src/Screens/AddCreditCard";
-import ChooseCreditCard from "./src/Screens/ChooseCreditCard";
 import DashbordScreen from "./src/Screens/DashbordScreen";
 import StatisticsScreen from "./src/Screens/StatisticsScreen";
 import TransactionScreen from "./src/Screens/TransactionsScreen";
@@ -30,7 +30,6 @@ const navigator = createStackNavigator({
       //walletMainFlow: {
         indexWallet: IndexWalletScreen,
         makePurchase: PurchaseScreen,
-        chooseCreditCard: ChooseCreditCard,
         addCreditCard: AddCreditCard,
         Settings: SettingsScreen,
       //},
@@ -56,7 +55,9 @@ export default ()=>{
   return(
 
       <UserProvider>
-          <App ref={(navigator)=>{setNavigator(navigator)}}/>
+          <FinancialProvider>
+            <App ref={(navigator)=>{setNavigator(navigator)}}/>
+          </FinancialProvider>
       </UserProvider>
 
   );
