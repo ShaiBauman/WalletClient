@@ -32,7 +32,8 @@ const addReq = dispatch=> async ({email,openDate,closedDate,category,cost,descri
         const response = await serverApi.post('/request', {email,openDate,closedDate,category,cost,description,necessity,additionalDescription,
             pic,confirmationStatus,friendsConfirmation,botConfirmation,score});
         if(response.data.id)
-            dispatch({type:'add_success_message',payload: 'create success request'})
+        {    dispatch({type:'add_success_message',payload: 'create success request'})
+               navigate('dashboard');}
      }
     catch (err)
     {
