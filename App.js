@@ -18,6 +18,7 @@ import DashboardScreen from "./src/Screens/DashboardScreen";
 import StatisticsScreen from "./src/Screens/StatisticsScreen";
 import TransactionScreen from "./src/Screens/TransactionsScreen";
 import FriendsScreen from "./src/Screens/FriendsScreen";
+import AssistanceStatisticsScreen from "./src/Screens/AssistanceStatisticsScreen";
 
 
 const navigator = createStackNavigator({
@@ -37,7 +38,8 @@ const navigator = createStackNavigator({
       //friendMainFlow: {
         indexFriend: IndexFriendScreen,
         dashboard: DashboardScreen,
-        statistics: StatisticsScreen,
+       assistanceStatistics:AssistanceStatisticsScreen,
+     statistics: StatisticsScreen,
     transactions: TransactionScreen,
     walletFriends: FriendsScreen
       //}

@@ -34,72 +34,72 @@ const PurchaseScreen = ()=>{
             <ScrollView>
                 <Spacer>
                     <Text style={styles.textStyle}>Category</Text>
-                    <DropDownForm
-                        data={categoryState}
-                        title={"Category"}
-                        onSubmit={setCategory}
-                    />
+                <DropDownForm
+                    data={categoryState}
+                    title={"Category"}
+                    onSubmit={setCategory}
+                />
                 </Spacer>
 
                 <Spacer>
                     <Text style={styles.textStyle}>Describe your product</Text>
-                    <Input
-                        value={description}
-                        onChangeText={setDescription}
-                        style={styles.inputStyle}
-                        autoCapitalize="none"
-                        autoCorrect={false}
-                        placeholder="Description"
-                    />
+                <Input
+                    value={description}
+                    onChangeText={setDescription}
+                    style={styles.inputStyle}
+                    autoCapitalize="none"
+                    autoCorrect={false}
+                    placeholder="Description"
+                />
                 </Spacer>
 
                 <Spacer>
                     <Text style={styles.textStyle}>How much it costs?</Text>
-                    <Input
-                        //secureTextEntry={true}
-                        //  label={"Price"}
-                        value={price}
-                        onChangeText={setPrice}
-                        style={styles.inputStyle}
-                        autoCapitalize="none"
-                        autoCorrect={false}
-                        placeholder="Price"
-                        keyboardType = 'numeric'
+                <Input
+                    //secureTextEntry={true}
+                  //  label={"Price"}
+                    value={price}
+                    onChangeText={setPrice}
+                    style={styles.inputStyle}
+                    autoCapitalize="none"
+                    autoCorrect={false}
+                    placeholder="Price"
+                    keyboardType = 'numeric'
 
-                    />
+                />
                 </Spacer>
 
                 <Spacer>
                     <Text style={styles.textStyle}>Necessity</Text>
-                    <DropDownForm
-                        data={necessaryMeasureState}
-                        title={"Necessity"}
-                        onSubmit={setNecessaryMeasure}
-                    />
+                <DropDownForm
+                    data={necessaryMeasureState}
+                    title={"Necessity"}
+                    onSubmit={setNecessaryMeasure}
+                />
                 </Spacer>
 
                 <Spacer>
                     <Text style={styles.textStyle}>Additional text</Text>
-                    <Input
-                        // label={"Remarks"}
-                        value={remark}
-                        onChangeText={setRemark}
-                        style={styles.inputStyle}
-                        autoCapitalize="none"
-                        autoCorrect={false}
-                        placeholder="Remarks"
+                <Input
+                   // label={"Remarks"}
+                    value={remark}
+                    onChangeText={setRemark}
+                    style={styles.inputStyle}
+                    autoCapitalize="none"
+                    autoCorrect={false}
+                    placeholder="Remarks"
 
-                    />
+                />
                 </Spacer>
 
-                <Spacer>
-                    <TouchableOpacity
-                        onPress={funcPicture}
-                    >
-                        <Text style={styles.Button}>
-                            {"Insert Picture"}</Text>
-                    </TouchableOpacity>
-                </Spacer>
+            <Spacer>
+                <TouchableOpacity
+                    onPress={funcPicture}
+                >
+                    <Text style={styles.Button}>
+                        {"Insert Picture"}</Text>
+                </TouchableOpacity>
+            </Spacer>
 
                 <Spacer>
                     <View style={styles.buttonContainer}>
@@ -108,11 +108,11 @@ const PurchaseScreen = ()=>{
                             onPress={()=>updateReq(price)}
                         >
 
-                            <Text style={styles.button}>{"Than myself"}</Text>
+                            <Text style={styles.button}>{"Self-approval"}</Text>
                         </TouchableOpacity>
 
                         <TouchableOpacity
-                            onPress={()=>updateReq(category, necessaryMeasure, description,price, remark)}
+                           // onPress={()=>updateReq(category, necessaryMeasure, description,price, remark)}
                         >
 
                             <Text style={styles.button}>{"Send to approval"}</Text>
@@ -211,7 +211,7 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         justifyContent: 'center',
         alignItems: 'center',
-        //  backgroundColor: '#CEB386'
+      //  backgroundColor: '#CEB386'
     },
 });
 
