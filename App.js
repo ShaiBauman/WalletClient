@@ -14,7 +14,7 @@ import WalletProfileScreen from "./src/Screens/WalletProfileScreen";
 import {setNavigator} from "./src/navigationRef";
 import AddCreditCard from "./src/Screens/AddCreditCard";
 import ChooseCreditCard from "./src/Screens/ChooseCreditCard";
-import DashbordScreen from "./src/Screens/DashbordScreen";
+import DashboardScreen from "./src/Screens/DashboardScreen";
 import StatisticsScreen from "./src/Screens/StatisticsScreen";
 import TransactionScreen from "./src/Screens/TransactionsScreen";
 import FriendsScreen from "./src/Screens/FriendsScreen";
@@ -36,14 +36,14 @@ const navigator = createStackNavigator({
       //},
       //friendMainFlow: {
         indexFriend: IndexFriendScreen,
-        dashbord: DashbordScreen,
+        dashboard: DashboardScreen,
         statistics: StatisticsScreen,
     transactions: TransactionScreen,
     walletFriends: FriendsScreen
       //}
     },
     {
-        initialRouteName: "Registration",
+        initialRouteName: "dashboard",
         defaultNavigationOptions: {
             title: "WLT"
         }

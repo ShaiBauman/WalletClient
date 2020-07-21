@@ -9,7 +9,7 @@ import {FontAwesome} from "@expo/vector-icons";
 
 
 
-const DashbordScreen = ({navigation})=>{
+const DashboardScreen = ({navigation})=>{
 
     const {state: {firstName,lastName}} = useContext(UserContext);
     const [visible,setVisible] = useState( false );
@@ -85,4 +85,4 @@ const styles = StyleSheet.create({
 
         }
 });
-export default DashbordScreen;
+export default DashboardScreen;
