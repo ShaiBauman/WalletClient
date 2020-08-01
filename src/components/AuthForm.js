@@ -1,7 +1,7 @@
 import React, {useState} from 'react';
-import {View, StyleSheet} from 'react-native'
+import {View, StyleSheet, TextInput, TouchableOpacity} from 'react-native'
 import Spacer from "./Spacer";
-import {Text, Button, Input} from "react-native-elements";
+import {Text, Button} from "react-native-elements";
 
 
 const AuthForm = ({header, errorMessage, onSubmit, submitButtonText})=>{
@@ -11,19 +11,25 @@ const AuthForm = ({header, errorMessage, onSubmit, submitButtonText})=>{
     return(
         <>
             <Spacer>
-                <Text h3>{header}</Text>
+                <Text style={styles.paragraph}>{header}</Text>
             </Spacer>
-            <Input
-                label="Email"
+            <TextInput
+                style={styles.inputStyle}
+                placeholderTextColor={'#2f4730'}
+                placeholder="Email"
                 value={email}
                 onChangeText={setEmail}
                 autoCorrect={false}
                 autoCapitalize="none"
             />
             <Spacer/>
-            <Input
+            <TextInput
                 secureTextEntry={true}
-                label="Password"
+                style={styles.inputStyle}
+                placeholderTextColor={'#2f4730'}
+                maxLength={10}
+                minLength={5}
+                placeholder="Password"
                 value={password}
                 onChangeText={setPassword}
                 autoCorrect={false}
@@ -33,12 +39,16 @@ const AuthForm = ({header, errorMessage, onSubmit, submitButtonText})=>{
                 (<Text style={styles.errorMessage}>{errorMessage}</Text>)
                 :null}
             <Spacer>
-                <Button
+                <TouchableOpacity
                     title={submitButtonText}
                     onPress={
-                        ()=> onSubmit(email, password)
-                    }
-                />
+                    ()=> onSubmit(email, password)
+                }>
+                    <Text style={styles.button}>
+                        {submitButtonText}
+                    </Text>
+                </TouchableOpacity>
+
             </Spacer>
         </>
     );
@@ -51,6 +61,44 @@ const styles = StyleSheet.create({
         marginLeft:15
 
     },
+    paragraph: {
+        margin: 24,
+        fontSize: 35,
+        fontWeight: 'bold',
+        textAlign: 'center',
+    },
+
+    inputStyle:{
+        backgroundColor:'#80B28B',
+        height: 40,
+        fontSize:12,
+        marginLeft:10,
+        marginRight:10,
+        marginBottom:10,
+        borderBottomWidth:0.3,
+        borderColor:'black',
+        textAlign: "center"
+    },
+    button: {
+        textAlign: "center",
+        padding: 10,
+        borderColor: '#2F4730',
+        borderWidth:10,
+        flex:1,
+        flexDirection: 'column',
+        justifyContent: 'space-between',
+        paddingVertical:18,
+        paddingLeft:18,
+        backgroundColor: '#2f4730',
+        marginTop:5,
+        fontSize: 15,
+        color:'#80B28B',
+        height: 15,
+        fontWeight: 'bold',
+        overflow: 'hidden',
+
+    },
+
 });
 
 export default AuthForm;
