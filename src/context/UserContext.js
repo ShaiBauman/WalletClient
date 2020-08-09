@@ -7,9 +7,19 @@ const userReducer = (state, action)=>{
     switch(action.type)
     {
         case 'add_user':
-            return {errorMessage: '', myUser: action.payload};
-        case 'add_id':
-            return {errorMessage: '', id: action.payload};
+            {
+                console.log(action.payload + ' payload');
+            return {...state, errorMessage: '', myUser: action.payload};
+        }        case 'add_email':
+            return {errorMessage: '', email: action.payload};
+        case 'add_name':
+            return {errorMessage: '', name: action.payload};
+        case 'add_phoneNumber':
+            return {errorMessage: '', phoneNumber: action.payload};
+        case 'add_firstName':
+            return {errorMessage: '', firstName: action.payload};
+        case 'add_lastName':
+            return {errorMessage: '', lastName: action.payload};
         case 'add_error':
             return {...state, errorMessage: action.payload};
         case 'add_type_wallet':
@@ -22,8 +32,6 @@ const userReducer = (state, action)=>{
             return {...state, myFixedExpenses: [...state.myFixedIncomes, action.payload]};
         case 'clear_error_message':
             return {...state, errorMessage: ''};
-        case 'login':
-            return {errorMessage: '', myUser: action.payload};
         case 'entrance_error':
             return {...state, errorMessage: action.payload};
         case 'signout':
@@ -97,6 +105,7 @@ const updateUser = dispatch => async ({addictedStatus, avgExpensesLastThreeMonth
     let walletMember = true;
     let passes = 5;
     let myWalletMembers =[];
+
     let walletMemberDto = {
         maritalStatus,
         addictedStatus,
@@ -161,18 +170,32 @@ const tryLocalSignIn = dispatch => async ()=>
 };
 
 // for Login V
-const login = dispatch=> async ({userEmail, userPassword})=>{
+const login = dispatch=> async (email, password)=>{
     //make api request to login with that email and password
     try {
-        const response = await serverApi.post('/user/logIn', {userEmail, userPassword});
-        await AsyncStorage.setItem('user', response.data);
-        dispatch({type: 'login', payload: response.data.id});
+
+        console.log('check ' +email + ' ' + password);
+        const response = await serverApi.post('/user/logIn', {email,password});
+        await AsyncStorage.setItem('email', response.data.email);
+        await AsyncStorage.setItem('name',response.data.firstName + ' '+ response.data.lastName);
+        dispatch({type: 'add_user', payload: response.data});
+
+        console.log(response.data.firstName + ' '+ response.data.lastName);
+        let name = response.data.firstName + ' '+ response.data.lastName;
+        console.log(name);
+        dispatch({type: 'add_name', payload: name});
+        dispatch({type: 'add_firstName', payload: response.data.firstName});
+        dispatch({type: 'add_lastName', payload: response.data.lastName});
+        dispatch({type: 'add_phoneNumber', payload: response.data.phoneNumber});
+        dispatch({type: 'add_email', payload: response.data.email});
+        console.log(response.data);
         navigate('dashboard');
 
         // ***need to add case of friend****
     }
     catch (err)
     {
+        console.log(email + ' ' + password);
         dispatch({type:'entrance_error', payload:'Wrong email or password'});
         console.log(err);
     }
@@ -181,16 +204,16 @@ const login = dispatch=> async ({userEmail, userPassword})=>{
 
 //for sign out
 const signOut = dispatch=>async ()=>{
-    await AsyncStorage.removeItem('user');
+    await AsyncStorage.removeItem('email');
     dispatch({type: 'signout'});
     navigate('Signin');
 };
 
 //check answer for recovery password
-const verificationPasswordAnswer = dispatch => async ({userId, answer}) =>{
+const verificationPasswordAnswer = dispatch => async ({id, answer}) =>{
     try
     {
-       const response = await serverApi.post('/user', {userId, answer});
+       const response = await serverApi.post('/user', {id, answer});
        if(response.data)
         dispatch({type: 'answer_password', payload: response.data})
         else
@@ -218,7 +241,7 @@ const updatePassword = dispatch => async ({userId, newPassword}) => {
 export const {Provider, Context} = createDataContext(
     userReducer,
     { addUser, updateUser, clearErrorMessage,navigateAccordingKindOfUser, tryLocalSignIn, login, signOut, addFriend,verificationPasswordAnswer,updatePassword },
-    { id: '', myUser: null,
+    { id: '', firstName: '', lastName:'', email: '', phoneNumber: '', name:'', myUser: {},
         target:0, myWalletMembers: [], myFixedExpenses: [], myFixedIncomes: [], avgExpenses:0,
         walletMember: false, friendMember: false,
         passes:0,

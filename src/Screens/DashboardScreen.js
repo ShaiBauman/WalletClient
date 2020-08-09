@@ -6,14 +6,17 @@ import { NavigationActions } from 'react-navigation';
 import MyMenu from "../components/MyMenu";
 import {Divider, Menu, Modal, Portal, Provider} from "react-native-paper";
 import {FontAwesome} from "@expo/vector-icons";
+import SignInScreen from "./SignInScreen";
 
 
 
 const DashboardScreen = ({navigation})=>{
 
-    const {state: {firstName,lastName}} = useContext(UserContext);
+    const {state} = useContext(UserContext);
     const [visible,setVisible] = useState( false );
 
+console.log("1111 " + state.myUser);
+console.log(state.myUser);
 
     const card = el => {
         console.log('Card: ' + el.name)
@@ -57,9 +60,8 @@ const DashboardScreen = ({navigation})=>{
         <View style={styles.container}>
 
             <MyMenu/>
-
-            <Text style={styles.header}>Hello {firstName} {lastName},</Text>
-        <View style={styles.container}>
+            <Text style={styles.header}>Hello {state.name}</Text>
+         <View style={styles.container}>
             <Dashboard items={items} background={true} card={card} column={2} />
         </View>
 
@@ -69,8 +71,16 @@ const DashboardScreen = ({navigation})=>{
     );
 };
 
+
+DashboardScreen.navigationOptions =()=> {
+    return {
+        header: null
+    };
+};
+
 const styles = StyleSheet.create({
     container: {
+        marginTop:15,
         flex: 1,
         backgroundColor: '#ecf0f1',
     },

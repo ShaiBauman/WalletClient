@@ -9,8 +9,7 @@ import NavLink from "../components/NavLink";
 const SignInScreen = ()=>{
     const { state, login, clearErrorMessage } = useContext(UserContext);
 
-    console.log(state);
-    console.log(state.email);
+    console.disableYellowBox = true;
 
     return(
         <View style={styles.container}>
@@ -21,7 +20,7 @@ const SignInScreen = ()=>{
             <AuthForm
                 header={"WallLet"}
                 errorMessage={state.errorMessage}
-                submitButtonText={"Sign In"}
+                submitButtonText={"Login"}
                 onSubmit={login}
             />
             <NavLink

@@ -6,7 +6,7 @@ import ProgressChart from "react-native-chart-kit/src/progress-chart";
 
 const IndexWalletScreen = ()=>{
 
-    const {state: {firstName,lastName, email, passes, target, phoneNumber}} = useContext(UserContext);
+    const {state} = useContext(UserContext);
     const LeftContent = props => <Avatar.Icon {...props} icon="account" />
 
     const data = {
@@ -14,14 +14,14 @@ const IndexWalletScreen = ()=>{
         data: [0.8,0.4, 0.6]
     };
 
-
+        console.log(state.name);
     return(
         <Card>
-            <Card.Title title={firstName+' '+lastName} subtitle={'email: '+email} left={LeftContent} />
+            <Card.Title title={state.firstName+' '+state.lastName} subtitle={'email: '+state.email} left={LeftContent} />
             <Card.Cover source={{ uri: 'https://picsum.photos/700' }} />
             <Card.Content>
                 <Title style={{textAlign:"center"}}>My Target</Title>
-                <Paragraph style={{textAlign:"center"}}>{target}</Paragraph>
+                <Paragraph style={{textAlign:"center"}}>{"target"}</Paragraph>
             </Card.Content>
 
             <Card.Actions style={{padding:20, textAlign:"left"}}>
