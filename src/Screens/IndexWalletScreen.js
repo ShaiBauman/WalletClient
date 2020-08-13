@@ -14,10 +14,10 @@ const IndexWalletScreen = ()=>{
         data: [0.8,0.4, 0.6]
     };
 
-        console.log(state.name);
+     ;
     return(
         <Card>
-            <Card.Title title={state.firstName+' '+state.lastName} subtitle={'email: '+state.email} left={LeftContent} />
+            <Card.Title title={state.name} subtitle={'email: '+state.email} left={LeftContent} />
             <Card.Cover source={{ uri: 'https://picsum.photos/700' }} />
             <Card.Content>
                 <Title style={{textAlign:"center"}}>My Target</Title>
@@ -78,6 +78,5 @@ const styles = StyleSheet.create({
 
     }
 });
-
 
 export default IndexWalletScreen;

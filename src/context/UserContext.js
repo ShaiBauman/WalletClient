@@ -6,20 +6,14 @@ import {navigate} from "../navigationRef";
 const userReducer = (state, action)=>{
     switch(action.type)
     {
-        case 'add_user':
-            {
-                console.log(action.payload + ' payload');
-            return {...state, errorMessage: '', myUser: action.payload};
-        }        case 'add_email':
-            return {errorMessage: '', email: action.payload};
+        case 'add_id':
+            return {...state,errorMessage: '', id: action.payload};
+        case 'add_email':
+            return {...state,errorMessage: '', email: action.payload};
         case 'add_name':
-            return {errorMessage: '', name: action.payload};
+            return {...state,errorMessage: '', name: action.payload};
         case 'add_phoneNumber':
-            return {errorMessage: '', phoneNumber: action.payload};
-        case 'add_firstName':
-            return {errorMessage: '', firstName: action.payload};
-        case 'add_lastName':
-            return {errorMessage: '', lastName: action.payload};
+            return {...state,errorMessage: '', phoneNumber: action.payload};
         case 'add_error':
             return {...state, errorMessage: action.payload};
         case 'add_type_wallet':
@@ -176,16 +170,11 @@ const login = dispatch=> async (email, password)=>{
 
         console.log('check ' +email + ' ' + password);
         const response = await serverApi.post('/user/logIn', {email,password});
-        await AsyncStorage.setItem('email', response.data.email);
-        await AsyncStorage.setItem('name',response.data.firstName + ' '+ response.data.lastName);
-        dispatch({type: 'add_user', payload: response.data});
-
-        console.log(response.data.firstName + ' '+ response.data.lastName);
+        await AsyncStorage.setItem('id', response.data._id);
+      //  dispatch({type: 'add_user', payload: response.data});
         let name = response.data.firstName + ' '+ response.data.lastName;
-        console.log(name);
         dispatch({type: 'add_name', payload: name});
-        dispatch({type: 'add_firstName', payload: response.data.firstName});
-        dispatch({type: 'add_lastName', payload: response.data.lastName});
+        dispatch({type: 'add_id', payload: response.data._id});
         dispatch({type: 'add_phoneNumber', payload: response.data.phoneNumber});
         dispatch({type: 'add_email', payload: response.data.email});
         console.log(response.data);
@@ -204,7 +193,7 @@ const login = dispatch=> async (email, password)=>{
 
 //for sign out
 const signOut = dispatch=>async ()=>{
-    await AsyncStorage.removeItem('email');
+    await AsyncStorage.removeItem('id');
     dispatch({type: 'signout'});
     navigate('Signin');
 };
@@ -241,7 +230,7 @@ const updatePassword = dispatch => async ({userId, newPassword}) => {
 export const {Provider, Context} = createDataContext(
     userReducer,
     { addUser, updateUser, clearErrorMessage,navigateAccordingKindOfUser, tryLocalSignIn, login, signOut, addFriend,verificationPasswordAnswer,updatePassword },
-    { id: '', firstName: '', lastName:'', email: '', phoneNumber: '', name:'', myUser: {},
+    { id: '', email: '', phoneNumber: '', name:'', myUser: new Object(),
         target:0, myWalletMembers: [], myFixedExpenses: [], myFixedIncomes: [], avgExpenses:0,
         walletMember: false, friendMember: false,
         passes:0,
