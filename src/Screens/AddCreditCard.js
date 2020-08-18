@@ -1,30 +1,38 @@
-import React, { useState } from 'react';
+import React, {useContext, useState} from 'react';
 import {View, StyleSheet, Text, Button} from 'react-native';
 import { CreditCardInput } from "react-native-credit-card-input";
+import {Context as UserContext} from "../context/UserContext";
+import {Context as FinancialContext} from "../context/FinancialContext";
 
 const AddCreditCard = ({navigation})=>{
-    const [isValid, setIsValid] = useState(false);
-    const _saveCreditCard = function () {
-        // TODO: Add credit card to db
-        navigation.goBack();
-    };
-    this.data = {};
 
-    this._onChange = (form)=> {
+    const {state: {_id,id}} = useContext(UserContext);
+    const {addCreditCard} = useContext(FinancialContext);
+
+    const [isValid, setIsValid] = useState(false);
+    const [data, setData] = useState({});
+
+    const _onChange = (form)=> {
         setIsValid(form.valid);
         if (form.valid) {
-            this.values = form.values;
+            setData(form.values);
         }
+    };
+
+    const _saveCreditCard = function (data) {
+        // TODO: Add credit card to db
+        addCreditCard('5efb52a6d0ed16402c0133e3', data.number, data.expiry, data.cvc, data.type);
+        navigation.goBack();
     };
 
     return(
         <View style={styles.container}>
             <Text style={{fontSize:24}}>Add Credit Card</Text>
-            <CreditCardInput onChange={this._onChange} />
+            <CreditCardInput onChange={_onChange} />
             <Button   title="Save"
                       color="#841584"
                       disabled={!isValid}
-                      onPress={_saveCreditCard}/>
+                      onPress={()=>_saveCreditCard(data)}/>
 
         </View>
     );

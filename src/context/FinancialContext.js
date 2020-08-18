@@ -1,47 +1,35 @@
-import {AsyncStorage} from 'react-native';
 import createDataContext from "./createDataContext";
 import serverApi from "../api/serverApi";
-import {navigate} from "../navigationRef";
 
 const financialReducer = (state, action)=>{
     switch(action.type)
     {
         case 'add_credit_card':
-            return {errorMessage: 'This is invalid credit card', id: action.payload};
+            return {errorMessage: 'This is invalid credit card', myCreditCard: action.payload};
+        case 'add_error':
+            return {...state, errorMessage: action.payload};
         default:
             return state;
     }
 };
 
-/*
-const login = dispatch => async ({email, password, confirmPassword}) =>{
 
-};
-const logOut = dispatch=> ()=>{
+const getCreditCard = dispatch => async ({userId}) =>{
 
 };
 
-const passwordRecovery = dispatch=> ()=>{
-
-};
-*/
-/*id:'', firstName:'',lastName:'',phoneNumber:'',email:'',password:'',answerPassword:'',
-    target:0, myWalletMembers: [], myFixedExpenses: [], myFixedIncomes: [], addictedStatus:0,
-    avgExpensesLastThreeMonths:0, avgExpenses:0, dateOfBirth:'', maritalStatus:'',
-    walletMember: false, friendMember: false,
-    passes:0,
-*/
-
-
-const addCreditCard = dispatch =>async (cardNumber, valid,cvc,companyName)=>{
+const addCreditCard = dispatch =>async (userId, cardNumber, valid,cvc,companyName)=>{
 
     try {
-        const response = await serverApi.post('/financial/creditCard', {userId,cardNumber,valid,cvc,companyName});
-
-        dispatch({type: 'add_credit_card', payload: ''/*response.data.id*/});
+        serverApi.post('/financial/creditCard', {userId,cardNumber,valid,cvc,companyName}).then(
+            response => console.log(response),
+            error => console.log(error)
+        );
+        //dispatch({type: 'add_credit_card', payload: response.data});
     }
     catch (err)
     {
+        console.log('Something went wrong with registration')
         dispatch({type:'add_error', payload:'Something went wrong with registration'});
 
     }
@@ -49,13 +37,8 @@ const addCreditCard = dispatch =>async (cardNumber, valid,cvc,companyName)=>{
 
 export const {Provider, Context} = createDataContext(
     financialReducer,
-    {  addCreditCard /*, updateUser */},
+    {  addCreditCard /*, getCreditCard */},
     {
-        id:'', firstName:'',lastName:'',phoneNumber:'',email:'',password:'',answerPassword:'',
-        target:0, myWalletMembers: [], myFixedExpenses: [], myFixedIncomes: [], addictedStatus:0,
-        avgExpensesLastThreeMonths:0, dateOfBirth:'', maritalStatus:'',
-        walletMember: false, friendMember: false,
-        passes:0,
-        errorMessage:''
+        id:''
     }
 );
