@@ -5,22 +5,24 @@ import {Context as UserContext} from "../context/UserContext";
 import {Context as FinancialContext} from "../context/FinancialContext";
 
 const AddCreditCard = ({navigation})=>{
-    console.log(FinancialContext);
-    console.log(UserContext);
+
     const {state: {_id,id}} = useContext(UserContext);
     const {addCreditCard} = useContext(FinancialContext);
-    console.log("id: " + id);
-    console.log("_id: " + _id);
 
     const [isValid, setIsValid] = useState(false);
-
-    const data = {};
+    const [data, setData] = useState({});
 
     const _onChange = (form)=> {
         setIsValid(form.valid);
         if (form.valid) {
-            console.log(form.values);
+            setData(form.values);
         }
+    };
+
+    const _saveCreditCard = function (data) {
+        // TODO: Add credit card to db
+        addCreditCard('5efb52a6d0ed16402c0133e3', data.number, data.expiry, data.cvc, data.type);
+        navigation.goBack();
     };
 
     return(
@@ -30,7 +32,7 @@ const AddCreditCard = ({navigation})=>{
             <Button   title="Save"
                       color="#841584"
                       disabled={!isValid}
-                      onPress={_saveCreditCard}/>
+                      onPress={()=>_saveCreditCard(data)}/>
 
         </View>
     );
