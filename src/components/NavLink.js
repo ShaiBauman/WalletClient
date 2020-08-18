@@ -17,7 +17,8 @@ return(
 
 const styles = StyleSheet.create({
     link:{
-        color: 'blue'
+        color: '#2f4730',
+        textAlign: "center"
     }
 });
 

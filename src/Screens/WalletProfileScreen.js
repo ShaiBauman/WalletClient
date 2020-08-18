@@ -1,15 +1,12 @@
 import React, {useContext, useState} from 'react';
-import {View, StyleSheet, FlatList, ScrollView, TouchableOpacity, SafeAreaView, Button} from 'react-native'
+import {View, StyleSheet, ScrollView, TouchableOpacity} from 'react-native'
 import {Text, Input,  Slider} from "react-native-elements";
-import Spacer from "../components/Spacer";
 import DropDownForm from "../components/DropDownForm";
-import DateForm from "../components/DateForm";
 import {Context as UserContext} from "../context/UserContext";
 import DialogForm from "../components/DialogForm";
-import { NavigationActions } from 'react-navigation';
 
 
-const WalletProfileScreen = ({navigation})=>{
+const WalletProfileScreen = ()=>{
 
     const {state, updateUser } = useContext(UserContext);
 
@@ -20,7 +17,6 @@ const WalletProfileScreen = ({navigation})=>{
 
     const [target, setTarget] = useState(0);
     const [avgExpensesLastThreeMonths, setAvgExpensesLastThreeMonths] = useState(0);
-    const [dateOfBirth, setDateOfBirth] = useState("01-01-1900");
     const [maritalStatus, setMaritalStatus] = useState('');
     const [addictedStatus, setAddictedStatus] = useState(addictedStatus);
     const [fixedIncomes, setFixedIncomes] = useState(fixedIncomesState);
@@ -70,13 +66,7 @@ const WalletProfileScreen = ({navigation})=>{
                 onChangeText={setTarget}
             />
 
-                <Text style={styles.textStyle}>Select Your Birth Date</Text>
-            <DateForm
-                data={dateOfBirth}
-                onSubmit={setDateOfBirth}
-            />
-
-                <Text style={styles.textStyle}>Select Your Marital Status</Text>
+             <Text style={styles.textStyle}>Select Your Marital Status</Text>
                 <DropDownForm
                 data={maritalStatusState}
                 title={"Marital Status"}
@@ -93,13 +83,13 @@ const WalletProfileScreen = ({navigation})=>{
                     setFunc={setFixedIncomes}
                 />
             </ScrollView>
-            <View style={styles.container}>
+
             <TouchableOpacity
-                onPress={()=>navigation.navigate('dashbord')}
+                onPress={()=>navigation.navigate('dashboard')}
             >
                 <Text style={styles.buttonGoOn}>{"Go On!"}</Text>
             </TouchableOpacity>
-            </View>
+
         </View>
     );
 };
@@ -108,6 +98,7 @@ const styles = StyleSheet.create({
     container:{
         backgroundColor:'#CEB386',
         borderColor:'#CEB386',
+        flex:1
     },
 
     header:{
@@ -139,7 +130,6 @@ const styles = StyleSheet.create({
         padding: 10,
         borderColor: '#2F4730',
         borderWidth:3,
-        flex:1,
         flexDirection: 'column',
         justifyContent: 'space-between',
         paddingVertical:18,
@@ -156,7 +146,7 @@ const styles = StyleSheet.create({
         textAlign: "center",
         borderColor: '#80B28B',
         borderWidth:3,
-        flex:1,
+
         justifyContent: 'space-between',
         paddingVertical:20,
         paddingLeft:12,
@@ -166,9 +156,9 @@ const styles = StyleSheet.create({
         fontWeight: 'bold',
         overflow: 'hidden',
         color: '#80B28B',
-        marginBottom:15,
+        marginBottom:60,
         marginLeft: 8,
-        marginTop:10,
+        marginTop:0,
         marginRight:8,
     }
 });

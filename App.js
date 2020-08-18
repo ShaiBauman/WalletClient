@@ -3,10 +3,10 @@ import { createAppContainer, createSwitchNavigator } from 'react-navigation';
 import { createStackNavigator } from 'react-navigation-stack';
 //import { createBottomTabNavigator } from 'react-navigation-tabs';
 import {Provider as UserProvider} from "./src/context/UserContext";
+import {Provider as RequestContext} from "./src/context/requestContext";
 import {Provider as FinancialProvider} from "./src/context/FinancialContext";
 import SettingsScreen from "./src/Screens/SettingsScreen";
 import PurchaseScreen from "./src/Screens/PurchaseScreen";
-import SignUpScreen from "./src/Screens/SignUpScreen";
 import SignInScreen from "./src/Screens/SignInScreen";
 import IndexWalletScreen from "./src/Screens/IndexWalletScreen";
 import IndexFriendScreen from "./src/Screens/IndexFriendScreen";
@@ -18,12 +18,14 @@ import DashbordScreen from "./src/Screens/DashbordScreen";
 import StatisticsScreen from "./src/Screens/StatisticsScreen";
 import TransactionScreen from "./src/Screens/TransactionsScreen";
 import FriendsScreen from "./src/Screens/FriendsScreen";
+import AssistanceStatisticsScreen from "./src/Screens/AssistanceStatisticsScreen";
+import PasswordRecoveryScreen from "./src/Screens/PasswordRecoveryScreen";
 
 
 const navigator = createStackNavigator({
     //  loginFlow: {
-        Signup: SignUpScreen,
         Signin: SignInScreen,
+        PasswordRecovery: PasswordRecoveryScreen,
         Registration: RegistrationScreen,
         Profile: WalletProfileScreen,
       //},
@@ -35,14 +37,15 @@ const navigator = createStackNavigator({
       //},
       //friendMainFlow: {
         indexFriend: IndexFriendScreen,
-        dashbord: DashbordScreen,
-        statistics: StatisticsScreen,
+        dashboard: DashboardScreen,
+       assistanceStatistics:AssistanceStatisticsScreen,
+     statistics: StatisticsScreen,
     transactions: TransactionScreen,
     walletFriends: FriendsScreen
       //}
     },
     {
-        initialRouteName: "Registration",
+        initialRouteName: "Signin",
         defaultNavigationOptions: {
             title: "WLT"
         }
@@ -53,13 +56,13 @@ const App = createAppContainer(navigator);
 
 export default ()=>{
   return(
-
+<RequestContext>
       <UserProvider>
           <FinancialProvider>
             <App ref={(navigator)=>{setNavigator(navigator)}}/>
           </FinancialProvider>
       </UserProvider>
-
+</RequestContext>
   );
 };
 
