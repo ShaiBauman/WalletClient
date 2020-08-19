@@ -14,7 +14,7 @@ import RegistrationScreen from "./src/Screens/RegistrationScreen";
 import WalletProfileScreen from "./src/Screens/WalletProfileScreen";
 import {setNavigator} from "./src/navigationRef";
 import AddCreditCard from "./src/Screens/AddCreditCard";
-import DashbordScreen from "./src/Screens/DashbordScreen";
+import DashboardScreen from "./src/Screens/DashboardScreen";
 import StatisticsScreen from "./src/Screens/StatisticsScreen";
 import TransactionScreen from "./src/Screens/TransactionsScreen";
 import FriendsScreen from "./src/Screens/FriendsScreen";

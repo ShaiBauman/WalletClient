@@ -6,7 +6,7 @@ import {Context as FinancialContext} from "../context/FinancialContext";
 
 const AddCreditCard = ({navigation})=>{
 
-    const {state: {_id,id}} = useContext(UserContext);
+    const {state} = useContext(UserContext);
     const {addCreditCard} = useContext(FinancialContext);
 
     const [isValid, setIsValid] = useState(false);
@@ -20,8 +20,7 @@ const AddCreditCard = ({navigation})=>{
     };
 
     const _saveCreditCard = function (data) {
-        // TODO: Add credit card to db
-        addCreditCard('5efb52a6d0ed16402c0133e3', data.number, data.expiry, data.cvc, data.type);
+        addCreditCard(state.id, data.number, data.expiry, data.cvc, data.type);
         navigation.goBack();
     };
 
