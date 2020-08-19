@@ -90,7 +90,7 @@ const addUser = dispatch=> async ({firstName,lastName,phoneNumber,email,password
         await AsyncStorage.setItem('id', response.data,id);
         dispatch({type: 'add_user', payload: response.data});
         dispatch({type: 'add_id', payload: response.data.id});
-        console.log(myUser);
+        //console.log(myUser);
 
     }
       catch (err)
@@ -127,7 +127,7 @@ const updateUser = dispatch => async ({addictedStatus, avgExpensesLastThreeMonth
         await AsyncStorage.setItem('user', response.data);
 
         dispatch({type: 'add_user', payload: response.data});
-        console.log(myUser);
+        //console.log(myUser);
         navigate('dashboard');
 
     }

@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useContext, useState} from 'react';
 import {View, StyleSheet, Text,TouchableOpacity, Alert,ScrollView} from 'react-native'
 import {Row, Rows, Table, Cell, TableWrapper} from "react-native-table-component";
 import DropDownForm from "../components/DropDownForm";
@@ -6,9 +6,16 @@ import {data} from "react-native-chart-kit/data";
 import {Menu, Portal, Provider, Modal} from "react-native-paper";
 import { AntDesign } from '@expo/vector-icons';
 import DateForm from "../components/DateForm";
+import {Context as FinancialContext} from "../context/FinancialContext";
+import {navigate} from "../navigationRef";
+import {Context as UserContext} from "../context/UserContext";
 
 
 const TransactionScreen = ()=>{
+    const userState = useContext(UserContext).state;
+    const {getLastDigitsCreditCard, makeTransaction} = useContext(FinancialContext);
+    getLastDigitsCreditCard(userState.id);
+    const financialState = useContext(FinancialContext).state;
 
 const [requestsStatus,setRequestsStatus] = useState('All');
 const [categories,setCategories] = useState('All');
@@ -51,19 +58,39 @@ const [visible,setVisible] = useState( false );
         tableHead: ['Open Date','Close Date','Description', 'Category', 'Cost', 'Necessity', 'Approval Status'
         ],
         tableData: [
-            ['8/8/19','10/8/19','1', '2', '3', '4','5'],
+            ['8/8/19','10/8/19','1', '2', '3', '4','5f3d48d1ba9e753ae8b1c012'],
             ['8/8/19','10/8/19','a', 'b', 'c', 'd','e'],
             ['8/8/19','10/8/19','1', '2', '3', '789','10'],
             ['8/8/19','10/8/19','a', 'b', 'c', 'd','s']
         ]
     };
 
-    const alertIndex =(index)=> {
-        Alert.alert(`This is row ${index + 1}`);
+    const alertIndex =(data)=> {
+        const lastDigits = financialState && financialState.lastDigits;
+        console.log(data);
+
+        if(!lastDigits) {
+            Alert.alert("There is no credit card to charge", "Please add your credit card" );
+            return;
+        }
+
+        Alert.alert(
+            'Buy',
+            'Are you sure that you want to load your prepaid card that ends in '+lastDigits+'?',
+            [
+                {
+                    text: 'Cancel',
+                    onPress: () => undefined,
+                    style: 'cancel'
+                },
+                { text: 'OK', onPress: () => makeTransaction(userState.id, data) }
+            ],
+            { cancelable: false }
+        );
     };
 
     const element = (data, index) => (
-            <TouchableOpacity onPress={() => alertIndex(index)}>
+            <TouchableOpacity onPress={() => alertIndex(data)}>
                 <View style={styles.btn}>
                     <Text style={styles.btnText}>Buy</Text>
                 </View>
