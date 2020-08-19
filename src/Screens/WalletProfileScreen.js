@@ -6,7 +6,7 @@ import {Context as UserContext} from "../context/UserContext";
 import DialogForm from "../components/DialogForm";
 
 
-const WalletProfileScreen = ()=>{
+const WalletProfileScreen = (navigation)=>{
 
     const {state, updateUser } = useContext(UserContext);
 

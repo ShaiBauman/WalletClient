@@ -59,7 +59,7 @@ console.log(state.myUser);
     <Portal>
         <View style={styles.container}>
 
-            <MyMenu/>
+            <MyMenu navigation={navigation}/>
             <Text style={styles.header}>Hello {state.name}</Text>
          <View style={styles.container}>
             <Dashboard items={items} background={true} card={card} column={2} />

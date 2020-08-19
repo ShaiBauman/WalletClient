@@ -11,15 +11,17 @@ const userReducer = (state, action)=>{
                 console.log(action.payload + ' payload');
             return {...state, errorMessage: '', myUser: action.payload};
         }        case 'add_email':
-            return {errorMessage: '', email: action.payload};
+            return {...state, email: action.payload};
         case 'add_name':
-            return {errorMessage: '', name: action.payload};
+            return {...state, name: action.payload};
         case 'add_phoneNumber':
-            return {errorMessage: '', phoneNumber: action.payload};
+            return {...state, phoneNumber: action.payload};
         case 'add_firstName':
-            return {errorMessage: '', firstName: action.payload};
+            return {...state, firstName: action.payload};
         case 'add_lastName':
-            return {errorMessage: '', lastName: action.payload};
+            return {...state, lastName: action.payload};
+        case 'add_id':
+            return {...state, id: action.payload};
         case 'add_error':
             return {...state, errorMessage: action.payload};
         case 'add_type_wallet':
@@ -88,7 +90,7 @@ const addUser = dispatch=> async ({firstName,lastName,phoneNumber,email,password
         await AsyncStorage.setItem('id', response.data,id);
         dispatch({type: 'add_user', payload: response.data});
         dispatch({type: 'add_id', payload: response.data.id});
-        console.log(myUser);
+        //console.log(myUser);
 
     }
       catch (err)
@@ -125,7 +127,7 @@ const updateUser = dispatch => async ({addictedStatus, avgExpensesLastThreeMonth
         await AsyncStorage.setItem('user', response.data);
 
         dispatch({type: 'add_user', payload: response.data});
-        console.log(myUser);
+        //console.log(myUser);
         navigate('dashboard');
 
     }
@@ -177,6 +179,7 @@ const login = dispatch=> async (email, password)=>{
         console.log('check ' +email + ' ' + password);
         const response = await serverApi.post('/user/logIn', {email,password});
         await AsyncStorage.setItem('email', response.data.email);
+        await AsyncStorage.setItem('id', response.data._id);
         await AsyncStorage.setItem('name',response.data.firstName + ' '+ response.data.lastName);
         dispatch({type: 'add_user', payload: response.data});
 
@@ -188,6 +191,7 @@ const login = dispatch=> async (email, password)=>{
         dispatch({type: 'add_lastName', payload: response.data.lastName});
         dispatch({type: 'add_phoneNumber', payload: response.data.phoneNumber});
         dispatch({type: 'add_email', payload: response.data.email});
+        dispatch({type: 'add_id', payload: response.data._id});
         console.log(response.data);
         navigate('dashboard');
 

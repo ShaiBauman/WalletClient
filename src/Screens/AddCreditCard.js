@@ -6,11 +6,14 @@ import {Context as FinancialContext} from "../context/FinancialContext";
 
 const AddCreditCard = ({navigation})=>{
 
-    const {state: {_id,id}} = useContext(UserContext);
-    const {addCreditCard} = useContext(FinancialContext);
+    const userState = useContext(UserContext).state;
+    const {addCreditCard, getLastDigitsCreditCard} = useContext(FinancialContext);
+    const financialState = useContext(FinancialContext).state;
 
     const [isValid, setIsValid] = useState(false);
     const [data, setData] = useState({});
+
+    getLastDigitsCreditCard(userState.id);
 
     const _onChange = (form)=> {
         setIsValid(form.valid);
@@ -20,14 +23,21 @@ const AddCreditCard = ({navigation})=>{
     };
 
     const _saveCreditCard = function (data) {
-        // TODO: Add credit card to db
-        addCreditCard('5efb52a6d0ed16402c0133e3', data.number, data.expiry, data.cvc, data.type);
+        addCreditCard(userState.id, data.number, data.expiry, data.cvc, data.type);
         navigation.goBack();
     };
+
+    const lastDigits = financialState && financialState.lastDigits;
+    let lastDigitsText ='';
+    if (lastDigits) {
+        lastDigitsText = <Text style={{fontSize: 18}}>Your saved credit card ends in {lastDigits}</Text>
+    }
 
     return(
         <View style={styles.container}>
             <Text style={{fontSize:24}}>Add Credit Card</Text>
+            {lastDigitsText}
+
             <CreditCardInput onChange={_onChange} />
             <Button   title="Save"
                       color="#841584"
