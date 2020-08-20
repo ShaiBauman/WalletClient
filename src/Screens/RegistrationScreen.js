@@ -5,9 +5,9 @@ import {Context as UserContext} from "../context/UserContext";
 import DropDownForm from "../components/DropDownForm";
 import {NavigationEvents} from "react-navigation";
 
-const RegistrationScreen = ()=>{
+const RegistrationScreen = ({navigation})=>{
 
-    const {state, addUser, clearErrorMessage, navigateAccordingKindOfUser} = useContext(UserContext);
+    const {addUser, clearErrorMessage} = useContext(UserContext);
 
     const userTypeState = [
         {value: 'wallet'},
@@ -27,7 +27,6 @@ const RegistrationScreen = ()=>{
 
 
     console.log(yearOfBirth);
-
 
     return(
     <View style={styles.container}>
@@ -127,8 +126,24 @@ const RegistrationScreen = ()=>{
           <TouchableOpacity
                 title="Sign Up"
                 onPress={()=>{
-                    addUser(firstName,lastName,phoneNumber,email,password,answerPassword,yearOfBirth);
-                    navigateAccordingKindOfUser(userType);
+                    let myUserType = true;
+                    if(userType === 'wallet') //the user is a wallet only
+                    {
+                        myUserType = false;
+                    }
+
+                    let userDto = {
+                        "firstName":firstName,
+                        "lastName":lastName,
+                        "email":email,
+                        "password":password,
+                        "answerPassword":answerPassword,
+                        "phoneNumber":phoneNumber,
+                        "yearOfBirth":yearOfBirth,
+                        "myUserType":myUserType
+                    }
+        console.log(userDto)
+        addUser(userDto);
                 }}
                 >
                <Text style={styles.buttonSingUp}>{"Sign up"}</Text>

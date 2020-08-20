@@ -11,44 +11,35 @@ const PasswordRecoveryScreen = ()=>
     const {state, clearErrorMessage, verificationPasswordAnswer,updatePassword} = useContext(UserContext);
     const [password, setPassword] = useState('');
     const [passwordRecoveryAnswer, setPasswordRecoveryAnswer] = useState('');
+    const [email, setEmail] = useState('');
 
     let flag = false;
-    const isAnswerCorrect = (userId, answer) =>{
-        if(verificationPasswordAnswer(userId,answer))
-            flag=true;
+    const isAnswerCorrect = (email, answer) => {
+        if (verificationPasswordAnswer(email, answer)) {
+            flag = true;
+
+        }
+        console.log(flag);
     }
-
-    const changePassword = ()=>
-    {
-
-        return(
-            <View>
-                <TextInput
-                    autoCapitalize="none"
-                    placeholder="Insert new password"
-                    value={password}
-                    onChangeText={setPassword}
-                    autoCorrect={false}
-                    selectionColor={"red"}
-                    style={styles.inputStyle}
-                    placeholderTextColor={"#2F4730"}
-                    contextMenuHidden={true}
-                />
-                <TouchableOpacity
-                    title="Confirm"
-                    onPress={updatePassword(state.id, password)}
-                >
-                    <Text style={styles.buttonSingUp}>{"Confirm"}</Text>
-                </TouchableOpacity>
-            </View>
-        )
-    }
-
 
     return(
         <View style={styles.container}>
+            <NavigationEvents
+                onWillBlur={clearErrorMessage}/>
             <Text style={styles.title}>Password Recovery</Text>
-                <TextInput
+            <TextInput
+                autoCapitalize="none"
+                placeholder="Insert Your Email"
+                value={email}
+                onChangeText={setEmail}
+                autoCorrect={false}
+                selectionColor={"red"}
+                style={styles.inputStyle}
+                placeholderTextColor={"#2F4730"}
+                contextMenuHidden={true}
+            />
+
+            <TextInput
                     autoCapitalize="none"
                     placeholder="What is your Elementary School name?"
                     value={passwordRecoveryAnswer}
@@ -61,15 +52,31 @@ const PasswordRecoveryScreen = ()=>
                 />
                 <TouchableOpacity
                     title="Continue"
-                    onPress={isAnswerCorrect(state.id,passwordRecoveryAnswer)}>
+                    onPress={isAnswerCorrect(email,passwordRecoveryAnswer)}>
                     <Text style={styles.buttonSingUp}>{"Continue"}</Text>
                 </TouchableOpacity>
 
-                <NavigationEvents
-                    onWillBlur={clearErrorMessage}
-                />
-
-            {flag?changePassword:<Text style={styles.errorMessage}>{state.errorMessage}</Text>}
+            {state.errorMessage ?
+                (<Text style={styles.errorMessage}>{state.errorMessage}</Text>)
+                :null}
+            {flag ? ( <TextInput
+                autoCapitalize="none"
+                placeholder="Insert new password"
+                value={password}
+                onChangeText={setPassword}
+                autoCorrect={false}
+                selectionColor={"red"}
+                style={styles.inputStyle}
+                placeholderTextColor={"#2F4730"}
+                contextMenuHidden={true}
+                />) :null}
+            {flag ? (<TouchableOpacity
+                title="Confirm"
+                onPress={updatePassword(email, password)}
+            >
+                <Text style={styles.buttonSingUp}>{"Confirm"}</Text>
+            </TouchableOpacity>)
+                : null}
         </View>
       );
 };
