@@ -14,14 +14,17 @@ import {Context as UserContext} from "../context/UserContext";
 const TransactionScreen = ()=>{
     const userState = useContext(UserContext).state;
     const {getLastDigitsCreditCard, makeTransaction} = useContext(FinancialContext);
-    getLastDigitsCreditCard(userState.id);
-    const financialState = useContext(FinancialContext).state;
 
 const [requestsStatus,setRequestsStatus] = useState('All');
 const [categories,setCategories] = useState('All');
 const [openDay,setOpenDay] = useState('');
 const [closeDay,setCloseDay] = useState('');
 const [visible,setVisible] = useState( false );
+const [lastDigits, setLastDigits ] = useState('');
+
+if (!lastDigits) {
+    getLastDigitsCreditCard(userState.id).then(data => setLastDigits(data));
+}
 
 
     const requestsStatusState = [
@@ -66,9 +69,6 @@ const [visible,setVisible] = useState( false );
     };
 
     const alertIndex =(data)=> {
-        const lastDigits = financialState && financialState.lastDigits;
-        console.log(data);
-
         if(!lastDigits) {
             Alert.alert("There is no credit card to charge", "Please add your credit card" );
             return;
