@@ -44,13 +44,16 @@ const clearSuccessMessage = dispatch=>()=>{
 const addReq = dispatch=> async ({Request})=>{
 
     try {
-        const response = await serverApi.post('/request', {Request});
+        const response = await serverApi.patch('/request', {Request});
         if(response.data.id)
         {    dispatch({type:'add_success_message',payload: 'create success request'})
+            console.log("yes");
                navigate('dashboard');}
+
      }
     catch (err)
     {
+        console.log(err)
         dispatch({type:'add_error', payload:'Something went wrong with add request'});
     }
 };
