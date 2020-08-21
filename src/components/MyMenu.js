@@ -34,7 +34,7 @@ const MyMenu = ({navigation, children})=>{
                     <Menu.Item onPress={() => {navigation.navigate('indexFriend')}} title="Change to Friend" />
                     <Menu.Item onPress={() => {navigation.navigate('addCreditCard')}} title="Edit credit card" />
                     <Divider />
-                    <Menu.Item onPress={()=>{signOut}} title="Log Out" />
+                    <Menu.Item onPress={signOut} title="Log Out" />
 
                 </Menu>
                </View>

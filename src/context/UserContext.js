@@ -24,6 +24,8 @@ const userReducer = (state, action)=>{
             return {...state, isResetPass:action.payload};
         case 'add_friend':
             return action.payload;
+        case 'signin':
+            return {errorMessage: '', id: action.payload};
         default:
             return state;
     }
@@ -109,6 +111,8 @@ const tryLocalSignIn = dispatch => async ()=>
     const id = await AsyncStorage.getItem('id');
     if(id)
     {
+        const response = await serverApi.get('/user', {id});
+        dispatch({type: 'add_user', payload: response.data})
         dispatch({type: 'signin', payload: id});
         navigate('dashboard');
     }
@@ -188,6 +192,23 @@ const getUserByEmail = dispatch => async (email)=>{
 
 }
 
+/*
+const getUserById = dispatch => async (id)=>{
+
+    try{
+
+        const response = await serverApi.get('/user', {id});
+        dispatch({type: 'add_user', payload: response.data})
+
+    }
+    catch (e) {
+        dispatch({type:'add_error', payload:'warning'});
+
+    }
+
+
+}
+*/
 export const {Provider, Context} = createDataContext(
     userReducer,
     { addUser, updateUser, clearErrorMessage, getUserByEmail,

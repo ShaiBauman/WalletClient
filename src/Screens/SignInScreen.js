@@ -1,4 +1,4 @@
-import React, {useContext} from 'react';
+import React, {useContext, useEffect} from 'react';
 import {View, StyleSheet, Image} from 'react-native';
 import {NavigationEvents} from "react-navigation";
 import {Context as UserContext} from "../context/UserContext";
@@ -7,9 +7,13 @@ import NavLink from "../components/NavLink";
 
 
 const SignInScreen = ()=>{
-    const {state, login, clearErrorMessage } = useContext(UserContext);
+    const {state, login, tryLocalSignIn, clearErrorMessage } = useContext(UserContext);
 
     console.disableYellowBox = true;
+
+    useEffect(()=>{
+        tryLocalSignIn();
+    },[]);
 
     return(
         <View style={styles.container}>
