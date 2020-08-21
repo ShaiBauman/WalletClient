@@ -21,6 +21,10 @@
     "assetBundlePatterns": [
       "**/*"
     ],
+    "android": {
+      "package": "com.yuvapps.wallet",
+      "versionCode": 1
+    },
     "ios": {
       "supportsTablet": true
     }

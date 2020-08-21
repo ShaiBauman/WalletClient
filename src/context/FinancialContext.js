@@ -1,61 +1,84 @@
-import {AsyncStorage} from 'react-native';
 import createDataContext from "./createDataContext";
 import serverApi from "../api/serverApi";
-import {navigate} from "../navigationRef";
 
 const financialReducer = (state, action)=>{
     switch(action.type)
     {
         case 'add_credit_card':
-            return {errorMessage: 'This is invalid credit card', id: action.payload};
+            return {...state, lastDigits: action.payload};
+        case 'make_transaction':
+            return {...state, lastDigits: action.payload};
+        case 'add_error':
+            return {...state, errorMessage: action.payload};
         default:
             return state;
     }
 };
 
-/*
-const login = dispatch => async ({email, password, confirmPassword}) =>{
 
-};
-const logOut = dispatch=> ()=>{
-
-};
-
-const passwordRecovery = dispatch=> ()=>{
-
-};
-*/
-/*id:'', firstName:'',lastName:'',phoneNumber:'',email:'',password:'',answerPassword:'',
-    target:0, myWalletMembers: [], myFixedExpenses: [], myFixedIncomes: [], addictedStatus:0,
-    avgExpensesLastThreeMonths:0, avgExpenses:0, dateOfBirth:'', maritalStatus:'',
-    walletMember: false, friendMember: false,
-    passes:0,
-*/
-
-
-const addCreditCard = dispatch =>async (cardNumber, valid,cvc,companyName)=>{
-
+const getLastDigitsCreditCard = dispatch => async (userId) =>{
     try {
-        const response = await serverApi.post('/financial/creditCard', {userId,cardNumber,valid,cvc,companyName});
+        const url = "/financial/creditCard/" + userId;
+        const response = await serverApi.get(url).then(
+            response => response,
+            error => console.log(error)
+        );
 
-        dispatch({type: 'add_credit_card', payload: ''/*response.data.id*/});
+        if(response.data) {
+
+            dispatch({type: 'add_credit_card', payload: response.data});
+            return response.data;
+        }
     }
     catch (err)
     {
-        dispatch({type:'add_error', payload:'Something went wrong with registration'});
+        console.log('Something went wrong with get credit card info');
+        dispatch({type:'add_error', payload:'Something went wrong with get credit card info'});
+
+    }
+};
+
+const addCreditCard = dispatch =>async (userId, cardNumber, valid,cvc,companyName)=>{
+
+    try {
+        const response = await serverApi.post('/financial/creditCard', {userId,cardNumber,valid,cvc,companyName}).then(
+            response => response,
+            error => console.log(error)
+        );
+        if(response.data) {
+            dispatch({type: 'add_credit_card', payload: response.data});
+        }
+    }
+    catch (err)
+    {
+        console.log('Something went wrong with registration');
+        dispatch({type:'add_error', payload:'This is invalid credit card'});
+
+    }
+};
+
+const makeTransaction = dispatch =>async (userId, requestId)=>{
+
+    try {
+        const response = await serverApi.post('financial/transaction', {userId,requestId}).then(
+            response => response,
+            error => console.log(error)
+        );
+        if(response.data) {
+            dispatch({type: 'make_transaction', payload: response.data});
+        }
+    }
+    catch (err)
+    {
+        console.log('Something went wrong with registration');
+        dispatch({type:'add_error', payload:'This is invalid credit card'});
 
     }
 };
 
 export const {Provider, Context} = createDataContext(
     financialReducer,
-    {  addCreditCard /*, updateUser */},
+    {  addCreditCard , getLastDigitsCreditCard, makeTransaction},
     {
-        id:'', firstName:'',lastName:'',phoneNumber:'',email:'',password:'',answerPassword:'',
-        target:0, myWalletMembers: [], myFixedExpenses: [], myFixedIncomes: [], addictedStatus:0,
-        avgExpensesLastThreeMonths:0, dateOfBirth:'', maritalStatus:'',
-        walletMember: false, friendMember: false,
-        passes:0,
-        errorMessage:''
     }
 );

@@ -6,13 +6,16 @@ import { NavigationActions } from 'react-navigation';
 import MyMenu from "../components/MyMenu";
 import {Divider, Menu, Modal, Portal, Provider} from "react-native-paper";
 import {FontAwesome} from "@expo/vector-icons";
+import SignInScreen from "./SignInScreen";
 
 
 
-const DashbordScreen = ({navigation})=>{
+const DashboardScreen = ({navigation})=>{
 
-    const {state: {firstName,lastName}} = useContext(UserContext);
-    const [visible,setVisible] = useState( false );
+    console.disableYellowBox = true;
+
+    const {state} = useContext(UserContext);
+    //const [visible,setVisible] = useState( false );
 
 
     const card = el => {
@@ -56,10 +59,9 @@ const DashbordScreen = ({navigation})=>{
     <Portal>
         <View style={styles.container}>
 
-            <MyMenu/>
-
-            <Text style={styles.header}>Hello {firstName} {lastName},</Text>
-        <View style={styles.container}>
+            <MyMenu navigation={navigation}/>
+            <Text style={styles.header}>Hello {state.myUser.firstName + ' '+ state.myUser.lastName}</Text>
+         <View style={styles.container}>
             <Dashboard items={items} background={true} card={card} column={2} />
         </View>
 
@@ -69,8 +71,16 @@ const DashbordScreen = ({navigation})=>{
     );
 };
 
+
+DashboardScreen.navigationOptions =()=> {
+    return {
+        header: null
+    };
+};
+
 const styles = StyleSheet.create({
     container: {
+        marginTop:15,
         flex: 1,
         backgroundColor: '#ecf0f1',
     },
@@ -85,4 +95,4 @@ const styles = StyleSheet.create({
 
         }
 });
-export default DashbordScreen;
+export default DashboardScreen;
