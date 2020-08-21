@@ -12,11 +12,11 @@ import SignInScreen from "./SignInScreen";
 
 const DashboardScreen = ({navigation})=>{
 
-    const {state} = useContext(UserContext);
-    const [visible,setVisible] = useState( false );
+    console.disableYellowBox = true;
 
-console.log("1111 " + state.myUser);
-console.log(state.myUser);
+    const {state} = useContext(UserContext);
+    //const [visible,setVisible] = useState( false );
+
 
     const card = el => {
         console.log('Card: ' + el.name)
@@ -60,7 +60,7 @@ console.log(state.myUser);
         <View style={styles.container}>
 
             <MyMenu navigation={navigation}/>
-            <Text style={styles.header}>Hello {state.name}</Text>
+            <Text style={styles.header}>Hello {state.myUser.firstName + ' '+ state.myUser.lastName}</Text>
          <View style={styles.container}>
             <Dashboard items={items} background={true} card={card} column={2} />
         </View>

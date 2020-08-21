@@ -8,19 +8,27 @@ import DialogForm from "../components/DialogForm";
 
 const WalletProfileScreen = (navigation)=>{
 
+    console.disableYellowBox = true;
+
     const {state, updateUser } = useContext(UserContext);
 
-    const fixedIncomesState={title:'', price:0};
-    const fixedExpensesState={title:'', price:0};
-    let maritalStatusState =[
-    {value: "Bachelor"},{value: "Married"}, {value:"Divorcee"},{value:"Widower"}];
+
+    let maritalStatusState =[     //    Bachelor = 0,Married=1, Divorcee=2, Widower=3
+        {value: "Bachelor"},{value: "Married"}, {value:"Divorcee"},{value:"Widower"}];
 
     const [target, setTarget] = useState(0);
     const [avgExpensesLastThreeMonths, setAvgExpensesLastThreeMonths] = useState(0);
     const [maritalStatus, setMaritalStatus] = useState('');
     const [addictedStatus, setAddictedStatus] = useState(addictedStatus);
-    const [fixedIncomes, setFixedIncomes] = useState(fixedIncomesState);
-    const [fixedExpenses, setFixedExpenses] = useState(fixedExpenses);
+    const [fixedIncomes, setFixedIncomes] = useState(state.myUser.myFixedIncomes);
+    const [fixedExpenses, setFixedExpenses] = useState(state.myUser.myFixedExpenses);
+
+
+const AddItem = (item, item2, setFunc) =>{
+
+    setFunc(item.concat(setFunc));
+}
+
 
     console.log(maritalStatus);
     console.log(fixedExpenses);
@@ -34,7 +42,7 @@ const WalletProfileScreen = (navigation)=>{
             <Slider
                 step={1}
                 minimumValue={0}
-                maximumValue={100}
+                maximumValue={10}
                 title={"How addicted are you ??"}
                 value={addictedStatus}
                 onValueChange={slideValue => setAddictedStatus(slideValue)}
@@ -73,19 +81,45 @@ const WalletProfileScreen = (navigation)=>{
                 onSubmit={setMaritalStatus}
                 />
 
-
                 <DialogForm
                     title={"Edit Fixed Expenses"}
                     setFunc={setFixedExpenses}
+                    myList={fixedExpenses}
                 />
                 <DialogForm
                     title={"Edit Fixed Income"}
                     setFunc={setFixedIncomes}
+                    myList={fixedIncomes}
                 />
             </ScrollView>
 
             <TouchableOpacity
-                onPress={()=>navigation.navigate('dashboard')}
+                onPress={()=> {
+                    let maritalStatusScore = 0
+                       if(maritalStatus ==='Bachelor')
+                            maritalStatusScore=0
+                       else if(maritalStatus ==='Married')
+                            maritalStatusScore=1
+                       else if(maritalStatus ==='Divorcee')
+                            maritalStatusScore=2
+                       else //'Widower'
+                            maritalStatusScore =3
+                    console.log(maritalStatusScore)
+
+                    const walletMemberDto={
+                           "id": state.id,
+                        "maritalStatus":maritalStatusScore,
+                        "addictedStatus":addictedStatus,
+                        "myTarget":target,
+                        "walletMember": true,
+                        "myWalletMembers":[],
+                        "myFixedExpenses":fixedExpenses,
+                        "myFixedIncomes":fixedIncomes,
+                        "passes":addictedStatus
+                    }
+                       console.log(walletMemberDto)
+                    updateUser(walletMemberDto)
+                   }}
             >
                 <Text style={styles.buttonGoOn}>{"Go On!"}</Text>
             </TouchableOpacity>

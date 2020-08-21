@@ -7,40 +7,22 @@ const userReducer = (state, action)=>{
     switch(action.type)
     {
         case 'add_user':
-            {
-                console.log(action.payload + ' payload');
-            return {...state, errorMessage: '', myUser: action.payload};
-        }        case 'add_email':
-            return {...state, email: action.payload};
-        case 'add_name':
-            return {...state, name: action.payload};
-        case 'add_phoneNumber':
-            return {...state, phoneNumber: action.payload};
-        case 'add_firstName':
-            return {...state, firstName: action.payload};
-        case 'add_lastName':
-            return {...state, lastName: action.payload};
+            return {...state,errorMessage: '', myUser: action.payload};
         case 'add_id':
-            return {...state, id: action.payload};
-        case 'add_error':
-            return {...state, errorMessage: action.payload};
-        case 'add_type_wallet':
-            return {...state, walletMember: true};
-        case 'add_type_friend':
-            return {...state, friendMember: true};
-        case 'add_fixExpenses':
-            return {...state, myFixedExpenses: [...state.myFixedExpenses, action.payload]};
-        case 'add_fixIncomes':
-            return {...state, myFixedExpenses: [...state.myFixedIncomes, action.payload]};
+            return {...state,errorMessage: '', id: action.payload};
+       case 'add_error':
+            return {...state, errorMessagePassword: action.payload};
         case 'clear_error_message':
-            return {...state, errorMessage: ''};
+            return {...state, errorMessage: '',errorMessagePassword:''};
+        case 'clear_error_message_password_recovery':
+            return {...state, errorMessagePassword: ''};
         case 'entrance_error':
             return {...state, errorMessage: action.payload};
         case 'signout':
-            return {myUser: null, id:'', errorMessage: ''};
-        case 'add_friend':
-            return {...state, myWalletMembers: [...state.myWalletMembers, action.payload]};
+            return {myUser: {}, id:'', errorMessage: ''};
         case 'answer_password':
+            return {...state, isResetPass:action.payload};
+        case 'add_friend':
             return action.payload;
         default:
             return state;
@@ -50,90 +32,49 @@ const userReducer = (state, action)=>{
 const clearErrorMessage = dispatch=>()=>{
     dispatch({type: 'clear_error_message'});
 };
-
-const navigateAccordingKindOfUser = dispatch=> (userType) =>{
-    if(userType === 'both') //the user is a wallet and a friend
-    {
-        dispatch({type: 'add_type_wallet'});
-        dispatch({type: 'add_type_friend'});
-        navigate('Profile');
-    }
-    else if(userType === 'wallet') //the user is a wallet
-    {
-        dispatch({type: 'add_type_wallet'});
-        navigate('Profile');
-    }
-else //the user is a friend
-        {
-            dispatch({type: 'add_type_friend'});
-        navigate('indexMember');
-        }
-
-};
-
-
 // for registration V
-const addUser = dispatch=> async ({firstName,lastName,phoneNumber,email,password,answerPassword,yearOfBirth})=>{
-    let userDto = {
-        firstName,
-        lastName,
-        email,
-        password,
-        answerPassword,
-        phoneNumber,
-        yearOfBirth
-    }
+const addUser = dispatch=> async (userDto)=>{
 
     try {
-        const response = await serverApi.post('/user', {userDto});
-        await AsyncStorage.setItem('user', response.data);
-        await AsyncStorage.setItem('id', response.data,id);
+        const response = await serverApi.post('/user/signIn', {userDto});
+        await AsyncStorage.setItem('id', response.data,_id);
+        console.log(response.data + ' check');
         dispatch({type: 'add_user', payload: response.data});
-        dispatch({type: 'add_id', payload: response.data.id});
-        //console.log(myUser);
+        dispatch({type: 'add_id', payload: response.data._id});
 
+        if(response.data.walletMember) //the user is a wallet and a friend
+        {
+          navigate('Profile');
+        }
+        else //the user is a friend
+        {
+            navigate('indexMember');
+        }
+        console.log(response.data.walletMember)
     }
       catch (err)
     {
-        dispatch({type:'add_error', payload:'Something went wrong with registration'});
+        dispatch({type:'entrance_error', payload:'Something went wrong with registration'});
     }
 };
 
 //for update profile V
-// avgExpensesLastThreeMonths ???
-// need to check arrays
-const updateUser = dispatch => async ({addictedStatus, avgExpensesLastThreeMonths, myTarget, maritalStatus, myFixedIncomes, myFixedExpenses}) =>{
 
-    let walletMember = true;
-    let passes = 5;
-    let myWalletMembers =[];
-
-    let walletMemberDto = {
-        maritalStatus,
-        addictedStatus,
-        myTarget,
-        walletMember,
-        myWalletMembers,
-        myFixedExpenses,
-        myFixedIncomes,
-        passes
-    }
+const updateUser = dispatch => async (walletMemberDto) =>{
 
     try {
 
-       dispatch({type: 'add_fixedIncomes', payload: myFixedIncomes});
-       dispatch({type: 'add_fixedExpenses', payload: myFixedExpenses});
         const response = await serverApi.patch('/user', {walletMemberDto});
-        await AsyncStorage.setItem('user', response.data);
+       // await AsyncStorage.setItem('user', response.data);
 
         dispatch({type: 'add_user', payload: response.data});
-        //console.log(myUser);
+        console.log(response.data);
         navigate('dashboard');
 
     }
     catch (err)
     {
-        dispatch({type:'add_error', payload:'Something went wrong with update profile'});
+        dispatch({type:'entrance_error', payload:'Something went wrong with update profile'});
         console.log(this.errorMessage);
 
     }
@@ -147,9 +88,16 @@ const getImageById = dispatch=> ()=>{
 
 */
 
-const addFriend = dispatch=> async ({firstName,lastName,phoneNumber,email,password,confirmPassword})=> {
-    const response = await serverApi.post('/user', {firstName,lastName,phoneNumber,email,password,confirmPassword});
-    dispatch({type: 'add_friend', payload: email});
+const addFriend = dispatch=> async (userId, friendEmail)=> {
+try {
+    console.log(userId+' '+friendEmail)
+    const response = await serverApi.post('/user/addWalletFriend', {userId, friendEmail});
+
+    dispatch({type:'add_friend', payload:response.data});
+}
+catch (e) {
+    dispatch({type:'add_error', payload:'Something went wrong with add friend'});
+}
 
 }
 
@@ -176,66 +124,47 @@ const login = dispatch=> async (email, password)=>{
     //make api request to login with that email and password
     try {
 
-        console.log('check ' +email + ' ' + password);
         const response = await serverApi.post('/user/logIn', {email,password});
-        console.log(response)
-        await AsyncStorage.setItem('email', response.data.email);
         await AsyncStorage.setItem('id', response.data._id);
-        await AsyncStorage.setItem('name',response.data.firstName + ' '+ response.data.lastName);
         dispatch({type: 'add_user', payload: response.data});
-
-        console.log(response.data.firstName + ' '+ response.data.lastName);
-        let name = response.data.firstName + ' '+ response.data.lastName;
-        console.log(name);
-        dispatch({type: 'add_name', payload: name});
-        dispatch({type: 'add_firstName', payload: response.data.firstName});
-        dispatch({type: 'add_lastName', payload: response.data.lastName});
-        dispatch({type: 'add_phoneNumber', payload: response.data.phoneNumber});
-        dispatch({type: 'add_email', payload: response.data.email});
         dispatch({type: 'add_id', payload: response.data._id});
-        console.log(response.data);
         navigate('dashboard');
 
         // ***need to add case of friend****
     }
     catch (err)
     {
-        console.log(email + ' ' + password);
         dispatch({type:'entrance_error', payload:'Wrong email or password'});
-        console.log(err);
     }
 
 };
 
 //for sign out
 const signOut = dispatch=>async ()=>{
-    await AsyncStorage.removeItem('email');
+    await AsyncStorage.removeItem('id');
     dispatch({type: 'signout'});
     navigate('Signin');
 };
 
 //check answer for recovery password
-const verificationPasswordAnswer = dispatch => async ({id, answer}) =>{
+const verificationPasswordAnswer = dispatch => async (email, answer) =>{
     try
     {
-       const response = await serverApi.post('/user', {id, answer});
-       if(response.data)
-        dispatch({type: 'answer_password', payload: response.data})
-        else
-       {
+       const response = await serverApi.post('/user/verificationPasswordAnswer', {email, answer});
+        console.log("answer:" + response.data)
            dispatch({type: 'answer_password', payload: response.data})
-           dispatch({type:'add_error', payload:'Incorrect answer'});
-       }
+            if(!response.data)
+                dispatch({type: 'add_error', payload: 'Wrong answer, try again'})
     }
     catch (e) {
         dispatch({type:'add_error', payload:'Something went wrong'});
     }
 };
 
-const updatePassword = dispatch => async ({userId, newPassword}) => {
+const updatePassword = dispatch => async (email, newPassword) => {
     try
     {
-        const response = await serverApi.post('/user/updatePassword', {userId, newPassword});
+        const response = await serverApi.post('/user/updatePassword', {email, newPassword});
         navigate("Singin");
     }
     catch (e) {
@@ -243,13 +172,26 @@ const updatePassword = dispatch => async ({userId, newPassword}) => {
     }
 };
 
+const getUserByEmail = dispatch => async (email)=>{
+
+    try{
+
+    const response = await serverApi.post('/user/byEmail', {email});
+        dispatch({type: 'add_friend', payload: response.data})
+
+    }
+    catch (e) {
+        dispatch({type:'add_error', payload:'warning'});
+
+    }
+
+
+}
+
 export const {Provider, Context} = createDataContext(
     userReducer,
-    { addUser, updateUser, clearErrorMessage,navigateAccordingKindOfUser, tryLocalSignIn, login, signOut, addFriend,verificationPasswordAnswer,updatePassword },
-    { id: '', firstName: '', lastName:'', email: '', phoneNumber: '', name:'', myUser: {},
-        target:0, myWalletMembers: [], myFixedExpenses: [], myFixedIncomes: [], avgExpenses:0,
-        walletMember: false, friendMember: false,
-        passes:0,
-        errorMessage:''
+    { addUser, updateUser, clearErrorMessage, getUserByEmail,
+        tryLocalSignIn, login, signOut, addFriend,verificationPasswordAnswer,updatePassword },
+    { id: '', myUser: {}, isResetPass: false, errorMessage:'', errorMessagePassword:''
     }
 );

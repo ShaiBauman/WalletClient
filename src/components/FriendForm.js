@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useContext} from 'react';
 import {
     StyleSheet,
     Text,
@@ -10,21 +10,26 @@ import {
 } from 'react-native';
 import { MaterialIcons } from '@expo/vector-icons';
 import { FontAwesome5 } from '@expo/vector-icons';
-
+import {Context as UserContext} from "../context/UserContext";
 
 const FriendForm = ({friend})=>{
+
+    const {getUserByEmail} = useContext(UserContext);
+
 
     const onClickListener = (viewId) => {
         // need to complete !!!
         Alert.alert("Alert", "Button pressed "+viewId);
     };
 
+    const user = getUserByEmail(friend);
+    console.log(user);
     return (
 
             <View style={styles.container}>
                 <View style={styles.box}>
                     <Image style={styles.profileImage} source={{uri: 'https://bootdey.com/img/Content/avatar/avatar6.png'}}/>
-                    <Text style={styles.name}>{friend.firstName=friend.lastName}</Text>
+                    <Text style={styles.name}>{user.firstName+' '+user.lastName}</Text>
                 </View>
                 <View style={styles.buttonContainer}>
                     <TouchableHighlight style={[styles.button, styles.buttonMessage]} onPress={() => onClickListener('message')}>

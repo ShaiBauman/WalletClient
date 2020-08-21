@@ -5,9 +5,12 @@ import {Context as UserContext} from "../context/UserContext";
 import DropDownForm from "../components/DropDownForm";
 import {NavigationEvents} from "react-navigation";
 
-const RegistrationScreen = ()=>{
+const RegistrationScreen = ({navigation})=>{
 
-    const {state, addUser, clearErrorMessage, navigateAccordingKindOfUser} = useContext(UserContext);
+    console.disableYellowBox = true;
+
+
+    const {state, addUser, clearErrorMessage} = useContext(UserContext);
 
     const userTypeState = [
         {value: 'wallet'},
@@ -27,7 +30,6 @@ const RegistrationScreen = ()=>{
 
 
     console.log(yearOfBirth);
-
 
     return(
     <View style={styles.container}>
@@ -119,6 +121,7 @@ const RegistrationScreen = ()=>{
                 style={styles.inputStyle}
                 placeholderTextColor={"#2F4730"}
                 contextMenuHidden={true}
+                keyboardType = 'numeric'
             />
             <NavigationEvents
                 onWillBlur={clearErrorMessage}
@@ -127,8 +130,24 @@ const RegistrationScreen = ()=>{
           <TouchableOpacity
                 title="Sign Up"
                 onPress={()=>{
-                    addUser(firstName,lastName,phoneNumber,email,password,answerPassword,yearOfBirth);
-                    navigateAccordingKindOfUser(userType);
+                    let myUserType = true;
+                    if(userType === 'friend') //the user is friend
+                    {
+                        myUserType = false;
+                    }
+
+                    let userDto = {
+                        "firstName":firstName,
+                        "lastName":lastName,
+                        "email":email,
+                        "password":password,
+                        "answerPassword":answerPassword,
+                        "phoneNumber":phoneNumber,
+                        "yearOfBirth":yearOfBirth,
+                        "walletMember":myUserType
+                    }
+        console.log(userDto)
+        addUser(userDto);
                 }}
                 >
                <Text style={styles.buttonSingUp}>{"Sign up"}</Text>

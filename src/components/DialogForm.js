@@ -9,12 +9,22 @@ import {
     TextInput,
 } from 'react-native-paper';
 
-const DialogForm = ({title, setFunc})=> {
+const DialogForm = ({title, setFunc, myList})=> {
 
         const [isDialogVisible, setIsDialogVisible] = useState(false);
         const [val1, setVal1] = useState('');
         const [val2, setVal2] = useState('');
         const [flag, setFlag] = useState(false);
+
+        const list = myList;
+    const AddItem = (val1, val2, setFunc) =>{
+        const item = {"name": val1, "value": val2};
+        list.push(item);
+        setFunc(list);
+        setVal1('');
+        setVal2('')
+        setIsDialogVisible(false);
+    }
 
 
         return (
@@ -38,7 +48,7 @@ const DialogForm = ({title, setFunc})=> {
                                 />
                                 <TextInput
                                     value={val2}
-                                    onChangeText={text => {setVal2(text), setFunc({title:val1, price:val2})}}
+                                    onChangeText={text => {setVal2(text)}}
                                     autoCorrect={false}
                                     placeholder={"price"}
                                     style={styles.inputStyle}
@@ -47,7 +57,7 @@ const DialogForm = ({title, setFunc})=> {
                                />
                             </Dialog.Content>
                             <Dialog.Actions>
-                                <Button onPress={() => setIsDialogVisible(false)}>Done</Button>
+                                <Button onPress={() => AddItem(val1, val2, setFunc)}>Done</Button>
                             </Dialog.Actions>
                         </Dialog>
                     </Portal>
