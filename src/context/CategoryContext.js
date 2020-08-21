@@ -22,6 +22,7 @@ const getAllCategory = dispatch=> async () => {
 
         //console.log(response.data)
             dispatch({type: 'all_categories', payload: response.data});
+            return response.data;
 
     } catch (err) {
         dispatch({type: 'add_error', payload: 'Something went wrong'});

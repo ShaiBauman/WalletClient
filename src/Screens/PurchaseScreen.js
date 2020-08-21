@@ -5,27 +5,38 @@ import Spacer from "../components/Spacer";
 import DropDownForm from "../components/DropDownForm";
 import { Context as requestContext } from "../context/requestContext";
 import { Context as CategoryContext } from "../context/CategoryContext";
+import { Context as UserContext } from "../context/UserContext";
 
 import { data } from "react-native-chart-kit/data";
 
 
 const PurchaseScreen = ()=>{
+    const userState = useContext(UserContext).state;
     const {state, addReq, getRequestsByPass } = useContext(requestContext);
     const {getAllCategory} = useContext(CategoryContext);
-    const [categories, setCategories] = useState(["aaa"]);
+    const [categories, setCategories] = useState([]);
+    const [subcategories, setSubcategories] = useState([]);
    // const {getAllSubCategory} = useContext(SubCategoryContext);
 
-    console.log(categories);
 
- //   let categories =[];
-    setCategories(getAllCategory());
-    console.log(categories);
-    console.log("a");
-    console.log(getAllCategory().then(data => console.log(data)));
-    console.log("b");
+    if (!categories.length) {
+        let temp ={};
+        getAllCategory().then(function(data){
+            data.forEach(c =>  c.value= c.category);
+            for(let i =0 ;i<data.length;i++){
+                     data[i].subCategory.forEach(c =>  c.value= c.name);
+                     temp[data[i].category] = data[i].subCategory;
+            }
+            setSubcategories(temp);
+            setCategories(data);
+        } );
+    }
+
+
+
     //categories= getAllCategory().map(u => u.name);
     //console.log(categoryState.data);
-    let subcategories =[];
+
     //    for(let i =0 ;i<categoryState.length;i++){
     //     if(categoryState[i].name== categoryState)
     //     subcategories=categoryState[i].subCategory;
@@ -36,13 +47,12 @@ const PurchaseScreen = ()=>{
         {value: "food"},{value: "attraction"}, {value:"Home appliance"},
         {value:"clothing"},{value:"housewares"},{value:"other"}];
 */
-    let necessaryMeasureState =[
-        {value: "NotNecessary"},{value: "littleNecessary"},
-        {value:"midNecessary"},{value:"veryNecessary"}];
-
+    let necessaryMeasureState =[{value: "NotNecessary"},{value: "littleNecessary"},{value: "midNecessary"},
+        {value:"veryNecessary"}];
+    let necessaryMeasureStateEnum ={"NotNecessary":1,"littleNecessary":2,"midNecessary":3,"veryNecessary":4};
 
     const friendConfirmation = [];
-    const emails = state.myUser.myWalletMembers;
+    const emails = userState.myUser.myWalletMembers;
 
         for(let i=0;i<emails.length;i ++){
             friendConfirmation.push({
@@ -63,6 +73,8 @@ const PurchaseScreen = ()=>{
         console.log("func picture");
     };
 
+
+    console.log(subcategories);
     return(
         <View style={styles.container}>
             <Spacer>
@@ -72,7 +84,7 @@ const PurchaseScreen = ()=>{
                 <Spacer>
                     <Text style={styles.textStyle}>Category</Text>
                 <DropDownForm
-                    data={categoryState}
+                    data={categories}
                     title={"Category"}
                     onSubmit={setCategory}
                 />
@@ -81,7 +93,7 @@ const PurchaseScreen = ()=>{
                 <Spacer>
                     <Text style={styles.textStyle}>subCategory</Text>
                     <DropDownForm
-                        data={subcategories}
+                        data={subcategories[category] || []}
                         title={"subCategory"}
                         onSubmit={setSubCategory}
                     />
@@ -140,11 +152,13 @@ const PurchaseScreen = ()=>{
                 </Spacer>
 
             <Spacer>
+
                 <TouchableOpacity
                     onPress={funcPicture}
                 >
                     <Text style={styles.Button}>
                         {"Insert Picture"}</Text>
+
                 </TouchableOpacity>
             </Spacer>
 
@@ -154,16 +168,16 @@ const PurchaseScreen = ()=>{
                         <TouchableOpacity
                             onPress={()=>{
                             const request = {
-                                email: state.myUser.email,
+                                email: userState.myUser.email,
                                 openDate: null,
                                 closedDate:null,
                                 category: category,
                                 subCategory:subCategory,
                                 cost: price,
                                 description: description,
-                                necessity: necessaryMeasure,
+                                necessity: necessaryMeasureStateEnum[necessaryMeasure],
                                 additionalDescription: remark,
-                                pic: string,
+                                pic: null,
                                 friendsConfirmation: friendConfirmation,
                                 confirmationStatus: false,// open ,approved, inProcess;
                                 botScore:null
@@ -172,31 +186,31 @@ const PurchaseScreen = ()=>{
                             }}
                         >
 
-                            <Text style={styles.button}>{"Self-approval"}</Text>
+                            <Text style={styles.button}>{"Send to approval"}</Text>
                         </TouchableOpacity>
 
                         <TouchableOpacity
                             onPress={()=>{
                                 const request = {
-                                    email: state.myUser.email,
+                                    email: userState.myUser.email,
                                     openDate: null,
                                     closedDate:null,
                                     category: category,
                                     subCategory: subCategory,
                                     cost: price,
                                     description: description,
-                                    necessity: necessaryMeasure,
+                                    necessity: necessaryMeasureStateEnum[necessaryMeasure],
                                     additionalDescription: remark,
-                                    pic: string,
-                                    friendsConfirmation: state.myUser.myWalletMembers,
+                                    pic: null,
+                                    friendsConfirmation: userState.myUser.myWalletMembers,
                                     confirmationStatus: false,// open ,approved, inProcess;
                                     botScore:null
                                 }
-                                getRequestsByPass(state.myUser._id, request)
+                                getRequestsByPass(userState.myUser._id, request)
                             }}
                         >
 
-                            <Text style={styles.button}>{"Send to approval"}</Text>
+                            <Text style={styles.button}>{"Self-approval"}</Text>
                         </TouchableOpacity>
 
                     </View>

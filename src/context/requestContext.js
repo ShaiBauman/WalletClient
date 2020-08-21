@@ -239,7 +239,7 @@ catch (err)
 export const {Provider, Context} = createDataContext(
     requestReducer,
     {addReq,updateStatus,addFutureApprovedRequest,getRequestsByConfirmationStatus,howMuchISpentThisMonth,requestsByStatus,
-        requestsByCategory,requestsByCloseDate,requestsByOpenDate,requestsIApprovedToUsers,getRequestById},
+        requestsByCategory,requestsByCloseDate,requestsByOpenDate,requestsIApprovedToUsers,getRequestById, getRequestsByPass},
     { errorMessage:'',successMessage:'',
     }
 );
