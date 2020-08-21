@@ -3,6 +3,8 @@ import { createAppContainer, createSwitchNavigator } from 'react-navigation';
 import { createStackNavigator } from 'react-navigation-stack';
 //import { createBottomTabNavigator } from 'react-navigation-tabs';
 import {Provider as UserProvider} from "./src/context/UserContext";
+import {Provider as RequestProvider} from "./src/context/requestContext";
+import {Provider as CategoryProvider} from "./src/context/CategoryContext";
 import SettingsScreen from "./src/Screens/SettingsScreen";
 import PurchaseScreen from "./src/Screens/PurchaseScreen";
 import SignUpScreen from "./src/Screens/SignUpScreen";
@@ -45,7 +47,7 @@ const navigator = createStackNavigator({
       //}
     },
     {
-        initialRouteName: "Registration",
+        initialRouteName: "makePurchase",
         defaultNavigationOptions: {
             title: "WLT"
         }
@@ -56,10 +58,13 @@ const App = createAppContainer(navigator);
 
 export default ()=>{
   return(
-
-      <UserProvider>
-          <App ref={(navigator)=>{setNavigator(navigator)}}/>
-      </UserProvider>
+      <RequestProvider>
+      <CategoryProvider>
+          <UserProvider>
+              <App ref={(navigator)=>{setNavigator(navigator)}}/>
+          </UserProvider>
+      </CategoryProvider>
+      </RequestProvider>
 
   );
 };

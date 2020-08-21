@@ -3,20 +3,57 @@ import { Text,View, StyleSheet, ScrollView ,TouchableOpacity} from 'react-native
 import { Input,Button} from 'react-native-elements'
 import Spacer from "../components/Spacer";
 import DropDownForm from "../components/DropDownForm";
-import { Context as requestContext } from "../context/UserContext";
+import { Context as requestContext } from "../context/requestContext";
+import { Context as CategoryContext } from "../context/CategoryContext";
+
+import { data } from "react-native-chart-kit/data";
 
 
 const PurchaseScreen = ()=>{
-    const {state, updateReq } = useContext(requestContext);
+    const {state, addReq, getRequestsByPass } = useContext(requestContext);
+    const {getAllCategory} = useContext(CategoryContext);
+    const [categories, setCategories] = useState(["aaa"]);
+   // const {getAllSubCategory} = useContext(SubCategoryContext);
 
-    let categoryState =[
+    console.log(categories);
+
+ //   let categories =[];
+    setCategories(getAllCategory());
+    console.log(categories);
+    console.log("a");
+    console.log(getAllCategory().then(data => console.log(data)));
+    console.log("b");
+    //categories= getAllCategory().map(u => u.name);
+    //console.log(categoryState.data);
+    let subcategories =[];
+    //    for(let i =0 ;i<categoryState.length;i++){
+    //     if(categoryState[i].name== categoryState)
+    //     subcategories=categoryState[i].subCategory;
+    // }
+    //
+    // console.log(subcategoryState);
+   /* let subCategoryState =[
         {value: "food"},{value: "attraction"}, {value:"Home appliance"},
         {value:"clothing"},{value:"housewares"},{value:"other"}];
+*/
     let necessaryMeasureState =[
         {value: "NotNecessary"},{value: "littleNecessary"},
         {value:"midNecessary"},{value:"veryNecessary"}];
 
+
+    const friendConfirmation = [];
+    const emails = state.myUser.myWalletMembers;
+
+        for(let i=0;i<emails.length;i ++){
+            friendConfirmation.push({
+                "email":emails[i],
+                "confirm":false
+            })
+        }
+
+
     const [category,setCategory]=useState('');
+    const [subCategory,setSubCategory]=useState('');
     const [necessaryMeasure,setNecessaryMeasure]=useState('');
     const [description,setDescription]=useState('');
     const [price,setPrice]=useState(0);
@@ -40,6 +77,16 @@ const PurchaseScreen = ()=>{
                     onSubmit={setCategory}
                 />
                 </Spacer>
+
+                <Spacer>
+                    <Text style={styles.textStyle}>subCategory</Text>
+                    <DropDownForm
+                        data={subcategories}
+                        title={"subCategory"}
+                        onSubmit={setSubCategory}
+                    />
+                </Spacer>
+
 
                 <Spacer>
                     <Text style={styles.textStyle}>Describe your product</Text>
@@ -105,14 +152,48 @@ const PurchaseScreen = ()=>{
                     <View style={styles.buttonContainer}>
 
                         <TouchableOpacity
-                            onPress={()=>updateReq(price)}
+                            onPress={()=>{
+                            const request = {
+                                email: state.myUser.email,
+                                openDate: null,
+                                closedDate:null,
+                                category: category,
+                                subCategory:subCategory,
+                                cost: price,
+                                description: description,
+                                necessity: necessaryMeasure,
+                                additionalDescription: remark,
+                                pic: string,
+                                friendsConfirmation: friendConfirmation,
+                                confirmationStatus: false,// open ,approved, inProcess;
+                                botScore:null
+                            }
+                                addReq(request)
+                            }}
                         >
 
                             <Text style={styles.button}>{"Self-approval"}</Text>
                         </TouchableOpacity>
 
                         <TouchableOpacity
-                           // onPress={()=>updateReq(category, necessaryMeasure, description,price, remark)}
+                            onPress={()=>{
+                                const request = {
+                                    email: state.myUser.email,
+                                    openDate: null,
+                                    closedDate:null,
+                                    category: category,
+                                    subCategory: subCategory,
+                                    cost: price,
+                                    description: description,
+                                    necessity: necessaryMeasure,
+                                    additionalDescription: remark,
+                                    pic: string,
+                                    friendsConfirmation: state.myUser.myWalletMembers,
+                                    confirmationStatus: false,// open ,approved, inProcess;
+                                    botScore:null
+                                }
+                                getRequestsByPass(state.myUser._id, request)
+                            }}
                         >
 
                             <Text style={styles.button}>{"Send to approval"}</Text>
