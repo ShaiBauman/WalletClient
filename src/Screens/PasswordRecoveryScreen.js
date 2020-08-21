@@ -5,7 +5,7 @@ import {Context as UserContext} from "../context/UserContext";
 import {NavigationEvents} from "react-navigation";
 
 
-const PasswordRecoveryScreen = ()=>
+const PasswordRecoveryScreen = ({props})=>
 {
 
     const {state, clearErrorMessage, verificationPasswordAnswer,updatePassword} = useContext(UserContext);
@@ -13,15 +13,34 @@ const PasswordRecoveryScreen = ()=>
     const [passwordRecoveryAnswer, setPasswordRecoveryAnswer] = useState('');
     const [email, setEmail] = useState('');
 
-    let flag = false;
-    const isAnswerCorrect = (email, answer) => {
-        if (verificationPasswordAnswer(email, answer)) {
-            flag = true;
+    let changeAnswer = []
 
+    const isAnswerCorrect = (email) => {
+        if(state.isResetPass){
+            changeAnswer.push(
+                <TextInput
+                    autoCapitalize="none"
+                    placeholder="Insert new password"
+                    value={password}
+                    onChangeText={setPassword}
+                    autoCorrect={false}
+                    selectionColor={"red"}
+                    style={styles.inputStyle}
+                    placeholderTextColor={"#2F4730"}
+                    contextMenuHidden={true}/>
+            )
+            changeAnswer.push(
+                <TouchableOpacity
+                    title="Confirm"
+                    onPress={updatePassword(email, password)}
+                >
+                    <Text style={styles.buttonSingUp}>{"Confirm"}</Text>
+                </TouchableOpacity>
+            )
+        } else {
+            changeAnswer = []
         }
-        console.log(flag);
     }
-
     return(
         <View style={styles.container}>
             <NavigationEvents
@@ -52,32 +71,14 @@ const PasswordRecoveryScreen = ()=>
                 />
                 <TouchableOpacity
                     title="Continue"
-                    onPress={isAnswerCorrect(email,passwordRecoveryAnswer)}>
+                    onPress={() => {
+                        verificationPasswordAnswer(email, passwordRecoveryAnswer)
+                        isAnswerCorrect(email)}}>
                     <Text style={styles.buttonSingUp}>{"Continue"}</Text>
                 </TouchableOpacity>
-
-            {state.errorMessage ?
-                (<Text style={styles.errorMessage}>{state.errorMessage}</Text>)
-                :null}
-            {flag ? ( <TextInput
-                autoCapitalize="none"
-                placeholder="Insert new password"
-                value={password}
-                onChangeText={setPassword}
-                autoCorrect={false}
-                selectionColor={"red"}
-                style={styles.inputStyle}
-                placeholderTextColor={"#2F4730"}
-                contextMenuHidden={true}
-                />) :null}
-            {flag ? (<TouchableOpacity
-                title="Confirm"
-                onPress={updatePassword(email, password)}
-            >
-                <Text style={styles.buttonSingUp}>{"Confirm"}</Text>
-            </TouchableOpacity>)
-                : null}
-        </View>
+            {console.log(changeAnswer)}
+            {changeAnswer}
+             </View>
       );
 };
 

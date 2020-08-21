@@ -17,11 +17,11 @@ const IndexWalletScreen = ()=>{
      ;
     return(
         <Card>
-            <Card.Title title={state.myUser.firstName} subtitle={'email: '+state.email} left={LeftContent} />
+            <Card.Title title={state.myUser.firstName+' '+state.myUser.lastName} subtitle={'email: '+state.myUser.email} left={LeftContent} />
             <Card.Cover source={{ uri: 'https://picsum.photos/700' }} />
             <Card.Content>
                 <Title style={{textAlign:"center"}}>My Target</Title>
-                <Paragraph style={{textAlign:"center"}}>{"target"}</Paragraph>
+                <Paragraph style={{textAlign:"center"}}>{state.myUser.target}</Paragraph>
             </Card.Content>
 
             <Card.Actions style={{padding:20, textAlign:"left"}}>

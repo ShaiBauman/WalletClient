@@ -1,14 +1,13 @@
 import React, {useState, useContext} from 'react';
-import {View, StyleSheet, Text, TouchableOpacity} from 'react-native'
-import {Button, Paragraph, Menu, Divider, Provider, Portal, Modal} from 'react-native-paper';
+import {View, StyleSheet, TouchableOpacity} from 'react-native'
+import { Menu, Divider} from 'react-native-paper';
 import {FontAwesome} from "@expo/vector-icons";
-import { NavigationActions } from 'react-navigation';
 import {Context as UserContext} from "../context/UserContext";
 
 const MyMenu = ({navigation, children})=>{
 
     const [visible,setVisible] = useState( false );
-    const {state, logOut} = useContext(UserContext);
+    const {state, signOut} = useContext(UserContext);
 
 
 
@@ -34,7 +33,7 @@ const MyMenu = ({navigation, children})=>{
                     <Menu.Item onPress={() => {navigation.navigate('Settings')}} title="Settings" />
                     <Menu.Item onPress={() => {navigation.navigate('indexFriend')}} title="Change to Friend" />
                     <Divider />
-                    <Menu.Item onPress={()=>{navigation.navigate('Signin'), logOut}} title="Log Out" />
+                    <Menu.Item onPress={()=>{signOut}} title="Log Out" />
 
                 </Menu>
                </View>

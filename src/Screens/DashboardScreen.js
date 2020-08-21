@@ -12,8 +12,10 @@ import SignInScreen from "./SignInScreen";
 
 const DashboardScreen = ({navigation})=>{
 
+    console.disableYellowBox = true;
+
     const {state} = useContext(UserContext);
-    const [visible,setVisible] = useState( false );
+    //const [visible,setVisible] = useState( false );
 
 
     const card = el => {

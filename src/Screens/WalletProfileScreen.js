@@ -8,6 +8,8 @@ import DialogForm from "../components/DialogForm";
 
 const WalletProfileScreen = (navigation)=>{
 
+    console.disableYellowBox = true;
+
     const {state, updateUser } = useContext(UserContext);
 
 
@@ -18,12 +20,11 @@ const WalletProfileScreen = (navigation)=>{
     const [avgExpensesLastThreeMonths, setAvgExpensesLastThreeMonths] = useState(0);
     const [maritalStatus, setMaritalStatus] = useState('');
     const [addictedStatus, setAddictedStatus] = useState(addictedStatus);
-    const [fixedIncomes, setFixedIncomes] = useState();
-    const [fixedExpenses, setFixedExpenses] = useState();
-    const fixedIncomesState=state.myUser.myFixedIncomes;
-    const fixedExpensesState=state.myUser.myFixedExpenses;
+    const [fixedIncomes, setFixedIncomes] = useState(state.myUser.myFixedIncomes);
+    const [fixedExpenses, setFixedExpenses] = useState(state.myUser.myFixedExpenses);
 
-const AddItem = (item, setFunc) =>{
+
+const AddItem = (item, item2, setFunc) =>{
 
     setFunc(item.concat(setFunc));
 }
@@ -83,10 +84,12 @@ const AddItem = (item, setFunc) =>{
                 <DialogForm
                     title={"Edit Fixed Expenses"}
                     setFunc={setFixedExpenses}
+                    myList={fixedExpenses}
                 />
                 <DialogForm
                     title={"Edit Fixed Income"}
                     setFunc={setFixedIncomes}
+                    myList={fixedIncomes}
                 />
             </ScrollView>
 
@@ -104,6 +107,7 @@ const AddItem = (item, setFunc) =>{
                     console.log(maritalStatusScore)
 
                     const walletMemberDto={
+                           "id": state.id,
                         "maritalStatus":maritalStatusScore,
                         "addictedStatus":addictedStatus,
                         "myTarget":target,
@@ -113,9 +117,9 @@ const AddItem = (item, setFunc) =>{
                         "myFixedIncomes":fixedIncomes,
                         "passes":addictedStatus
                     }
+                       console.log(walletMemberDto)
                     updateUser(walletMemberDto)
-                    navigation.navigate('dashboard')
-                }}
+                   }}
             >
                 <Text style={styles.buttonGoOn}>{"Go On!"}</Text>
             </TouchableOpacity>

@@ -7,7 +7,10 @@ import {NavigationEvents} from "react-navigation";
 
 const RegistrationScreen = ({navigation})=>{
 
-    const {addUser, clearErrorMessage} = useContext(UserContext);
+    console.disableYellowBox = true;
+
+
+    const {state, addUser, clearErrorMessage} = useContext(UserContext);
 
     const userTypeState = [
         {value: 'wallet'},
@@ -118,6 +121,7 @@ const RegistrationScreen = ({navigation})=>{
                 style={styles.inputStyle}
                 placeholderTextColor={"#2F4730"}
                 contextMenuHidden={true}
+                keyboardType = 'numeric'
             />
             <NavigationEvents
                 onWillBlur={clearErrorMessage}
@@ -127,7 +131,7 @@ const RegistrationScreen = ({navigation})=>{
                 title="Sign Up"
                 onPress={()=>{
                     let myUserType = true;
-                    if(userType === 'wallet') //the user is a wallet only
+                    if(userType === 'friend') //the user is friend
                     {
                         myUserType = false;
                     }
@@ -140,7 +144,7 @@ const RegistrationScreen = ({navigation})=>{
                         "answerPassword":answerPassword,
                         "phoneNumber":phoneNumber,
                         "yearOfBirth":yearOfBirth,
-                        "myUserType":myUserType
+                        "walletMember":myUserType
                     }
         console.log(userDto)
         addUser(userDto);

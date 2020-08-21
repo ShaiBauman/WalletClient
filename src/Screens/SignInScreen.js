@@ -7,7 +7,7 @@ import NavLink from "../components/NavLink";
 
 
 const SignInScreen = ()=>{
-    const {login, clearErrorMessage } = useContext(UserContext);
+    const {state, login, clearErrorMessage } = useContext(UserContext);
 
     console.disableYellowBox = true;
 
