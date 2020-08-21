@@ -1,30 +1,48 @@
-import React, { useState } from 'react';
+import React, {useContext, useState} from 'react';
 import {View, StyleSheet, Text, Button} from 'react-native';
 import { CreditCardInput } from "react-native-credit-card-input";
+import {Context as UserContext} from "../context/UserContext";
+import {Context as FinancialContext} from "../context/FinancialContext";
 
 const AddCreditCard = ({navigation})=>{
-    const [isValid, setIsValid] = useState(false);
-    const _saveCreditCard = function () {
-        // TODO: Add credit card to db
-        navigation.goBack();
-    };
-    this.data = {};
 
-    this._onChange = (form)=> {
+    const userState = useContext(UserContext).state;
+    const {addCreditCard, getLastDigitsCreditCard} = useContext(FinancialContext);
+    const financialState = useContext(FinancialContext).state;
+
+    const [isValid, setIsValid] = useState(false);
+    const [data, setData] = useState({});
+
+    getLastDigitsCreditCard(userState.id);
+
+    const _onChange = (form)=> {
         setIsValid(form.valid);
         if (form.valid) {
-            this.values = form.values;
+            setData(form.values);
         }
     };
+
+    const _saveCreditCard = function (data) {
+        addCreditCard(userState.id, data.number, data.expiry, data.cvc, data.type);
+        navigation.goBack();
+    };
+
+    const lastDigits = financialState && financialState.lastDigits;
+    let lastDigitsText ='';
+    if (lastDigits) {
+        lastDigitsText = <Text style={{fontSize: 18}}>Your saved credit card ends in {lastDigits}</Text>
+    }
 
     return(
         <View style={styles.container}>
             <Text style={{fontSize:24}}>Add Credit Card</Text>
-            <CreditCardInput onChange={this._onChange} />
+            {lastDigitsText}
+
+            <CreditCardInput onChange={_onChange} />
             <Button   title="Save"
                       color="#841584"
                       disabled={!isValid}
-                      onPress={_saveCreditCard}/>
+                      onPress={()=>_saveCreditCard(data)}/>
 
         </View>
     );
