@@ -6,11 +6,12 @@ import {navigate} from "../navigationRef";
 const requestReducer = (state, action)=>{
     switch(action.type)
     {
+        case 'get_all_requests':
+            return {...state, allRequests: action.payload};
         case 'add_error':
             return {...state, errorMessage: action.payload};
         case 'add_success_message':
             return {...state, errorMessage: action.payload};
-
         default:
             return state;
     }
@@ -69,13 +70,11 @@ const addFutureApprovedRequest = dispatch=> async ({email,openDate,closedDate,ca
 
 
 
-    const getAllRequests = dispatch=> async (userType,confirmationStatus,email)=>{
+    const getAllRequests = dispatch=> async (userType,email)=>{
 
         try {
-            const response = await serverApi.post('/request', {userType,confirmationStatus,email});
-
-        if(response.data !== null)
-            return response.data;
+            const response = await serverApi.post('/request/all', {userType, email});
+            dispatch({type:'get_all_requests', payload: response.data})
         }
         catch (err)
         {

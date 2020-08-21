@@ -6,6 +6,8 @@ import { ProgressSteps, ProgressStep } from 'react-native-progress-steps';
 
 const BotGenerator = ({ navigation }) => {
 
+    const req = navigation.getParam('req');
+
     const { state, getBotQuest } = useContext(BotContext)
 
     useEffect(() => {
@@ -31,7 +33,7 @@ const BotGenerator = ({ navigation }) => {
     }
 
     const onSubmitSteps = () => {
-        navigation.navigate("Result", {"mainParams": mainParams})
+        navigation.navigate("Result", {"mainParams": mainParams, "req": req})
     };
 
     const progressStepsStyle = {

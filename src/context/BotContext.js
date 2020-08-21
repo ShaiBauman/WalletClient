@@ -49,6 +49,7 @@ const getBotQuest = dispatch => {
 const getMLStatus = dispatch => async (req_id, email, botScore) => {
     try {
       const response = await MLGetter.post('/req', {req_id: req_id, email: email, botScore: botScore})
+      console.log("response" + response.data)
       dispatch({ type: 'get_ml_status', payload: response.data })
     } catch (e)
     {

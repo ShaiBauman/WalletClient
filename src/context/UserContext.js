@@ -121,8 +121,10 @@ const tryLocalSignIn = dispatch => async ()=>
 // for Login V
 const login = dispatch=> async (email, password)=>{
     //make api request to login with that email and password
-    email = "fake2@gmail.com"
-    password = "123456"
+    if (email === "") {
+        email = "fake8@gmail.com"
+        password = "123456"
+    }
     try {
 
         const response = await serverApi.post('/user/logIn', {email,password});

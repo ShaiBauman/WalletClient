@@ -39,7 +39,7 @@ const DashboardScreen = ({navigation})=>{
                 return navigation.navigate('walletFriends');
 
             case 'Transactions':
-                return navigation.navigate('transactions');
+                return navigation.navigate('openReqs');
         }
     };
 

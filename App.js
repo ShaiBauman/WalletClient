@@ -21,9 +21,10 @@ import TransactionScreen from "./src/Screens/TransactionsScreen";
 import FriendsScreen from "./src/Screens/FriendsScreen";
 import AssistanceStatisticsScreen from "./src/Screens/AssistanceStatisticsScreen";
 import PasswordRecoveryScreen from "./src/Screens/PasswordRecoveryScreen";
-import IndexScreen from "./src/Screens/IndexScreen";
 import BotGenerator from "./src/Screens/BotGenerator";
 import ResultScreen from "./src/Screens/ResultScreen";
+import OpenRequests from "./src/Screens/OpenRequests";
+import FullRequest from "./src/Screens/FullRequest";
 
 
 const navigator = createStackNavigator({
@@ -47,9 +48,10 @@ const navigator = createStackNavigator({
         transactions: TransactionScreen,
         walletFriends: FriendsScreen,
         //}
-        Index: IndexScreen,
         Generator: BotGenerator,
-        Result: ResultScreen
+        Result: ResultScreen,
+        openReqs: OpenRequests,
+        FullR: FullRequest
     },
     {
         initialRouteName: 'SignIn',
