@@ -58,13 +58,13 @@ if (!lastDigits) {
 
 
     const tableData = {
-        tableHead: ['Open Date','Close Date','Description', 'Category', 'Cost', 'Necessity', 'Approval Status'
+        tableHead: ['Open Date','Close Date','Description', 'Category', 'Cost', 'Necessity', 'Use Bot', 'Approval Status'
         ],
         tableData: [
-            ['8/8/19','10/8/19','1', '2', '3', '4','5f3d48d1ba9e753ae8b1c012'],
-            ['8/8/19','10/8/19','a', 'b', 'c', 'd','e'],
-            ['8/8/19','10/8/19','1', '2', '3', '789','10'],
-            ['8/8/19','10/8/19','a', 'b', 'c', 'd','s']
+            ['8/8/19','10/8/19','1', '2', '3', '4', '2'],
+            ['8/8/19','10/8/19','a', 'b', 'c', 'd', 'e'],
+            ['8/8/19','10/8/19','1', '2', '3', '789', '10'],
+            ['8/8/19','10/8/19','a', 'b', 'c', 'd', 's']
         ]
     };
 
