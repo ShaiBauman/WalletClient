@@ -4,6 +4,7 @@ import {Text, Input,  Slider} from "react-native-elements";
 import DropDownForm from "../components/DropDownForm";
 import {Context as UserContext} from "../context/UserContext";
 import DialogForm from "../components/DialogForm";
+import {Portal, Provider} from "react-native-paper";
 
 
 const WalletProfileScreen = (navigation)=>{
@@ -34,6 +35,8 @@ const AddItem = (item, item2, setFunc) =>{
     console.log(fixedExpenses);
 
     return(
+        <Provider>
+            <Portal>
         <View style={styles.container}>
             <Text style={styles.header}>My Profile</Text>
             <ScrollView>
@@ -125,6 +128,8 @@ const AddItem = (item, item2, setFunc) =>{
             </TouchableOpacity>
 
         </View>
+            </Portal>
+        </Provider>
     );
 };
 

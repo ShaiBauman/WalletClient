@@ -10,7 +10,7 @@ import MyMenu from "../components/MyMenu";
 import { Ionicons } from '@expo/vector-icons';
 
 const IndexFriendScreen = ({navigation})=>{
-    const {state:{firstName,lastName}}=useContext(UserContext);
+    const {state}=useContext(UserContext);
 
     const [requestsStatus,setRequestsStatus] = useState('All');
     const [friendName ,setFriendName] = useState('All');
@@ -64,8 +64,8 @@ return(
 
 
 
-
-        <Text style={styles.titleText}>Hello {firstName} {lastName},</Text>
+        <MyMenu navigation={navigation}/>
+        <Text style={styles.titleText}>Hello {state.myUser.firstName+' '+state.myUser.lastName},</Text>
         <Text style={styles.subTitle}> Open Requests</Text>
         <Table borderStyle={{borderWidth: 2, borderColor: '#2F4730'}}>
 
@@ -93,7 +93,7 @@ return(
         </Spacer>
         <Spacer>
             <Text style={styles.subTitle}> My relief segmentation</Text>
-<View style={{ flexDirection: 'row',alignSelf:'center'}}>
+            <View style={{ flexDirection: 'row',alignSelf:'center'}}>
             <TouchableOpacity style={styles.statistics}
                               onPress={()=>{navigation.navigate('assistanceStatistics')}}
             >

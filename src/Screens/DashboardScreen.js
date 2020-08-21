@@ -17,6 +17,7 @@ const DashboardScreen = ({navigation})=>{
     const {state} = useContext(UserContext);
     //const [visible,setVisible] = useState( false );
 
+  console.log(state.myUser.firstName)
 
     const card = el => {
         console.log('Card: ' + el.name)
@@ -55,10 +56,10 @@ const DashboardScreen = ({navigation})=>{
 
 
     return(
+
     <Provider>
     <Portal>
         <View style={styles.container}>
-
             <MyMenu navigation={navigation}/>
             <Text style={styles.header}>Hello {state.myUser.firstName + ' '+ state.myUser.lastName}</Text>
          <View style={styles.container}>

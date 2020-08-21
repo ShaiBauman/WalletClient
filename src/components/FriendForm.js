@@ -6,8 +6,7 @@ import {
     TouchableHighlight,
     Image,
     Alert,
-    ScrollView,
-} from 'react-native';
+    } from 'react-native';
 import { MaterialIcons } from '@expo/vector-icons';
 import { FontAwesome5 } from '@expo/vector-icons';
 import {Context as UserContext} from "../context/UserContext";
@@ -16,14 +15,13 @@ const FriendForm = ({friend})=>{
 
     const {getUserByEmail} = useContext(UserContext);
 
-
     const onClickListener = (viewId) => {
         // need to complete !!!
         Alert.alert("Alert", "Button pressed "+viewId);
     };
 
     const user = getUserByEmail(friend);
-    console.log(user);
+    console.log(JSON.stringify(user))
     return (
 
             <View style={styles.container}>
@@ -52,12 +50,12 @@ const styles = StyleSheet.create({
         flex: 1,
     },
     container:{
-        padding:20,
+        padding:40,
 
     },
     box: {
         marginTop:5,
-        backgroundColor: 'white',
+        backgroundColor: '#2F4730',
         alignItems: 'center',
         shadowColor: 'black',
         shadowOpacity: .2,
@@ -81,7 +79,9 @@ const styles = StyleSheet.create({
         fontSize:20,
         marginBottom:5,
         fontWeight: 'bold',
-        color: 'black',
+        color: '#CEB386',
+        textAlign: 'center',
+
     },
     buttonContainer:{
         flexDirection:'row',

@@ -23,7 +23,9 @@ const userReducer = (state, action)=>{
         case 'answer_password':
             return {...state, isResetPass:action.payload};
         case 'add_friend':
-            return action.payload;
+            return { ...state, myFriends: [...state.myFriends, action.payload] };
+        case 'add_myFriends':
+            return {...state, myFriends: action.payload}
         case 'signin':
             return {errorMessage: '', id: action.payload};
         default:
@@ -39,7 +41,7 @@ const addUser = dispatch=> async (userDto)=>{
 
     try {
         const response = await serverApi.post('/user/signIn', {userDto});
-        await AsyncStorage.setItem('id', response.data,_id);
+        await AsyncStorage.setItem('id', response.data._id);
         console.log(response.data + ' check');
         dispatch({type: 'add_user', payload: response.data});
         dispatch({type: 'add_id', payload: response.data._id});
@@ -67,8 +69,6 @@ const updateUser = dispatch => async (walletMemberDto) =>{
     try {
 
         const response = await serverApi.patch('/user', {walletMemberDto});
-       // await AsyncStorage.setItem('user', response.data);
-
         dispatch({type: 'add_user', payload: response.data});
         console.log(response.data);
         navigate('dashboard');
@@ -95,7 +95,8 @@ try {
     console.log(userId+' '+friendEmail)
     const response = await serverApi.post('/user/addWalletFriend', {userId, friendEmail});
 
-    dispatch({type:'add_friend', payload:response.data});
+    dispatch({type: 'add_user', payload: response.data});
+
 }
 catch (e) {
     dispatch({type:'add_error', payload:'Something went wrong with add friend'});
@@ -127,11 +128,14 @@ const tryLocalSignIn = dispatch => async ()=>
 const login = dispatch=> async (email, password)=>{
     //make api request to login with that email and password
     try {
-
+        email = "shai.bauman@gmail.com";
+        password = '123456'
         const response = await serverApi.post('/user/logIn', {email,password});
         await AsyncStorage.setItem('id', response.data._id);
         dispatch({type: 'add_user', payload: response.data});
         dispatch({type: 'add_id', payload: response.data._id});
+        dispatch({type: 'add_myFriends', payload: response.data.myWalletMembers});
+
         navigate('dashboard');
 
         // ***need to add case of friend****
@@ -181,8 +185,7 @@ const getUserByEmail = dispatch => async (email)=>{
     try{
 
     const response = await serverApi.post('/user/byEmail', {email});
-        dispatch({type: 'add_friend', payload: response.data})
-
+    dispatch({type: 'add_friend', payload: response.data})
     }
     catch (e) {
         dispatch({type:'add_error', payload:'warning'});
@@ -213,6 +216,6 @@ export const {Provider, Context} = createDataContext(
     userReducer,
     { addUser, updateUser, clearErrorMessage, getUserByEmail,
         tryLocalSignIn, login, signOut, addFriend,verificationPasswordAnswer,updatePassword },
-    { id: '', myUser: {}, isResetPass: false, errorMessage:'', errorMessagePassword:''
+    { id: '', myUser: {}, isResetPass: false, errorMessage:'', errorMessagePassword:'',myFriends:[]
     }
 );
