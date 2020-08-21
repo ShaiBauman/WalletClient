@@ -5,6 +5,7 @@ import { createStackNavigator } from 'react-navigation-stack';
 import {Provider as UserProvider} from "./src/context/UserContext";
 import {Provider as RequestContext} from "./src/context/requestContext";
 import {Provider as FinancialProvider} from "./src/context/FinancialContext";
+import { Provider as BotContext} from './src/context/BotContext';
 import SettingsScreen from "./src/Screens/SettingsScreen";
 import PurchaseScreen from "./src/Screens/PurchaseScreen";
 import SignInScreen from "./src/Screens/SignInScreen";
@@ -20,35 +21,43 @@ import TransactionScreen from "./src/Screens/TransactionsScreen";
 import FriendsScreen from "./src/Screens/FriendsScreen";
 import AssistanceStatisticsScreen from "./src/Screens/AssistanceStatisticsScreen";
 import PasswordRecoveryScreen from "./src/Screens/PasswordRecoveryScreen";
+import BotGenerator from "./src/Screens/BotGenerator";
+import ResultScreen from "./src/Screens/ResultScreen";
+import OpenRequests from "./src/Screens/OpenRequests";
+import FullRequest from "./src/Screens/FullRequest";
 
 
 const navigator = createStackNavigator({
-    //  loginFlow: {
-        Signin: SignInScreen,
+        //  loginFlow: {
+        SignIn: SignInScreen,
         PasswordRecovery: PasswordRecoveryScreen,
         Registration: RegistrationScreen,
         Profile: WalletProfileScreen,
-      //},
-      //walletMainFlow: {
+        //},
+        //walletMainFlow: {
         indexWallet: IndexWalletScreen,
         makePurchase: PurchaseScreen,
         addCreditCard: AddCreditCard,
         Settings: SettingsScreen,
-      //},
-      //friendMainFlow: {
+        //},
+        //friendMainFlow: {
         indexFriend: IndexFriendScreen,
         dashboard: DashboardScreen,
-       assistanceStatistics:AssistanceStatisticsScreen,
-     statistics: StatisticsScreen,
-    transactions: TransactionScreen,
-    walletFriends: FriendsScreen
-      //}
+        assistanceStatistics: AssistanceStatisticsScreen,
+        statistics: StatisticsScreen,
+        transactions: TransactionScreen,
+        walletFriends: FriendsScreen,
+        //}
+        Generator: BotGenerator,
+        Result: ResultScreen,
+        openReqs: OpenRequests,
+        FullR: FullRequest
     },
     {
-        initialRouteName: "Signin",
+        initialRouteName: 'SignIn',
         defaultNavigationOptions: {
-            title: "WLT"
-        }
+            title: 'Wall-Let App',
+        },
     }
 );
 
@@ -56,13 +65,15 @@ const App = createAppContainer(navigator);
 
 export default ()=>{
   return(
-<RequestContext>
-      <UserProvider>
-          <FinancialProvider>
-            <App ref={(navigator)=>{setNavigator(navigator)}}/>
-          </FinancialProvider>
-      </UserProvider>
-</RequestContext>
+      <BotContext>
+            <RequestContext>
+                  <UserProvider>
+                      <FinancialProvider>
+                        <App ref={(navigator)=>{setNavigator(navigator)}}/>
+                      </FinancialProvider>
+                  </UserProvider>
+            </RequestContext>
+      </BotContext>
   );
 };
 
