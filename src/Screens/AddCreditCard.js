@@ -8,12 +8,14 @@ const AddCreditCard = ({navigation})=>{
 
     const userState = useContext(UserContext).state;
     const {addCreditCard, getLastDigitsCreditCard} = useContext(FinancialContext);
-    const financialState = useContext(FinancialContext).state;
 
     const [isValid, setIsValid] = useState(false);
     const [data, setData] = useState({});
+    const [lastDigits, setLastDigits ] = useState('');
 
-    getLastDigitsCreditCard(userState.id);
+    if(!lastDigits) {
+        getLastDigitsCreditCard(userState.id).then(data => setLastDigits(data));
+    }
 
     const _onChange = (form)=> {
         setIsValid(form.valid);
@@ -27,8 +29,7 @@ const AddCreditCard = ({navigation})=>{
         navigation.goBack();
     };
 
-    const lastDigits = financialState && financialState.lastDigits;
-    let lastDigitsText ='';
+    let lastDigitsText =<Text></Text>;
     if (lastDigits) {
         lastDigitsText = <Text style={{fontSize: 18}}>Your saved credit card ends in {lastDigits}</Text>
     }
