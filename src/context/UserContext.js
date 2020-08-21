@@ -178,6 +178,7 @@ const login = dispatch=> async (email, password)=>{
 
         console.log('check ' +email + ' ' + password);
         const response = await serverApi.post('/user/logIn', {email,password});
+        console.log(response)
         await AsyncStorage.setItem('email', response.data.email);
         await AsyncStorage.setItem('id', response.data._id);
         await AsyncStorage.setItem('name',response.data.firstName + ' '+ response.data.lastName);
