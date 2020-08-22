@@ -73,7 +73,7 @@ const FullRequest = ({ navigation }) => {
             <Text style={styles.SubSubTitle}> {"Additional Description : "+req.additionalDescription} </Text>
 
             <Spacer>
-                {req.confirmationStatus === 2 ? element : null}
+                {req.confirmationStatus == 0 ? element : null}
                 {state.errorMessage ?
                     (<Text style={styles.errorMessage}>{state.errorMessage}</Text>)
                     :null}
