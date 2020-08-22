@@ -11,21 +11,23 @@ const requestReducer = (state, action)=>{
         case 'add_success_message':
             return {...state, errorMessage: action.payload};
         case 'howMuchISpentThisMonth':
-            return action.payload;
+            return {...state,requests:action.payload};
         case 'requestsByStatus':
-            return action.payload;
+            return {...state,requests:action.payload};
         case 'requestsByCloseDate':
-            return action.payload;
+            return {...state,requests:action.payload};
         case 'requestsByOpenDate':
-            return action.payload;
+            return {...state,requests:action.payload};
         case 'requestsByCategory':
-            return action.payload;
+            return {...state,requests:action.payload};
         case 'requestsIApprovedToUsers':
-            return action.payload;
+            return {...state,requests:action.payload};
         case 'getRequestById':
-            return action.payload;
+            return {...state,requests:action.payload};
         case 'getRequestsByConfirmationStatus':
-            return action.payload;
+            return {...state,requests:action.payload};
+        case 'get_all_requests':
+            return {...state, allRequests: action.payload};
 
         default:
             return state;
@@ -135,6 +137,8 @@ const getRequestsByPass=dispatch=>async (userId,request)=>{
  /////////////////////////****************************
 
 ///????????????????????????????????????
+
+
 
 
 const requestsIApprovedToUsers = dispatch=> async (myEmail,userType,confirmationStatus)=>{// my email= friend member
@@ -265,6 +269,17 @@ const deleteRequest = dispatch=> async (id)=>{
         dispatch({type:'add_error', payload:'Something went wrong with add request'});
     }
 };
+const getAllRequests = dispatch=> async (userType,email)=>{
+
+    try {
+        const response = await serverApi.post('/request/all', {userType, email});
+        dispatch({type:'get_all_requests', payload: response.data})
+    }
+    catch (err)
+    {
+        dispatch({type:'add_error', payload:'Something went wrong with get all requests'});
+    }
+};
 
 /*
 //for friend member
@@ -287,7 +302,7 @@ catch (err)
 export const {Provider, Context} = createDataContext(
     requestReducer,
     {addReq,updateStatus,addFutureApprovedRequest,getRequestsByConfirmationStatus,howMuchISpentThisMonth,requestsByStatus,
-        requestsByCategory,requestsByCloseDate,requestsByOpenDate,requestsIApprovedToUsers,getRequestById, getRequestsByPass},
+        requestsByCategory,updateRequest,deleteRequest,requestsByCloseDate,getAllRequests,requestsByOpenDate,requestsIApprovedToUsers,getRequestById, getRequestsByPass},
     { errorMessage:'',successMessage:'',
     }
 );

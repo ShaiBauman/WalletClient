@@ -10,7 +10,7 @@ import { Context as UserContext } from "../context/UserContext";
 import { data } from "react-native-chart-kit/data";
 
 
-const PurchaseScreen = ()=>{
+const PurchaseScreen = ({navigation})=>{
     const userState = useContext(UserContext).state;
     const {state, addReq, getRequestsByPass } = useContext(requestContext);
     const {getAllCategory} = useContext(CategoryContext);
@@ -179,9 +179,11 @@ const PurchaseScreen = ()=>{
                                 pic: null,
                                 friendsConfirmation: friendConfirmation,
                                 confirmationStatus: false,// open ,approved, inProcess;
-                                botScore:null
+                                botScore:30
                             }
                                 addReq(requestDto)
+                                navigation.navigate('dashboard');
+
                             }}
                         >
 
