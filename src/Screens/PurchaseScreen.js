@@ -74,11 +74,10 @@ const PurchaseScreen = ()=>{
     };
 
 
-    console.log(subcategories);
     return(
         <View style={styles.container}>
             <Spacer>
-                <Text style={styles.titleText}>Purchase Screen</Text>
+                <Text style={styles.titleText}>Sending a request</Text>
             </Spacer>
             <ScrollView>
                 <Spacer>
@@ -167,7 +166,7 @@ const PurchaseScreen = ()=>{
 
                         <TouchableOpacity
                             onPress={()=>{
-                            const request = {
+                            const requestDto = {
                                 email: userState.myUser.email,
                                 openDate: null,
                                 closedDate:null,
@@ -182,36 +181,13 @@ const PurchaseScreen = ()=>{
                                 confirmationStatus: false,// open ,approved, inProcess;
                                 botScore:null
                             }
-                                addReq(request)
+                                addReq(requestDto)
                             }}
                         >
 
-                            <Text style={styles.button}>{"Send to approval"}</Text>
+                            <Text style={styles.button}>{"Send"}</Text>
                         </TouchableOpacity>
 
-                        <TouchableOpacity
-                            onPress={()=>{
-                                const request = {
-                                    email: userState.myUser.email,
-                                    openDate: null,
-                                    closedDate:null,
-                                    category: category,
-                                    subCategory: subCategory,
-                                    cost: price,
-                                    description: description,
-                                    necessity: necessaryMeasureStateEnum[necessaryMeasure],
-                                    additionalDescription: remark,
-                                    pic: null,
-                                    friendsConfirmation: userState.myUser.myWalletMembers,
-                                    confirmationStatus: false,// open ,approved, inProcess;
-                                    botScore:null
-                                }
-                                getRequestsByPass(userState.myUser._id, request)
-                            }}
-                        >
-
-                            <Text style={styles.button}>{"Self-approval"}</Text>
-                        </TouchableOpacity>
 
                     </View>
                 </Spacer>

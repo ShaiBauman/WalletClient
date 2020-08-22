@@ -39,10 +39,10 @@ const navigator = createStackNavigator({
       //friendMainFlow: {
         indexFriend: IndexFriendScreen,
         dashboard: DashboardScreen,
-       assistanceStatistics:AssistanceStatisticsScreen,
-     statistics: StatisticsScreen,
-    transactions: TransactionScreen,
-    walletFriends: FriendsScreen
+         assistanceStatistics:AssistanceStatisticsScreen,
+         statistics: StatisticsScreen,
+         transactions: TransactionScreen,
+         walletFriends: FriendsScreen
       //}
     },
     {

@@ -41,12 +41,13 @@ const clearSuccessMessage = dispatch=>()=>{
 };
 
 
-const addReq = dispatch=> async ({Request})=>{
-
+const addReq = dispatch=> async (RequestDto)=>{
+    console.log(Request)
     try {
-        const response = await serverApi.patch('/request', {Request});
+        const response = await serverApi.patch('/request', {'request':RequestDto});
+        console.log(response.data);
         if(response.data.id)
-        {    dispatch({type:'add_success_message',payload: 'create success request'})
+        {dispatch({type:'add_success_message',payload: 'create success request'})
             console.log("yes");
                navigate('dashboard');}
 
@@ -61,7 +62,7 @@ const addReq = dispatch=> async ({Request})=>{
 const updateStatus = dispatch => async ({id,email,confirmationStatus})=>{
 
    try {
-       const response = await serverApi.patch('/request', {id,email,confirmationStatus});
+       const response = await serverApi.post('/request/ReactToRequest', {id,email,confirmationStatus});
 
   }
    catch (err)
@@ -72,24 +73,26 @@ const updateStatus = dispatch => async ({id,email,confirmationStatus})=>{
 
 };
 
-const addFutureApprovedRequest = dispatch=> async ({email,openDate,closedDate,category,cost,description,necessity,additionalDescription,
+
+/////////*********************************************************8
+const addFutureApprovedRequest = dispatch=> async (
+{email,openDate,closedDate,category,cost,description,necessity,additionalDescription,
                                                        pic,confirmationStatus})=>{
     try {
-        const response = await serverApi.post('/request', {email,openDate,closedDate,category,cost,description,necessity,additionalDescription,
-            pic,confirmationStatus});
+        const response = await serverApi.post('/request', {Request});
     }
     catch (err)
     {
         dispatch({type:'add_error', payload:'Something went wrong with approved request'});
     }
 };
-
+////////////////****************************************************************
 
 
     const getRequestsByConfirmationStatus = dispatch=> async (userType,confirmationStatus,email)=>{
 
         try {
-            const response = await serverApi.post('/request', {userType,confirmationStatus,email});
+            const response = await serverApi.post('/request/getRequestByConfirmationStatus', {userType,confirmationStatus,email});
 
         if(response.data !== null)
            // return response.data;
@@ -102,10 +105,12 @@ const addFutureApprovedRequest = dispatch=> async ({email,openDate,closedDate,ca
         }
     };
 
+
+
 const getRequestById = dispatch=> async (id)=>{
 
     try {
-        const response = await serverApi.post('/request', {id});
+        const response = await serverApi.post('/request/'+{id});
      //   return response.data;
         dispatch({type: 'getRequestById', payload: response.data});
 
@@ -116,7 +121,7 @@ const getRequestById = dispatch=> async (id)=>{
     }
 
 };
-
+//*************************************************************8
 const getRequestsByPass=dispatch=>async (userId,request)=>{
     const id=addReq(request)._id;
     try{
@@ -127,11 +132,17 @@ const getRequestsByPass=dispatch=>async (userId,request)=>{
     }
 
 };
+ /////////////////////////****************************
 
-const requestsIApprovedToUsers = dispatch=> async (myEmail)=>{// my email= friend member
+///????????????????????????????????????
+
+
+const requestsIApprovedToUsers = dispatch=> async (myEmail,userType,confirmationStatus)=>{// my email= friend member
 
     try {
-        const response = await serverApi.post('/request', {myEmail});
+        let userType=1;
+        let confirmationStatus=1;
+        const response = await serverApi.post('/request', {myEmail,userType,confirmationStatus});
            // return response.data;
         dispatch({type: 'requestsIApprovedToUsers', payload: response.data});
 
@@ -143,10 +154,10 @@ const requestsIApprovedToUsers = dispatch=> async (myEmail)=>{// my email= frien
 };
 
 
-const requestsByCategory = dispatch=> async (email,category)=>{
+const requestsByCategory = dispatch=> async (RequestByC /*email,category*/)=>{
 
     try {
-        const response = await serverApi.post('/request', {email,category});
+        const response = await serverApi.post('/request/getRequestByCategory', {/*email,category*/ RequestByC});
            // return response.data;
         dispatch({type: 'requestsByCategory', payload: response.data});
 
@@ -158,10 +169,10 @@ const requestsByCategory = dispatch=> async (email,category)=>{
 
 };
 
-const requestsByOpenDate = dispatch=> async (email,openDate)=>{
+const requestsByOpenDate = dispatch=> async (email,userType,openDate)=>{
 
     try {
-        const response = await serverApi.post('/request', {email,openDate});
+        const response = await serverApi.get('/request/getRequestByOpenDate', {email,userType,openDate});
      //   return response.data
         dispatch({type: 'requestsByOpenDate', payload: response.data});
 
@@ -173,10 +184,10 @@ const requestsByOpenDate = dispatch=> async (email,openDate)=>{
 
 };
 
-const requestsByCloseDate = dispatch=> async (email,closeDate)=>{
+const requestsByCloseDate = dispatch=> async (email,userType,closeDate)=>{
 
     try {
-        const response = await serverApi.post('/request', {email,closeDate});
+        const response = await serverApi.get('/request/getRequestByCloseDate', {email,userType,closeDate});
            // return response.data;
         dispatch({type: 'requestsByCloseDate', payload: response.data});
 
@@ -189,10 +200,10 @@ const requestsByCloseDate = dispatch=> async (email,closeDate)=>{
 };
 
 
-const requestsByStatus = dispatch=> async (email,status)=>{
+const requestsByStatus = dispatch=> async (email,confirmationStatus)=>{
 
     try {
-        const response = await serverApi.post('/request', {email,status});
+        const response = await serverApi.post('/request/getRequestByConfirmationStatus', {email,confirmationStatus});
         dispatch({type: 'requestsByStatus', payload: response.data});
 
        // return response.data;
@@ -208,7 +219,7 @@ const requestsByStatus = dispatch=> async (email,status)=>{
 const  howMuchISpentThisMonth = dispatch=> async (email)=>{
 
     try {
-        const response = await serverApi.post('/request', {email});
+        const response = await serverApi.post('/statistics/monMoney', email);
         //return response.data;
         dispatch({type: 'howMuchISpentThisMonth', payload: response.data});
 
@@ -220,6 +231,40 @@ const  howMuchISpentThisMonth = dispatch=> async (email)=>{
 
 };
 
+const updateRequest = dispatch=> async (requestDto)=>{
+    console.log(Request)
+    try {
+        const response = await serverApi.post('/request/updateRequest', {'requestDto':requestDto});
+        if(response.data.id)
+        {dispatch({type:'add_success_message',payload: 'create success request'})
+            console.log("yes");
+            navigate('dashboard');}
+
+    }
+    catch (err)
+    {
+        console.log(err)
+        dispatch({type:'add_error', payload:'Something went wrong with add request'});
+    }
+};
+
+
+const deleteRequest = dispatch=> async (id)=>{
+    console.log(Request)
+    try {
+        const response = await serverApi.delete('/request'+{id});
+        if(response.data.id)
+        {dispatch({type:'add_success_message',payload: 'create success request'})
+            console.log("yes");
+            navigate('dashboard');}
+
+    }
+    catch (err)
+    {
+        console.log(err)
+        dispatch({type:'add_error', payload:'Something went wrong with add request'});
+    }
+};
 
 /*
 //for friend member

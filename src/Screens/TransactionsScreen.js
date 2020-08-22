@@ -9,22 +9,35 @@ import DateForm from "../components/DateForm";
 import {Context as FinancialContext} from "../context/FinancialContext";
 import {navigate} from "../navigationRef";
 import {Context as UserContext} from "../context/UserContext";
+import { Context as CategoryContext } from "../context/CategoryContext";
+import { Context as requestContext } from "../context/requestContext";
 
 
 const TransactionScreen = ()=>{
     const userState = useContext(UserContext).state;
+    const {requestsByCategory} = useContext(requestContext);
     const {getLastDigitsCreditCard, makeTransaction} = useContext(FinancialContext);
 
-const [requestsStatus,setRequestsStatus] = useState('All');
-const [categories,setCategories] = useState('All');
-const [openDay,setOpenDay] = useState('');
-const [closeDay,setCloseDay] = useState('');
-const [visible,setVisible] = useState( false );
-const [lastDigits, setLastDigits ] = useState('');
+    const {getAllCategory,getRequestsByConfirmationStatus} = useContext(CategoryContext);
 
-if (!lastDigits) {
-    getLastDigitsCreditCard(userState.id).then(data => setLastDigits(data));
-}
+    const [requestsStatus,setRequestsStatus] = useState('All');
+    const [categories,setCategories] = useState([]/*'All'*/);
+    const [openDay,setOpenDay] = useState('');
+    const [closeDay,setCloseDay] = useState('');
+    const [visible,setVisible] = useState( false );
+    const [lastDigits, setLastDigits ] = useState('');
+
+    if (!lastDigits) {
+        getLastDigitsCreditCard(userState.id).then(data => setLastDigits(data));
+    }
+
+
+    if (!categories.length) {
+        getAllCategory().then(function(data){
+            data.forEach(c =>  c.value= c.category);
+            setCategories(data);
+        } );
+    }
 
 
     const requestsStatusState = [
@@ -34,6 +47,7 @@ if (!lastDigits) {
         {value: 'All'}
     ];
 
+
     const categoriesState = [
         {value: 'Toiletries'},
         {value: 'Attractions'},
@@ -42,6 +56,13 @@ if (!lastDigits) {
         {value: 'Clothing'},
         {value: 'All'}
     ];
+   /* const categoriesS={
+        email: userState.myUser.email,
+        category:categories
+    }*/
+
+
+
 
 
     const approveTableData = {
@@ -139,11 +160,14 @@ if (!lastDigits) {
                 data={requestsStatusState}
                 title={"Filter Requests By Status"}
                 onSubmit={setRequestsStatus}
+                onPress={()=>{getRequestsByConfirmationStatus(userState.myUser.type,requestsStatus,userState.myUser.email)}}
             />
             <DropDownForm
-                data={categoriesState}
+                data={/*categoriesS categoriesState*/categories}
                 title={"Filter Requests By Category"}
                 onSubmit={setCategories}
+                onPress={()=>{requestsByCategory(categories)}}
+
             />
             <View style={{flexDirection:'row'}}>
                 <Text>Filter Requests By {'/n'} Open Date</Text>
@@ -152,10 +176,14 @@ if (!lastDigits) {
             <View style={{flexDirection:'row', padding:10,justifyContent: 'center', marginRight:5}}>
             <DateForm
                 data={openDay}
-                onSubmit={setOpenDay}/>
+                onSubmit={setOpenDay}
+            />
+
             <DateForm
                 data={closeDay}
-                onSubmit={setCloseDay}/>
+                onSubmit={setCloseDay}
+
+            />
             </View>
             <Modal
                 visible={visible}
