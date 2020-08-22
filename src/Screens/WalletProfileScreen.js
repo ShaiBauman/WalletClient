@@ -1,4 +1,4 @@
-import React, {useContext, useState} from 'react';
+import React, {useContext, useEffect, useState} from 'react';
 import {View, StyleSheet, ScrollView, TouchableOpacity} from 'react-native'
 import {Text, Input,  Slider} from "react-native-elements";
 import DropDownForm from "../components/DropDownForm";
@@ -11,13 +11,15 @@ const WalletProfileScreen = (navigation)=>{
 
     console.disableYellowBox = true;
 
+
+
     const {state, updateUser } = useContext(UserContext);
 
 
     let maritalStatusState =[     //    Bachelor = 0,Married=1, Divorcee=2, Widower=3
         {value: "Bachelor"},{value: "Married"}, {value:"Divorcee"},{value:"Widower"}];
 
-    const [target, setTarget] = useState(0);
+    const [target, setTarget] = useState(state.myUser.target);
     const [avgExpensesLastThreeMonths, setAvgExpensesLastThreeMonths] = useState(0);
     const [maritalStatus, setMaritalStatus] = useState('');
     const [addictedStatus, setAddictedStatus] = useState(addictedStatus);

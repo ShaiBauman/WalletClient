@@ -50,7 +50,7 @@ const TransactionScreen = ({navigation})=>{
                              <Text>
                                 {new Date(com.openDate).toDateString()} - {com.description} - {com.cost}
                             </Text>
-                        {element(com._id)}
+                        {element(com)}
                     </ListItem>
                 )
             }
