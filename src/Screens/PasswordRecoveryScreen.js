@@ -60,7 +60,7 @@ const PasswordRecoveryScreen = ()=>
 
             <TextInput
                     autoCapitalize="none"
-                    placeholder="What is your Elementary School name?"
+                    placeholder="Who Is Your Favorite Lecturer?"
                     value={passwordRecoveryAnswer}
                     onChangeText={setPasswordRecoveryAnswer}
                     autoCorrect={false}

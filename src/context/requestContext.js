@@ -11,7 +11,7 @@ const requestReducer = (state, action)=>{
         case 'add_error':
             return {...state, errorMessage: action.payload};
         case 'add_success_message':
-            return {...state, errorMessage: action.payload};
+            return {...state, successMessage: action.payload};
         case 'clear_error_message':
             return {...state, errorMessage: ''}
         case 'clear_success_message':
@@ -192,16 +192,28 @@ const  howMuchISpentThisMonth = dispatch=> async (email)=>{
 
 const deleteRequest = dispatch=> async (id)=>{
     try {
-        console.log("id in context: "+ id)
         const response = await serverApi.post('/request/deleteRequest',{id});
-        {dispatch({type:'add_success_message',payload: 'Request Deleted'})
-        navigate('openReqs');}
+       dispatch({type:'add_success_message',payload: response.data})
+        navigate('openReqs');
+
+    }
+    catch (err)
+    {
+        dispatch({type:'add_error', payload:'Something went wrong with delete request'});
+    }
+};
+
+const remindFriends = dispatch=> async (requestId)=>{
+    try {
+        const response = await serverApi.post('/request/remindFriend',{requestId});
+        dispatch({type:'add_success_message',payload: response.data})
+            navigate('openReqs');
 
     }
     catch (err)
     {
         console.log(err)
-        dispatch({type:'add_error', payload:'Something went wrong with delete request'});
+        dispatch({type:'add_error', payload:'Something went wrong with remind friends'});
     }
 };
 
@@ -210,7 +222,7 @@ export const {Provider, Context} = createDataContext(
     requestReducer,
     {addReq,updateStatus,addFutureApprovedRequest,getAllRequests,howMuchISpentThisMonth,requestsByStatus,
         requestsByCategory,requestsByCloseDate,requestsByOpenDate,requestsIApprovedToUsers,getRequestById,
-        deleteRequest, clearErrorMessage,clearSuccessMessage },
+        deleteRequest, clearErrorMessage,clearSuccessMessage,remindFriends },
     { errorMessage:'',successMessage:'',
     }
 );

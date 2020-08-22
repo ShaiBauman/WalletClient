@@ -6,71 +6,77 @@ import {StyleSheet, View, TouchableOpacity, Alert} from "react-native";
 import NavLink from "../components/NavLink";
 import Spacer from "../components/Spacer";
 import {NavigationEvents} from "react-navigation";
+import {FontAwesome5} from "@expo/vector-icons";
 
 const FullRequest = ({ navigation }) => {
 
-    const {getRequestsByPass, deleteRequest, state, clearErrorMessage, clearSuccessMessage} = useContext(RequestContext);
+    const {getRequestsByPass, deleteRequest, state, clearErrorMessage, clearSuccessMessage, remindFriends} = useContext(RequestContext);
     const {id} = useContext(UserContext);
 
         const req = navigation.getParam('req');
 
     const onClickListener = () => {
-        // need to complete !!!
         Alert.alert("", state.successMessage);
     };
 
+    const element = [];
+    element.push(<TouchableOpacity onPress={() => {
+            navigation.navigate("makePurchase", {'req': req})
+        }}>
+            <Text style={styles.activeButton}>Edit Request</Text>
+        </TouchableOpacity>) //0
 
+    element.push(<TouchableOpacity onPress={() => {
+            console.log("req id: "+ req._id)
+            deleteRequest(req._id)
+            onClickListener()
+
+        }}>
+            <Text style={styles.activeButton}>Regret Request</Text>
+        </TouchableOpacity>
+    ) //1
+    element.push(<TouchableOpacity onPress={() => {
+            remindFriends(req._id) // need to check this function
+            onClickListener()
+
+        }}>
+            <Text style={styles.button}>Remind My Friends</Text>
+        </TouchableOpacity>
+    )//2
+    element.push(<TouchableOpacity onPress={() => {
+            getRequestsByPass(id,req) //need to check this function
+            onClickListener()
+            navigation.navigate("dashboard")
+        }}>
+            <Text style={styles.button}>Use One Of My Passes  </Text>
+        </TouchableOpacity>
+    )//3
+
+    element.push(        <TouchableOpacity onPress={() => {
+            navigation.navigate("Generator", {'req': req})
+        }}>
+            <Text style={styles.button}>Use Bot!</Text>
+        </TouchableOpacity>
+    ) //4
 
       return (
         <Container style={styles.container}>
 
             <NavigationEvents
-                onWillBlur={clearErrorMessage}/>
-            <NavigationEvents
-                onWillBlur={clearSuccessMessage}/>
-
+                onWillBlur={()=>{clearErrorMessage()
+                    clearSuccessMessage()
+                }}/>
             <Text style={styles.title}> {req.description} </Text>
             <Text style={styles.subTitle}> {"Cost: "+ req.cost} </Text>
             <Text style={styles.subTitle}> {"Category: "+req.category} </Text>
-            <Text style={styles.subTitle}> {"Open date: "+new Date(req.openDate).toDateString()} </Text>
+            <Text style={styles.subTitle}> {"Open Date: "+new Date(req.openDate).toDateString()} </Text>
+            <Text style={styles.SubSubTitle}> {"Additional Description : "+req.additionalDescription} </Text>
+
             <Spacer>
-            <TouchableOpacity onPress={() => {
-                navigation.navigate("makePurchase", {'req': req})
-            }}>
-                <Text style={styles.activeButton}>Edit Request</Text>
-            </TouchableOpacity>
-
-
-            <TouchableOpacity onPress={() => {
-                console.log("req id: "+ req._id)
-                deleteRequest(req._id)
-                onClickListener()
-
-            }}>
-                <Text style={styles.activeButton}>Delete Request</Text>
-            </TouchableOpacity>
-
-
-            <TouchableOpacity onPress={() => {
-                // need to complete function
-                navigation.navigate("dashboard")
-
-            }}>
-                <Text style={styles.button}>Remind My Friends</Text>
-            </TouchableOpacity>
-
-            <TouchableOpacity onPress={() => {
-                getRequestsByPass(id,req) //need to check this function
-                navigation.navigate("dashboard")
-            }}>
-                <Text style={styles.button}>Use One Of My Passes  </Text>
-            </TouchableOpacity>
-
-            <TouchableOpacity onPress={() => {
-                navigation.navigate("Generator", {'req': req})
-            }}>
-                <Text style={styles.button}>Use Bot!</Text>
-            </TouchableOpacity>
+                {req.confirmationStatus === 2 ? element : null}
+                {state.errorMessage ?
+                    (<Text style={styles.errorMessage}>{state.errorMessage}</Text>)
+                    :null}
 
             <NavLink
                 routeName={"dashboard"}
@@ -94,9 +100,9 @@ button: {
         overflow: 'hidden',
         color: '#80B28B',
         marginBottom:20,
-        marginLeft: 50,
+        marginLeft: 40,
         marginTop:0,
-        marginRight:50,
+        marginRight:40,
     },
     activeButton: {
         textAlign: "center",
@@ -108,9 +114,9 @@ button: {
         overflow: 'hidden',
         color: '#2F4730',
         marginBottom:20,
-        marginLeft: 50,
+        marginLeft: 40,
         marginTop:0,
-        marginRight:50,
+        marginRight:40,
 
     },
 
@@ -130,5 +136,15 @@ button: {
         textAlign: "center",
         fontWeight: 'bold'
     },
+    SubSubTitle:{
+        fontSize: 10,
+        textAlign: "center",
+    },
+    errorMessage:{
+        fontSize:16,
+        color:'red',
+        marginLeft:15
+
+    }
 });
 export default FullRequest

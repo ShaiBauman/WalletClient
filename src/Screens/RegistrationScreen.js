@@ -89,7 +89,7 @@ const RegistrationScreen = ({navigation})=>{
                />
             <TextInput
                 autoCapitalize="none"
-                placeholder="Password Recovery - Insert your Elementary School name..."
+                placeholder="Password Recovery - Insert Your Favorite Lecturer Name"
                 value={answerPassword}
                 onChangeText={setAnswerPassword}
                 autoCorrect={false}

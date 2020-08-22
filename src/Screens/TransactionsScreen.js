@@ -3,7 +3,7 @@ import { StyleSheet, TouchableOpacity, Alert,View} from 'react-native'
 import {Context as FinancialContext} from "../context/FinancialContext";
 import {Context as RequestContext} from '../context/requestContext'
 import {Context as UserContext} from '../context/UserContext'
-import { Container, Header, Content,  ListItem, Text, Separator } from 'native-base';
+import { Container, Header, Content,  ListItem, Text, Separator, Right, Left } from 'native-base';
 import { FontAwesome5 } from '@expo/vector-icons';
 
 const TransactionScreen = ({navigation})=>{
@@ -29,48 +29,6 @@ const TransactionScreen = ({navigation})=>{
     if (!lastDigits) {
         getLastDigitsCreditCard(user_state.id).then(data => setLastDigits(data));
     }
-
-
-    const requestsStatusState = [
-        {value: 'Pending Approval'},
-        {value: 'Approved'},
-        {value: 'Unapproved'},
-        {value: 'All'}
-    ];
-
-    const categoriesState = [
-        {value: 'Toiletries'},
-        {value: 'Attractions'},
-        {value: 'Appliances'},
-        {value: 'Food'},
-        {value: 'Clothing'},
-        {value: 'All'}
-    ];
-
-
-    const approveTableData = {
-        tableHead: ['Open Date','Close Date','Description', 'Category', 'Cost', 'Necessity', 'Make a Transaction'
-        ],
-        tableData: [
-            ['8/8/19','10/8/19','1', '2', '3', '4','5'],
-            ['8/8/19','10/8/19','a', 'b', 'c', 'd','e'],
-            ['8/8/19','10/8/19','1', '2', '3', '789','10'],
-            ['8/8/19','10/8/19','a', 'b', 'c', 'd','s']
-        ]
-    };
-
-
-
-    const tableData = {
-        tableHead: ['Open Date','Close Date','Description', 'Category', 'Cost', 'Necessity', 'Use Bot', 'Approval Status'
-        ],
-        tableData: [
-            ['8/8/19','10/8/19','1', '2', '3', '4', '2'],
-            ['8/8/19','10/8/19','a', 'b', 'c', 'd', 'e'],
-            ['8/8/19','10/8/19','1', '2', '3', '789', '10'],
-            ['8/8/19','10/8/19','a', 'b', 'c', 'd', 's']
-        ]
-    };
 
     const alertIndex =(data)=> {
         if(!lastDigits) {
@@ -102,7 +60,7 @@ const TransactionScreen = ({navigation})=>{
         }
 
         }>
-            <FontAwesome5 name="money-check-alt" size={24} color="black"/>
+            <FontAwesome5 name="money-check-alt" size={24} color="black" style={styles.icon}/>
         </TouchableOpacity>)
 };
 
@@ -115,24 +73,26 @@ const TransactionScreen = ({navigation})=>{
             for (let req of req_state.allRequests)
             {
                 console.log("req " + JSON.stringify(req))
-                if (req.confirmationStatus) {
-                    if (req.closedDate != null)
-                    {
-                        reqToBuy.push(req)
+                if (req.confirmationStatus === 1) {
+                    reqToBuy.push(req)
                     }
-                else
+                else if (req.confirmationStatus === 2)
                     {
                         closedReqs.push(req)
                     }
-                }
+
             }
             for (let com of reqToBuy) {
                 reqToBuyJSX.push(
                     <ListItem>
-                             <Text>
+                        <Left>
+                             <Text style={styles.list}>
                                 {new Date(com.openDate).toDateString()} - {com.description} - {com.cost}
                             </Text>
+                        </Left>
+                        <Right>
                         {element(com.id)}
+                        </Right>
                     </ListItem>
                 )
             }
@@ -142,7 +102,7 @@ const TransactionScreen = ({navigation})=>{
                         <TouchableOpacity onPress={() => {
                             navigation.navigate('FullR', {"req": close}) //need to change!!!
                         }}>
-                            <Text>
+                            <Text style={styles.list}>
                                 {new Date(close.openDate).toDateString()} - {close.description} - {close.cost}
                             </Text>
                         </TouchableOpacity>
@@ -155,18 +115,19 @@ const TransactionScreen = ({navigation})=>{
     splitRequests()
 
         return(
-            <Container style={styles.container}>
-                <Content>
-                    <Separator bordered>
-                <Text style={styles.title}>Request You Can Realize Now</Text>
-                 </Separator>
-            {reqToBuyJSX}
-                    <Separator bordered>
-                <Text style={styles.title}>Closed Requests</Text>
-                    </Separator>
-            {closedReqsJSX}
-        </Content>
-    </Container>
+                    <Container style={styles.container}>
+                        <Content>
+                            <Separator bordered>
+                        <Text style={styles.title}>Request You Can Realize Now</Text>
+                         </Separator>
+                    {reqToBuyJSX}
+                            <Separator bordered>
+                        <Text style={styles.title}>Closed Requests</Text>
+                            </Separator>
+                    {closedReqsJSX}
+                </Content>
+            </Container>
+        )
 };
 
 const styles = StyleSheet.create({
@@ -184,16 +145,13 @@ const styles = StyleSheet.create({
         alignItems:'center',
 
     },
-    tableTitle:{ fontWeight: "bold", textAlign: 'center', fontSize: 18, textDecorationLine: 'underline'},
-    tableContainer: { padding: 4,  backgroundColor: '#E9D2B3' },
-    tableHead: { justifyContent: 'center',height: 42, backgroundColor: '#80B28B' },
-    tableText: {  fontSize:12, textAlign: 'center' },
-    tableHeadText: {  fontSize:9, textAlign: 'center',fontWeight: "bold"},
+icon:{
+        alignSelf:"center"
 
-      row: { flexDirection: 'row', backgroundColor: '#E9D2B3', borderColor: '#2F4730' },
-    btn: { width: 47, height: 17, backgroundColor: '#2F4730',  borderRadius: 0, borderColor:"#E9D2B3", borderWidth:0.5 },
-    btnText: { textAlign: 'center', color: '#fff' }
-
+},
+    list:{
+        textAlign: 'center',
+    }
 
 });
 
