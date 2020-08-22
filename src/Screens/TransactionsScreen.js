@@ -5,7 +5,6 @@ import {Context as RequestContext} from '../context/requestContext'
 import {Context as UserContext} from '../context/UserContext'
 import { Container, Header, Content,  ListItem, Text, Separator } from 'native-base';
 import { FontAwesome5 } from '@expo/vector-icons';
-import Spacer from "../components/Spacer";
 
 const TransactionScreen = ({navigation})=>{
 
@@ -112,34 +111,36 @@ if (!lastDigits) {
 
 
         return(
-            <View style={styles.container}>
-                <Spacer>
-                  <Text style={styles.header}>Request You Can Realize</Text>
-                    {reqToBuyJSX}
-                    </Spacer>
+            <Container style={styles.container}>
+                <Content>
+                    <Separator bordered>
+                <Text style={styles.title}>Request You Can Realize Now</Text>
+                 </Separator>
+            {reqToBuyJSX}
+                    <Separator bordered>
+                <Text style={styles.title}>Closed Requests</Text>
+                    </Separator>
+            {closedReqsJSX}
+        </Content>
+    </Container>
 
-                    <Spacer>
-                        <Text style={styles.header}>Closed Requests</Text>
-                    {closedReqsJSX}
-                </Spacer>
-            </View>
+
     );
 };
 
 const styles = StyleSheet.create({
     container:{
         flex: 1,
-        backgroundColor:'#E9D2B3',
-        borderColor:'#E9D2B3',
+
         borderWidth: 2
     },
-    header:{
+    title:{
         color: "black",
         textAlign: 'center',
-        fontSize:30,
-        textShadowRadius: 20,
+        fontSize:15,
         fontWeight: "bold",
         marginBottom:0,
+        alignItems:'center',
 
     },
     tableTitle:{ fontWeight: "bold", textAlign: 'center', fontSize: 18, textDecorationLine: 'underline'},
