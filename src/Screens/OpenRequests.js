@@ -1,7 +1,7 @@
 import React, {useContext, useEffect} from 'react';
 import {Context as RequestContext} from '../context/requestContext'
 import {Context as UserContext} from '../context/UserContext'
-import { Container, Header, Content, List, ListItem, Text, Separator } from 'native-base';
+import { Container, Header, Content, ListItem, Text, Separator } from 'native-base';
 import { TouchableOpacity } from "react-native";
 
 const OpenRequests = ({ navigation }) => {
@@ -9,6 +9,7 @@ const OpenRequests = ({ navigation }) => {
     const { getAllRequests} = useContext(RequestContext);
     const req_state = useContext(RequestContext).state
     const user_state = useContext(UserContext).state
+
     useEffect(() => {
         getAllRequests(user_state.myUser.walletMember ? 0 : 1, user_state.myUser.email)
         getAllRequests(user_state.myUser.walletMember ? 0 : 1, user_state.myUser.email)

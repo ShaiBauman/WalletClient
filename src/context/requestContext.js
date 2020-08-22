@@ -12,6 +12,10 @@ const requestReducer = (state, action)=>{
             return {...state, errorMessage: action.payload};
         case 'add_success_message':
             return {...state, errorMessage: action.payload};
+        case 'clear_error_message':
+            return {...state, errorMessage: ''}
+        case 'clear_success_message':
+            return {...state, clear_success_message: ''}
         default:
             return state;
     }
@@ -186,29 +190,27 @@ const  howMuchISpentThisMonth = dispatch=> async (email)=>{
 
 };
 
+const deleteRequest = dispatch=> async (id)=>{
+    try {
+        console.log("id in context: "+ id)
+        const response = await serverApi.post('/request/deleteRequest',{id});
+        {dispatch({type:'add_success_message',payload: 'Request Deleted'})
+        navigate('openReqs');}
 
-/*
-//for friend member
-const getAllStatusRequests = dispatch=> async (email,status)=>{
-
-try {
-    const response = await serverApi.post('/request', {email,status});
-    await AsyncStorage.setItem('request', response.data.arrayStatus);
- //   dispatch({type: 'all_ApprovedReq', payload: response.data.request});
-
-}
-catch (err)
-{
-    dispatch({type:'add_error', payload:'Something went wrong with registration'});
-   // console.log(this.myUser);
-}
-};*/
+    }
+    catch (err)
+    {
+        console.log(err)
+        dispatch({type:'add_error', payload:'Something went wrong with delete request'});
+    }
+};
 
 
 export const {Provider, Context} = createDataContext(
     requestReducer,
     {addReq,updateStatus,addFutureApprovedRequest,getAllRequests,howMuchISpentThisMonth,requestsByStatus,
-        requestsByCategory,requestsByCloseDate,requestsByOpenDate,requestsIApprovedToUsers,getRequestById},
+        requestsByCategory,requestsByCloseDate,requestsByOpenDate,requestsIApprovedToUsers,getRequestById,
+        deleteRequest, clearErrorMessage,clearSuccessMessage },
     { errorMessage:'',successMessage:'',
     }
 );

@@ -19,7 +19,8 @@ const userReducer = (state, action)=>{
         case 'entrance_error':
             return {...state, errorMessage: action.payload};
         case 'signout':
-            return {myUser: {}, id:'', errorMessage: ''};
+            return {myUser: {}, id:'', errorMessage: '', errorMessagePassword:'',
+                isResetPass:false, myFriends:[]};
         case 'answer_password':
             return {...state, isResetPass:action.payload};
         case 'add_friend':
@@ -41,7 +42,8 @@ const addUser = dispatch=> async (userDto)=>{
     try {
         const response = await serverApi.post('/user/signIn', {userDto});
         await AsyncStorage.setItem('id', response.data._id);
-        console.log(response.data + ' check');
+        console.log("after registration: "+JSON.stringify(response.data));
+        console.log("friend member after registration: "+(response.data.friendMember));
         dispatch({type: 'add_user', payload: response.data});
         dispatch({type: 'add_id', payload: response.data._id});
 
@@ -49,11 +51,10 @@ const addUser = dispatch=> async (userDto)=>{
         {
           navigate('Profile');
         }
-        else //the user is a friend
+        else if(response.data.friendMember) //the user is a friend only
         {
-            navigate('indexMember');
+            navigate('indexFriend');
         }
-        console.log(response.data.walletMember)
     }
       catch (err)
     {
@@ -69,7 +70,7 @@ const updateUser = dispatch => async (walletMemberDto) =>{
 
         const response = await serverApi.patch('/user', {walletMemberDto});
         dispatch({type: 'add_user', payload: response.data});
-        console.log(response.data);
+        console.log("after update profile: "+JSON.stringify(response.data));
         navigate('dashboard');
 
     }
@@ -127,21 +128,22 @@ const tryLocalSignIn = dispatch => async ()=>
 const login = dispatch=> async (email, password)=>{
     //make api request to login with that email and password
     if (email === "") {
-        email = "fake8@gmail.com"
-        password = "123456"
+        email = "fake8@gmail.com";
+        password = '123456'
     }
     try {
-        email = "shai.bauman@gmail.com";
-        password = '123456'
+
         const response = await serverApi.post('/user/logIn', {email,password});
         await AsyncStorage.setItem('id', response.data._id);
         dispatch({type: 'add_user', payload: response.data});
         dispatch({type: 'add_id', payload: response.data._id});
         dispatch({type: 'add_myFriends', payload: response.data.myWalletMembers});
 
-        navigate('dashboard');
+        if(response.data.walletMember)
+           navigate('dashboard');
+        else
+            navigate('indexFriend');
 
-        // ***need to add case of friend****
     }
     catch (err)
     {
@@ -154,7 +156,7 @@ const login = dispatch=> async (email, password)=>{
 const signOut = dispatch=>async ()=>{
     await AsyncStorage.removeItem('id');
     dispatch({type: 'signout'});
-    navigate('Signin');
+    navigate('SignIn');
 };
 
 //check answer for recovery password
