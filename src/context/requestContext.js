@@ -31,6 +31,11 @@ const requestReducer = (state, action)=>{
         case 'get_all_requests':
             return {...state, allRequests: action.payload};
 
+            return {...state, successMessage: action.payload};
+        case 'clear_error_message':
+            return {...state, errorMessage: ''}
+        case 'clear_success_message':
+            return {...state, clear_success_message: ''}
         default:
             return state;
     }
@@ -246,7 +251,6 @@ const updateRequest = dispatch=> async (requestDto)=>{
         {dispatch({type:'add_success_message',payload: 'create success request'})
             console.log("yes");
             navigate('dashboard');}
-
     }
     catch (err)
     {
@@ -254,58 +258,38 @@ const updateRequest = dispatch=> async (requestDto)=>{
         dispatch({type:'add_error', payload:'Something went wrong with add request'});
     }
 };
-
-
-const deleteRequest = dispatch=> async (id)=>{
-    console.log(Request)
+    const deleteRequest = dispatch=> async (id)=>{
     try {
-        const response = await serverApi.delete('/request'+{id});
-        if(response.data.id)
-        {dispatch({type:'add_success_message',payload: 'create success request'})
-            console.log("yes");
-            navigate('dashboard');}
+        const response = await serverApi.post('/request/deleteRequest',{id});
+        dispatch({type:'add_success_message',payload: response.data})
+        navigate('openReqs');
+    }
+    catch (err)
+    {
+        dispatch({type:'add_error', payload:'Something went wrong with delete request'});
+    }
+};
+
+const remindFriends = dispatch=> async (requestId)=>{
+    try {
+        const response = await serverApi.post('/request/remindFriend',{requestId});
+        dispatch({type:'add_success_message',payload: response.data})
+            navigate('openReqs');
 
     }
     catch (err)
     {
         console.log(err)
-        dispatch({type:'add_error', payload:'Something went wrong with add request'});
+        dispatch({type:'add_error', payload:'Something went wrong with remind friends'});
     }
 };
-const getAllRequests = dispatch=> async (userType,email)=>{
-
-    try {
-        const response = await serverApi.post('/request/all', {userType, email});
-        dispatch({type:'get_all_requests', payload: response.data})
-    }
-    catch (err)
-    {
-        dispatch({type:'add_error', payload:'Something went wrong with get all requests'});
-    }
-};
-
-/*
-//for friend member
-const getAllStatusRequests = dispatch=> async (email,status)=>{
-
-try {
-    const response = await serverApi.post('/request', {email,status});
-    await AsyncStorage.setItem('request', response.data.arrayStatus);
- //   dispatch({type: 'all_ApprovedReq', payload: response.data.request});
-
-}
-catch (err)
-{
-    dispatch({type:'add_error', payload:'Something went wrong with registration'});
-   // console.log(this.myUser);
-}
-};*/
 
 
 export const {Provider, Context} = createDataContext(
     requestReducer,
-    {addReq,updateStatus,addFutureApprovedRequest,getRequestsByConfirmationStatus,howMuchISpentThisMonth,requestsByStatus,
-        requestsByCategory,updateRequest,deleteRequest,requestsByCloseDate,getAllRequests,requestsByOpenDate,requestsIApprovedToUsers,getRequestById, getRequestsByPass},
-    { errorMessage:'',successMessage:'',
-    }
+    {addReq,updateStatus,addFutureApprovedRequest,howMuchISpentThisMonth,requestsByStatus,
+        getRequestsByConfirmationStatus, requestsByCategory,updateRequest,deleteRequest,requestsByCloseDate,
+        getAllRequests,requestsByOpenDate, requestsIApprovedToUsers,getRequestById, getRequestsByPass,
+        clearErrorMessage,clearSuccessMessage,remindFriends},
+    { errorMessage:'',successMessage:''}
 );

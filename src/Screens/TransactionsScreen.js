@@ -3,23 +3,24 @@ import { StyleSheet, TouchableOpacity, Alert} from 'react-native'
 import {Context as FinancialContext} from "../context/FinancialContext";
 import {Context as RequestContext} from '../context/requestContext'
 import {Context as UserContext} from '../context/UserContext'
-import { Container, Content,  ListItem, Text, Separator } from 'native-base';
+import { Container, Content,  ListItem, Text, Separator, Right, Left } from 'native-base';
 import { FontAwesome5 } from '@expo/vector-icons';
 
 const TransactionScreen = ({navigation})=>{
-    const userState = useContext(UserContext).state;
-    const {state, getAllRequests} = useContext(RequestContext);
+    const user_state = useContext(UserContext).state;
+   const req_state = useContext(RequestContext).state;
+    const {getAllRequests } = useContext(RequestContext);
     const {getLastDigitsCreditCard, makeTransaction} = useContext(FinancialContext);
 
     const [lastDigits, setLastDigits ] = useState('');
 
     useEffect(() => {
-        getAllRequests(userState.myUser.walletMember ? 0 : 1, userState.myUser.email);
-        getAllRequests(userState.myUser.walletMember ? 0 : 1, userState.myUser.email);
+        getAllRequests(user_state.myUser.walletMember ? 0 : 1, user_state.myUser.email);
+        getAllRequests(user_state.myUser.walletMember ? 0 : 1, user_state.myUser.email);
     }, []);
 
     if (!lastDigits) {
-        getLastDigitsCreditCard(userState.id).then(data => setLastDigits(data));
+        getLastDigitsCreditCard(user_state.id).then(data => setLastDigits(data));
     }
     let closedReqs = [];
     let closedReqsJSX = [];
@@ -27,29 +28,31 @@ const TransactionScreen = ({navigation})=>{
     let reqToBuyJSX = [];
 
     const splitRequests = () => {
-        console.log("state " + JSON.stringify(state.allRequests));
-        if (state.allRequests) {
-            for (let req of state.allRequests)
+        console.log("req_state " + JSON.stringify(req_state.allRequests));
+        if (req_state.allRequests) {
+            for (let req of req_state.allRequests)
             {
                 console.log("req " + JSON.stringify(req));
-                if (req.confirmationStatus) {
-                    if (req.closedDate != null)
-                    {
-                        reqToBuy.push(req)
+                if (req.confirmationStatus === 1) {
+                    reqToBuy.push(req)
                     }
-                else
+                else if (req.confirmationStatus === 2)
                     {
                         closedReqs.push(req)
                     }
-                }
+
             }
             for (let com of reqToBuy) {
                 reqToBuyJSX.push(
                     <ListItem>
-                             <Text>
+                        <Left>
+                             <Text style={styles.list}>
                                 {new Date(com.openDate).toDateString()} - {com.description} - {com.cost}
                             </Text>
-                        {element(com)}
+                        </Left>
+                        <Right>
+                        {element(com.id)}
+                        </Right>
                     </ListItem>
                 )
             }
@@ -59,7 +62,7 @@ const TransactionScreen = ({navigation})=>{
                         <TouchableOpacity onPress={() => {
                             navigation.navigate('FullR', {"req": close}) //need to change!!!
                         }}>
-                            <Text>
+                            <Text style={styles.list}>
                                 {new Date(close.openDate).toDateString()} - {close.description} - {close.cost}
                             </Text>
                         </TouchableOpacity>
@@ -72,7 +75,7 @@ const TransactionScreen = ({navigation})=>{
     splitRequests();
 
 if (!lastDigits) {
-    getLastDigitsCreditCard(userState.id).then(data => setLastDigits(data));
+    getLastDigitsCreditCard(user_state.id).then(data => setLastDigits(data));
 }
 
     const alertIndex =(data)=> {
@@ -90,7 +93,7 @@ if (!lastDigits) {
                     onPress: () => undefined,
                     style: 'cancel'
                 },
-                { text: 'OK', onPress: () => makeTransaction(userState.id, data) }
+                { text: 'OK', onPress: () => makeTransaction(user_state.id, data) }
             ],
             { cancelable: false }
         );
@@ -116,7 +119,7 @@ if (!lastDigits) {
                     {closedReqsJSX}
                 </Content>
             </Container>
-    );
+        )
 };
 
 const styles = StyleSheet.create({
@@ -133,7 +136,15 @@ const styles = StyleSheet.create({
         marginBottom:0,
         alignItems:'center',
 
+    },
+icon:{
+        alignSelf:"center"
+
+},
+    list:{
+        textAlign: 'center',
     }
+
 });
 
 export default TransactionScreen;

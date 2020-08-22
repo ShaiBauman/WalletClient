@@ -21,8 +21,8 @@ const WalletProfileScreen = (navigation)=>{
 
     const [target, setTarget] = useState(state.myUser.target);
     const [avgExpensesLastThreeMonths, setAvgExpensesLastThreeMonths] = useState(0);
-    const [maritalStatus, setMaritalStatus] = useState('');
-    const [addictedStatus, setAddictedStatus] = useState(addictedStatus);
+    const [maritalStatus, setMaritalStatus] = useState(state.myUser.maritalStatus);
+    const [addictedStatus, setAddictedStatus] = useState(state.myUser.addictedStatus);
     const [fixedIncomes, setFixedIncomes] = useState(state.myUser.myFixedIncomes);
     const [fixedExpenses, setFixedExpenses] = useState(state.myUser.myFixedExpenses);
 
@@ -31,10 +31,6 @@ const AddItem = (item, item2, setFunc) =>{
 
     setFunc(item.concat(setFunc));
 }
-
-
-    console.log(maritalStatus);
-    console.log(fixedExpenses);
 
     return(
         <Provider>
