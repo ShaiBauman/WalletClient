@@ -29,7 +29,6 @@ const MyMenu = ({navigation, children})=>{
                     <Menu.Item icon="wall" onPress={() => {}} title="Menu" disabled={false} />
                     <Divider />
                     <Menu.Item onPress={() => {navigation.navigate('Profile')}} title="Update Profile" />
-                    <Menu.Item onPress={() => {navigation.navigate('Settings')}} title="Settings" />
                     <Menu.Item onPress={() => {navigation.navigate('indexFriend')}} title="Change to Friend"  />
                     <Menu.Item onPress={() => {navigation.navigate('dashboard')}} title="Change to Wallet"  />
                     <Menu.Item onPress={() => {navigation.navigate('addCreditCard')}} title="Edit credit card" />

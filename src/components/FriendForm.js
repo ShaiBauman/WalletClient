@@ -10,13 +10,18 @@ import {
 import { MaterialIcons } from '@expo/vector-icons';
 import { FontAwesome5 } from '@expo/vector-icons';
 import {Context as UserContext} from "../context/UserContext";
+import {Linking} from "react-native";
 
 const FriendForm = ({friend})=>{
 
     const {getUserByEmail} = useContext(UserContext);
 
+
+
     const onClickListener = (viewId) => {
-        // need to complete !!!
+        if(viewId=== 'phone')
+            Linking.openURL("tel:0502668752")
+        else
         Alert.alert("Alert", "Button pressed "+viewId);
     };
 
