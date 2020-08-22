@@ -31,6 +31,47 @@ const TransactionScreen = ({navigation})=>{
     }
 
 
+    const requestsStatusState = [
+        {value: 'Pending Approval'},
+        {value: 'Approved'},
+        {value: 'Unapproved'},
+        {value: 'All'}
+    ];
+
+    const categoriesState = [
+        {value: 'Toiletries'},
+        {value: 'Attractions'},
+        {value: 'Appliances'},
+        {value: 'Food'},
+        {value: 'Clothing'},
+        {value: 'All'}
+    ];
+
+
+    const approveTableData = {
+        tableHead: ['Open Date','Close Date','Description', 'Category', 'Cost', 'Necessity', 'Make a Transaction'
+        ],
+        tableData: [
+            ['8/8/19','10/8/19','1', '2', '3', '4','5'],
+            ['8/8/19','10/8/19','a', 'b', 'c', 'd','e'],
+            ['8/8/19','10/8/19','1', '2', '3', '789','10'],
+            ['8/8/19','10/8/19','a', 'b', 'c', 'd','s']
+        ]
+    };
+
+
+
+    const tableData = {
+        tableHead: ['Open Date','Close Date','Description', 'Category', 'Cost', 'Necessity', 'Use Bot', 'Approval Status'
+        ],
+        tableData: [
+            ['8/8/19','10/8/19','1', '2', '3', '4', '2'],
+            ['8/8/19','10/8/19','a', 'b', 'c', 'd', 'e'],
+            ['8/8/19','10/8/19','1', '2', '3', '789', '10'],
+            ['8/8/19','10/8/19','a', 'b', 'c', 'd', 's']
+        ]
+    };
+
     const alertIndex =(data)=> {
         if(!lastDigits) {
             Alert.alert("There is no credit card to charge", "Please add your credit card" );
@@ -126,9 +167,6 @@ const TransactionScreen = ({navigation})=>{
             {closedReqsJSX}
         </Content>
     </Container>
-
-
-    );
 };
 
 const styles = StyleSheet.create({
