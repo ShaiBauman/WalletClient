@@ -6,6 +6,8 @@ import {navigate} from "../navigationRef";
 const requestReducer = (state, action)=>{
     switch(action.type)
     {
+        case 'get_all_requests':
+            return {...state, allRequests: action.payload};
         case 'add_error':
             return {...state, errorMessage: action.payload};
         case 'add_success_message':

@@ -1,25 +1,28 @@
-import React, {useContext, useState} from 'react';
-import {View, StyleSheet, Text,TouchableOpacity, Alert,ScrollView} from 'react-native'
-import {Row, Rows, Table, Cell, TableWrapper} from "react-native-table-component";
-import DropDownForm from "../components/DropDownForm";
-import {data} from "react-native-chart-kit/data";
-import {Menu, Portal, Provider, Modal} from "react-native-paper";
-import { AntDesign } from '@expo/vector-icons';
-import DateForm from "../components/DateForm";
+import React, {useContext, useEffect, useState} from 'react';
+import { StyleSheet, TouchableOpacity, Alert,View} from 'react-native'
 import {Context as FinancialContext} from "../context/FinancialContext";
+import {Context as RequestContext} from '../context/requestContext'
+import {Context as UserContext} from '../context/UserContext'
+import { Container, Header, Content,  ListItem, Text, Separator } from 'native-base';
+import { FontAwesome5 } from '@expo/vector-icons';
 import {navigate} from "../navigationRef";
-import {Context as UserContext} from "../context/UserContext";
 import { Context as CategoryContext } from "../context/CategoryContext";
-import { Context as requestContext } from "../context/requestContext";
 
+const TransactionScreen = ({navigation})=>{
 
 const TransactionScreen = ()=>{
     const userState = useContext(UserContext).state;
-    const {requestsByCategory} = useContext(requestContext);
+
+    const {state, getAllRequests} = useContext(RequestContext);
     const {getLastDigitsCreditCard, makeTransaction} = useContext(FinancialContext);
 
+    const [lastDigits, setLastDigits ] = useState('');
     const {getAllCategory,getRequestsByConfirmationStatus} = useContext(CategoryContext);
 
+    useEffect(() => {
+        getAllRequests(user_state.myUser.walletMember ? 0 : 1, user_state.myUser.email)
+        getAllRequests(user_state.myUser.walletMember ? 0 : 1, user_state.myUser.email)
+    }, []);
     const [requestsStatus,setRequestsStatus] = useState('All');
     const [categories,setCategories] = useState([]/*'All'*/);
     const [openDay,setOpenDay] = useState('');
@@ -30,6 +33,10 @@ const TransactionScreen = ()=>{
     if (!lastDigits) {
         getLastDigitsCreditCard(userState.id).then(data => setLastDigits(data));
     }
+    let closedReqs = []
+    let closedReqsJSX = []
+    let reqToBuy = []
+    let reqToBuyJSX = []
 
 
     if (!categories.length) {
@@ -47,6 +54,48 @@ const TransactionScreen = ()=>{
         {value: 'All'}
     ];
 
+    const splitRequests = () => {
+        console.log("state " + JSON.stringify(state.allRequests))
+        if (state.allRequests) {
+            for (let req of state.allRequests)
+            {
+                console.log("req " + JSON.stringify(req))
+                if (req.confirmationStatus) {
+                    if (req.closedDate != null)
+                    {
+                        reqToBuy.push(req)
+                    }
+                else
+                    {
+                        closedReqs.push(req)
+                    }
+                }
+            }
+            for (let com of reqToBuy) {
+                reqToBuyJSX.push(
+                    <ListItem>
+                             <Text>
+                                {new Date(com.openDate).toDateString()} - {com.description} - {com.cost}
+                            </Text>
+                        {element(com)}
+                    </ListItem>
+                )
+            }
+            for (let close of closedReqs) {
+                closedReqsJSX.push(
+                    <ListItem>
+                        <TouchableOpacity onPress={() => {
+                            navigation.navigate('FullR', {"req": close}) //need to change!!!
+                        }}>
+                            <Text>
+                                {new Date(close.openDate).toDateString()} - {close.description} - {close.cost}
+                            </Text>
+                        </TouchableOpacity>
+                    </ListItem>
+                )
+            }
+        }
+    }
 
     const categoriesState = [
         {value: 'Toiletries'},
@@ -61,33 +110,14 @@ const TransactionScreen = ()=>{
         category:categories
     }*/
 
+    splitRequests()
 
 
 
+if (!lastDigits) {
+    getLastDigitsCreditCard(user_state.id).then(data => setLastDigits(data));
+}
 
-    const approveTableData = {
-        tableHead: ['Open Date','Close Date','Description', 'Category', 'Cost', 'Necessity', 'Make a Transaction'
-        ],
-        tableData: [
-            ['8/8/19','10/8/19','1', '2', '3', '4','5'],
-            ['8/8/19','10/8/19','a', 'b', 'c', 'd','e'],
-            ['8/8/19','10/8/19','1', '2', '3', '789','10'],
-            ['8/8/19','10/8/19','a', 'b', 'c', 'd','s']
-        ]
-    };
-
-
-
-    const tableData = {
-        tableHead: ['Open Date','Close Date','Description', 'Category', 'Cost', 'Necessity', 'Approval Status'
-        ],
-        tableData: [
-            ['8/8/19','10/8/19','1', '2', '3', '4','5f3d48d1ba9e753ae8b1c012'],
-            ['8/8/19','10/8/19','a', 'b', 'c', 'd','e'],
-            ['8/8/19','10/8/19','1', '2', '3', '789','10'],
-            ['8/8/19','10/8/19','a', 'b', 'c', 'd','s']
-        ]
-    };
 
     const alertIndex =(data)=> {
         if(!lastDigits) {
@@ -104,17 +134,16 @@ const TransactionScreen = ()=>{
                     onPress: () => undefined,
                     style: 'cancel'
                 },
-                { text: 'OK', onPress: () => makeTransaction(userState.id, data) }
+                { text: 'OK', onPress: () => makeTransaction(user_state.id, data) }
             ],
             { cancelable: false }
         );
     };
 
-    const element = (data, index) => (
+    const element = (data) => (
             <TouchableOpacity onPress={() => alertIndex(data)}>
-                <View style={styles.btn}>
-                    <Text style={styles.btnText}>Buy</Text>
-                </View>
+                <FontAwesome5 name="money-check-alt" size={24} color="black"/>
+
             </TouchableOpacity>
         );
 
@@ -122,36 +151,19 @@ const TransactionScreen = ()=>{
 
 
         return(
-        <Provider>
-            <Portal>
-            <View style={styles.container}>
-        <Text style={styles.header}>Transactions</Text>
-                <View style={styles.tableContainer}>
-                    <Text style={styles.tableTitle}>Requests that Approved</Text>
-                    <Text style={styles.tableTitle}>You Can Buy It Now</Text>
-                    <Table borderStyle={{borderWidth: 2, borderColor: '#2F4730'}}>
-                        <Row data={tableData.tableHead} style={styles.tableHead} textStyle={styles.tableHeadText}/>
-                        {
-                            tableData.tableData.map((rowData, index) => (
-                                <TableWrapper key={index} style={styles.row}>
-                                    {
-                                        rowData.map((cellData, cellIndex) => (
-                                            <Cell key={cellIndex} data={cellIndex === 6 ? element(cellData, index) : cellData} textStyle={styles.tableText}/>
-                                        ))
-                                    }
-                                </TableWrapper>
-                            ))
-                        }
-                    </Table>
-                </View>
+            <Container style={styles.container}>
+                <Content>
+                    <Separator bordered>
+                <Text style={styles.title}>Request You Can Realize Now</Text>
+                 </Separator>
+            {reqToBuyJSX}
+                    <Separator bordered>
+                <Text style={styles.title}>Closed Requests</Text>
+                    </Separator>
+            {closedReqsJSX}
+        </Content>
+    </Container>
 
-            <View style={styles.tableContainer}>
-                <Text style={styles.tableTitle}>Requests In Process</Text>
-                <Table borderStyle={{borderWidth: 2, borderColor: '#2F4730'}}>
-                    <Row data={tableData.tableHead} style={styles.tableHead} textStyle={styles.tableHeadText}/>
-                    <Rows data={tableData.tableData} textStyle={styles.tableText}/>
-                </Table>
-            </View>
 
 
         <View style={styles.tableContainer}>
@@ -213,17 +225,16 @@ const TransactionScreen = ()=>{
 const styles = StyleSheet.create({
     container:{
         flex: 1,
-        backgroundColor:'#E9D2B3',
-        borderColor:'#E9D2B3',
+
         borderWidth: 2
     },
-    header:{
+    title:{
         color: "black",
         textAlign: 'center',
-        fontSize:30,
-        textShadowRadius: 20,
+        fontSize:15,
         fontWeight: "bold",
         marginBottom:0,
+        alignItems:'center',
 
     },
     tableTitle:{ fontWeight: "bold", textAlign: 'center', fontSize: 18, textDecorationLine: 'underline'},

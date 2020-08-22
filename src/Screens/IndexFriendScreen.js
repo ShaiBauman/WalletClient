@@ -124,6 +124,11 @@ return(
         </Container>
         {/*<Table borderStyle={{borderWidth: 2, borderColor: '#2F4730'}}>
 
+        <MyMenu navigation={navigation}/>
+        <Text style={styles.titleText}>Hello {state.myUser.firstName+' '+state.myUser.lastName},</Text>
+        <Text style={styles.subTitle}> Open Requests</Text>
+        <Table borderStyle={{borderWidth: 2, borderColor: '#2F4730'}}>
+
             <Row data={tableData.tableHead} style={styles.head} textStyle={styles.text}/>
             {
                 tableData.tableData.map((rowData, index) => (
@@ -166,7 +171,7 @@ return(
 
         <Spacer>
             <Text style={styles.subTitle}> My relief segmentation</Text>
-        <View style={{ flexDirection: 'row',alignSelf:'center'}}>
+            <View style={{ flexDirection: 'row',alignSelf:'center'}}>
             <TouchableOpacity style={styles.statistics}
                               onPress={()=>{navigation.navigate('assistanceStatistics')}}
             >

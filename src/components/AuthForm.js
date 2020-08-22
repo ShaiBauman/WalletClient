@@ -42,7 +42,12 @@ const AuthForm = ({header, errorMessage, onSubmit, submitButtonText})=>{
                 <TouchableOpacity
                     title={submitButtonText}
                     onPress={
-                    ()=> onSubmit(email, password)
+                    ()=> {
+                        onSubmit(email, password),
+                            setEmail(''),
+                            setPassword('')
+                    }
+
                 }>
                     <Text style={styles.button}>
                         {submitButtonText}

@@ -5,7 +5,7 @@ import {Context as UserContext} from "../context/UserContext";
 import {NavigationEvents} from "react-navigation";
 
 
-const PasswordRecoveryScreen = ({props})=>
+const PasswordRecoveryScreen = ()=>
 {
 
     const {state, clearErrorMessage, verificationPasswordAnswer,updatePassword} = useContext(UserContext);

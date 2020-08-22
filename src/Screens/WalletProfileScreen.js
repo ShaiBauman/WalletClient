@@ -1,14 +1,17 @@
-import React, {useContext, useState} from 'react';
+import React, {useContext, useEffect, useState} from 'react';
 import {View, StyleSheet, ScrollView, TouchableOpacity} from 'react-native'
 import {Text, Input,  Slider} from "react-native-elements";
 import DropDownForm from "../components/DropDownForm";
 import {Context as UserContext} from "../context/UserContext";
 import DialogForm from "../components/DialogForm";
+import {Portal, Provider} from "react-native-paper";
 
 
 const WalletProfileScreen = (navigation)=>{
 
     console.disableYellowBox = true;
+
+
 
     const {state, updateUser } = useContext(UserContext);
 
@@ -16,7 +19,7 @@ const WalletProfileScreen = (navigation)=>{
     let maritalStatusState =[     //    Bachelor = 0,Married=1, Divorcee=2, Widower=3
         {value: "Bachelor"},{value: "Married"}, {value:"Divorcee"},{value:"Widower"}];
 
-    const [target, setTarget] = useState(0);
+    const [target, setTarget] = useState(state.myUser.target);
     const [avgExpensesLastThreeMonths, setAvgExpensesLastThreeMonths] = useState(0);
     const [maritalStatus, setMaritalStatus] = useState('');
     const [addictedStatus, setAddictedStatus] = useState(addictedStatus);
@@ -34,6 +37,8 @@ const AddItem = (item, item2, setFunc) =>{
     console.log(fixedExpenses);
 
     return(
+        <Provider>
+            <Portal>
         <View style={styles.container}>
             <Text style={styles.header}>My Profile</Text>
             <ScrollView>
@@ -125,6 +130,8 @@ const AddItem = (item, item2, setFunc) =>{
             </TouchableOpacity>
 
         </View>
+            </Portal>
+        </Provider>
     );
 };
 
@@ -180,7 +187,6 @@ const styles = StyleSheet.create({
         textAlign: "center",
         borderColor: '#80B28B',
         borderWidth:3,
-
         justifyContent: 'space-between',
         paddingVertical:20,
         paddingLeft:12,

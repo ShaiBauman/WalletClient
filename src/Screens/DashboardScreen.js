@@ -17,6 +17,7 @@ const DashboardScreen = ({navigation})=>{
     const {state} = useContext(UserContext);
     //const [visible,setVisible] = useState( false );
 
+  console.log(state.myUser.firstName)
 
     const card = el => {
         console.log('Card: ' + el.name)
@@ -32,14 +33,14 @@ const DashboardScreen = ({navigation})=>{
             case 'My Progress':
                 return navigation.navigate('statistics');
 
-            case 'One-time Income':
-                return navigation.navigate('indexWallet');
+            case 'Buy!':
+                return navigation.navigate('transactions');
 
             case 'My Friends':
                 return navigation.navigate('walletFriends');
 
             case 'Transactions':
-                return navigation.navigate('transactions');
+                return navigation.navigate('openReqs');
         }
     };
 
@@ -47,18 +48,18 @@ const DashboardScreen = ({navigation})=>{
         { name: 'Me', background: '#CEB386', icon: 'user' },
         { name: 'Make A Purchase', background: '#80B28B', icon: 'shopping-cart' },
         { name: 'My Progress', background: '#D76B49', icon: 'spinner' },
-        { name: 'One-time Income', background: '#2F4730', icon: 'money' },
+        { name: 'Transactions', background: '#2F4730', icon: 'suitcase' },
         { name: 'My Friends', background: '#80B28B', icon: 'group' },
-        { name: 'Transactions', background: '#E9D2B3', icon: 'suitcase' },
+        { name: 'Buy!', background: '#E9D2B3', icon: 'money' },
     ];
 
 
 
     return(
+
     <Provider>
     <Portal>
         <View style={styles.container}>
-
             <MyMenu navigation={navigation}/>
             <Text style={styles.header}>Hello {state.myUser.firstName + ' '+ state.myUser.lastName}</Text>
          <View style={styles.container}>

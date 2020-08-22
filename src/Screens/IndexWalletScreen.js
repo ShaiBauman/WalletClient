@@ -1,5 +1,5 @@
 import React, {useContext} from 'react';
-import { Avatar, Button, Card, Title, Paragraph } from 'react-native-paper';
+import { Avatar, Card, Title, Paragraph } from 'react-native-paper';
 import  {StyleSheet} from 'react-native';
 import {Context as UserContext} from "../context/UserContext";
 import ProgressChart from "react-native-chart-kit/src/progress-chart";
