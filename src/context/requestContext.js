@@ -11,7 +11,7 @@ const requestReducer = (state, action)=>{
         case 'add_error':
             return {...state, errorMessage: action.payload};
         case 'add_success_message':
-            return {...state, errorMessage: action.payload};
+            return {...state, successMessage: action.payload};
         case 'howMuchISpentThisMonth':
             return {...state,requests:action.payload};
         case 'requestsByStatus':
@@ -28,14 +28,10 @@ const requestReducer = (state, action)=>{
             return {...state,requests:action.payload};
         case 'getRequestsByConfirmationStatus':
             return {...state,requests:action.payload};
-        case 'get_all_requests':
-            return {...state, allRequests: action.payload};
-
-            return {...state, successMessage: action.payload};
         case 'clear_error_message':
             return {...state, errorMessage: ''}
         case 'clear_success_message':
-            return {...state, clear_success_message: ''}
+            return {...state, successMessage: ''}
         default:
             return state;
     }
@@ -284,10 +280,27 @@ const remindFriends = dispatch=> async (requestId)=>{
     }
 };
 
+const  ReactToRequest = dispatch=> async (id,email,confirmationStatus)=>{
+    try {
+        const response = await serverApi.post('/request/remindFriend',{id,email,confirmationStatus});
+        let message = 'approve success'
+        if(confirmationStatus===2)
+            message = 'Reject success'
+        dispatch({type:'add_success_message',payload:message})
+        navigation.navigate("indexFriend")
+
+    }
+    catch (err)
+    {
+        console.log(err)
+        dispatch({type:'add_error', payload:'Something went wrong with remind friends'});
+    }
+};
+
 
 export const {Provider, Context} = createDataContext(
     requestReducer,
-    {addReq,updateStatus,addFutureApprovedRequest,howMuchISpentThisMonth,requestsByStatus,
+    {addReq,updateStatus,ReactToRequest,addFutureApprovedRequest,howMuchISpentThisMonth,requestsByStatus,
         getRequestsByConfirmationStatus, requestsByCategory,updateRequest,deleteRequest,requestsByCloseDate,
         getAllRequests,requestsByOpenDate, requestsIApprovedToUsers,getRequestById, getRequestsByPass,
         clearErrorMessage,clearSuccessMessage,remindFriends},

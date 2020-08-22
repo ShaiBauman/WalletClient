@@ -1,5 +1,6 @@
 import React, {useContext, useState} from 'react';
-import {View, StyleSheet, Text, TouchableOpacity} from 'react-native'
+import {View, StyleSheet, Text, TouchableOpacity, Platform} from 'react-native'
+import { ListItem } from 'react-native-elements'
 import Dashboard from 'react-native-dashboard';
 import {Context as UserContext} from "../context/UserContext";
 import { NavigationActions } from 'react-navigation';
@@ -52,8 +53,27 @@ const DashboardScreen = ({navigation})=>{
         { name: 'My Friends', background: '#80B28B', icon: 'group' },
         { name: 'Buy!', background: '#E9D2B3', icon: 'money' },
     ];
-
-
+    let ios_list = []
+        if (Platform.OS === 'ios') {
+            ios_list = items.map(
+                (item, i) => (
+                    <TouchableOpacity
+                        onPress={() => card(item)}
+                    >
+                        <ListItem
+                        key={i}
+                        title={item.name}
+                        leftIcon={{ name: item.icon }}
+                        bottomDivider
+                        chevron
+                        />
+                    </TouchableOpacity>
+                )
+            )
+        }
+        else {
+            ios_list.push(<Dashboard items={items} background={true} card={card} column={2}/>)
+        }
 
     return(
 
@@ -62,9 +82,9 @@ const DashboardScreen = ({navigation})=>{
         <View style={styles.container}>
             <MyMenu navigation={navigation}/>
             <Text style={styles.header}>Hello {state.myUser.firstName + ' '+ state.myUser.lastName}</Text>
-         <View style={styles.container}>
-            <Dashboard items={items} background={true} card={card} column={2} />
-        </View>
+            <View style={styles.container}>
+                {ios_list}
+            </View>
 
         </View>
     </Portal>

@@ -67,15 +67,15 @@ const App = createAppContainer(navigator);
 export default ()=>{
   return(
       <BotContext>
-            <RequestContext>
-    <CategoryProvider>
+            <RequestProvider>
+                <CategoryProvider>
                   <UserProvider>
                       <FinancialProvider>
                         <App ref={(navigator)=>{setNavigator(navigator)}}/>
                       </FinancialProvider>
                   </UserProvider>
-    </CategoryProvider>
-            </RequestContext>
+                </CategoryProvider>
+            </RequestProvider>
       </BotContext>
   );
 };

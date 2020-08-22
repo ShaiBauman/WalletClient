@@ -1,17 +1,17 @@
-import React, {useContext, useEffect} from 'react';
+import React, {useContext} from 'react';
 import {Context as RequestContext} from '../context/requestContext'
 import {Context as UserContext} from '../context/UserContext'
 import { Container,Text} from 'native-base';
-import {StyleSheet, View, TouchableOpacity, Alert} from "react-native";
+import {StyleSheet, TouchableOpacity, Alert} from "react-native";
 import NavLink from "../components/NavLink";
 import Spacer from "../components/Spacer";
 import {NavigationEvents} from "react-navigation";
-import {FontAwesome5} from "@expo/vector-icons";
 
 const FullRequest = ({ navigation }) => {
 
-    const {getRequestsByPass, deleteRequest, state, clearErrorMessage, clearSuccessMessage, remindFriends} = useContext(RequestContext);
-    const {id} = useContext(UserContext);
+    const {getRequestsByPass, deleteRequest, state, clearErrorMessage, clearSuccessMessage,
+        remindFriends, ReactToRequest} = useContext(RequestContext);
+    const user_state = useContext(UserContext).state;
 
         const req = navigation.getParam('req');
 
@@ -19,51 +19,70 @@ const FullRequest = ({ navigation }) => {
         Alert.alert("", state.successMessage);
     };
 
-    const element = [];
-    element.push(<TouchableOpacity onPress={() => {
+    const edit_buttons = [];
+    const friend_buttons = [];
+    edit_buttons.push(<TouchableOpacity onPress={() => {
             navigation.navigate("makePurchase", {'req': req})
         }}>
             <Text style={styles.activeButton}>Edit Request</Text>
-        </TouchableOpacity>) //0
+        </TouchableOpacity>);
 
-    element.push(<TouchableOpacity onPress={() => {
-            console.log("req id: "+ req._id)
-            deleteRequest(req._id)
+    edit_buttons.push(<TouchableOpacity onPress={() => {
+            console.log("req id: "+ req["_id"]);
+            deleteRequest(req["_id"]);
             onClickListener()
 
         }}>
             <Text style={styles.activeButton}>Regret Request</Text>
         </TouchableOpacity>
-    ) //1
-    element.push(<TouchableOpacity onPress={() => {
-            remindFriends(req._id) // need to check this function
+    );
+    edit_buttons.push(<TouchableOpacity onPress={() => {
+            remindFriends(req["_id"]); // need to check this function
             onClickListener()
 
         }}>
             <Text style={styles.button}>Remind My Friends</Text>
         </TouchableOpacity>
-    )//2
-    element.push(<TouchableOpacity onPress={() => {
-            getRequestsByPass(id,req) //need to check this function
-            onClickListener()
+    );//2
+    edit_buttons.push(<TouchableOpacity onPress={() => {
+            getRequestsByPass(id,req); //need to check this function
+            onClickListener();
             navigation.navigate("dashboard")
         }}>
             <Text style={styles.button}>Use One Of My Passes  </Text>
         </TouchableOpacity>
-    )//3
+    );//3
 
-    element.push(        <TouchableOpacity onPress={() => {
+    edit_buttons.push(        <TouchableOpacity onPress={() => {
             navigation.navigate("Generator", {'req': req})
         }}>
-            <Text style={styles.button}>Use Bot!</Text>
+            <Text style={styles.button}>Use the bot!</Text>
         </TouchableOpacity>
-    ) //4
+    ); //4
+
+    friend_buttons.push(
+        <TouchableOpacity onPress={() => {
+            ReactToRequest(req["_id"],req.email,1);
+
+        }}>
+            <Text style={styles.button}>Approve Request</Text>
+        </TouchableOpacity>
+    );
+
+    friend_buttons.push(
+        <TouchableOpacity onPress={() => {
+            ReactToRequest(req["_id"],req.email,0);
+        }}>
+            <Text style={styles.button}>Reject Request</Text>
+        </TouchableOpacity>
+    );
 
       return (
         <Container style={styles.container}>
 
             <NavigationEvents
-                onWillBlur={()=>{clearErrorMessage()
+                onWillBlur={()=>{
+                    clearErrorMessage();
                     clearSuccessMessage()
                 }}/>
             <Text style={styles.title}> {req.description} </Text>
@@ -73,7 +92,8 @@ const FullRequest = ({ navigation }) => {
             <Text style={styles.SubSubTitle}> {"Additional Description : "+req.additionalDescription} </Text>
 
             <Spacer>
-                {req.confirmationStatus === 2 ? element : null}
+                {(req.confirmationStatus < 2 && req.email === user_state.myUser.email)? edit_buttons : null}
+                { req.email !== user_state.myUser.email ? friend_buttons : null }
                 {state.errorMessage ?
                     (<Text style={styles.errorMessage}>{state.errorMessage}</Text>)
                     :null}
@@ -85,7 +105,7 @@ const FullRequest = ({ navigation }) => {
             </Spacer>
         </Container>
     )
-}
+};
 
 
 
