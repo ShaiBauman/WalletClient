@@ -24,7 +24,7 @@ const IndexFriendScreen = ({navigation})=>{
     const [requestingName,setRequestingName] = useState('');
     const [MonthlyBalance,setMonthlyBalance] = useState('');
 
-let  confirmationStatus=false; // open
+let  confirmationStatus=0; // open
 let type= 1; //friend
 
     useEffect(()=>{

@@ -169,21 +169,20 @@ const PurchaseScreen = ({navigation})=>{
                             const requestDto = {
                                 email: userState.myUser.email,
                                 openDate: null,
-                                closedDate:null,
+                                closedDate:"",
                                 category: category,
                                 subCategory:subCategory,
                                 cost: price,
                                 description: description,
                                 necessity: necessaryMeasureStateEnum[necessaryMeasure],
                                 additionalDescription: remark,
-                                pic: null,
+                                pic: "",
                                 friendsConfirmation: friendConfirmation,
                                 confirmationStatus: false,// open ,approved, inProcess;
                                 botScore:30
                             }
                                 addReq(requestDto)
                                 navigation.navigate('dashboard');
-
                             }}
                         >
 

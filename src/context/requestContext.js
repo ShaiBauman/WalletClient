@@ -77,8 +77,6 @@ const updateStatus = dispatch => async ({id,email,confirmationStatus})=>{
 
 };
 
-
-/////////*********************************************************8
 const addFutureApprovedRequest = dispatch=> async (
 {email,openDate,closedDate,category,cost,description,necessity,additionalDescription,
                                                        pic,confirmationStatus})=>{
@@ -90,8 +88,17 @@ const addFutureApprovedRequest = dispatch=> async (
         dispatch({type:'add_error', payload:'Something went wrong with approved request'});
     }
 };
-////////////////****************************************************************
 
+const getAllRequests = dispatch=> async (userType,email)=>{
+    try {
+        const response = await serverApi.post('/request/all', {userType, email});
+        dispatch({type:'get_all_requests', payload: response.data})
+    }
+    catch (err)
+    {
+        dispatch({type:'add_error', payload:'Something went wrong with get all requests'});
+    }
+}
 
     const getRequestsByConfirmationStatus = dispatch=> async (userType,confirmationStatus,email)=>{
 
@@ -125,7 +132,6 @@ const getRequestById = dispatch=> async (id)=>{
     }
 
 };
-//*************************************************************8
 const getRequestsByPass=dispatch=>async (userId,request)=>{
     const id=addReq(request)._id;
     try{
@@ -136,11 +142,6 @@ const getRequestsByPass=dispatch=>async (userId,request)=>{
     }
 
 };
- /////////////////////////****************************
-
-///????????????????????????????????????
-
-
 
 
 const requestsIApprovedToUsers = dispatch=> async (myEmail,userType,confirmationStatus)=>{// my email= friend member
