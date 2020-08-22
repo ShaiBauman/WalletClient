@@ -22,31 +22,24 @@ const OpenRequests = ({ navigation }) => {
     let openReqs = []
     let openReqsJSX = []
 
-    const splitRequests = () => {
+    const splitRequests = () =>
+    {
         console.log("req_state " + JSON.stringify(req_state.allRequests))
-        if (req_state.allRequests) {
-            for (let req of req_state.allRequests) {
+        if (req_state.allRequests)
+        {
+            for (let req of req_state.allRequests)
+            {
                 console.log("req " + JSON.stringify(req))
-                if (req.confirmationStatus === 0) { //
+                if (req.confirmationStatus === 0)
+                { //
                     //   completedReqs.push(req)
 
                     openReqs.push(req)
 
                 }
-                /* for (let com of completedReqs) {
-                     completedReqsJSX.push(
-                         <ListItem>
-                             <TouchableOpacity onPress={() => {
-                                 navigation.navigate('FullR', {"req": com})
-                             }}>
-                             <Text>
-                                 {new Date(com.openDate).toDateString()} - {com.description} - {com.cost}
-                             </Text>
-                             </TouchableOpacity>
-                         </ListItem>
-                     )
-                 }*/
-                for (let open of openReqs) {
+            }
+            for (let open of openReqs)
+            {
                     openReqsJSX.push(
                         <ListItem>
                             <Left>
@@ -63,16 +56,15 @@ const OpenRequests = ({ navigation }) => {
                             </Right>
                         </ListItem>
                     )
-                }
             }
         }
+    }
 
         splitRequests()
 
 
         return (
             <Container style={styles.container}>
-
                 <Content>
                     <Separator bordered>
                         <Text style={styles.title}>Open Requests</Text>
@@ -81,8 +73,8 @@ const OpenRequests = ({ navigation }) => {
                 </Content>
             </Container>
         );
-    }
 
+}
     const styles = StyleSheet.create({
         container: {
             flex: 1,
@@ -101,7 +93,7 @@ const OpenRequests = ({ navigation }) => {
 
 
     });
-}
+
 
 
 export default OpenRequests;

@@ -91,7 +91,7 @@ const TransactionScreen = ({navigation})=>{
                             </Text>
                         </Left>
                         <Right>
-                        {element(com.id)}
+                        {element(com._id)}
                         </Right>
                     </ListItem>
                 )
