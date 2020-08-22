@@ -1,7 +1,7 @@
 import React, {useContext, useEffect} from 'react';
 import {Context as RequestContext} from '../context/requestContext'
 import {Context as UserContext} from '../context/UserContext'
-import { Container, Header, Content, List, ListItem, Text, Separator } from 'native-base';
+import { Container, Header, Content, ListItem, Text, Separator } from 'native-base';
 import { TouchableOpacity } from "react-native";
 
 const OpenRequests = ({ navigation }) => {

@@ -19,7 +19,8 @@ const userReducer = (state, action)=>{
         case 'entrance_error':
             return {...state, errorMessage: action.payload};
         case 'signout':
-            return {myUser: {}, id:'', errorMessage: ''};
+            return {myUser: {}, id:'', errorMessage: '', errorMessagePassword:'',
+                isResetPass:false, myFriends:[]};
         case 'answer_password':
             return {...state, isResetPass:action.payload};
         case 'add_friend':
@@ -127,12 +128,11 @@ const tryLocalSignIn = dispatch => async ()=>
 const login = dispatch=> async (email, password)=>{
     //make api request to login with that email and password
     if (email === "") {
-        email = "fake8@gmail.com"
-        password = "123456"
-    }
-    try {
         email = "shai.bauman@gmail.com";
         password = '123456'
+    }
+    try {
+
         const response = await serverApi.post('/user/logIn', {email,password});
         await AsyncStorage.setItem('id', response.data._id);
         dispatch({type: 'add_user', payload: response.data});
@@ -154,7 +154,7 @@ const login = dispatch=> async (email, password)=>{
 const signOut = dispatch=>async ()=>{
     await AsyncStorage.removeItem('id');
     dispatch({type: 'signout'});
-    navigate('Signin');
+    navigate('SignIn');
 };
 
 //check answer for recovery password

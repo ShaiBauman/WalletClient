@@ -1,72 +1,84 @@
-import React, {useContext, useState} from 'react';
-import {View, StyleSheet, Text,TouchableOpacity, Alert,ScrollView} from 'react-native'
-import {Row, Rows, Table, Cell, TableWrapper} from "react-native-table-component";
-import DropDownForm from "../components/DropDownForm";
-import {data} from "react-native-chart-kit/data";
-import {Menu, Portal, Provider, Modal} from "react-native-paper";
-import { AntDesign } from '@expo/vector-icons';
-import DateForm from "../components/DateForm";
+import React, {useContext, useEffect, useState} from 'react';
+import { StyleSheet, TouchableOpacity, Alert,View} from 'react-native'
 import {Context as FinancialContext} from "../context/FinancialContext";
-import {navigate} from "../navigationRef";
-import {Context as UserContext} from "../context/UserContext";
+import {Context as RequestContext} from '../context/requestContext'
+import {Context as UserContext} from '../context/UserContext'
+import { Container, Header, Content,  ListItem, Text, Separator } from 'native-base';
+import { FontAwesome5 } from '@expo/vector-icons';
+import Spacer from "../components/Spacer";
+
+const TransactionScreen = ({navigation})=>{
 
 
-const TransactionScreen = ()=>{
-    const userState = useContext(UserContext).state;
+    const {state, getAllRequests} = useContext(RequestContext);
+  //  const req_state = useContext(RequestContext).state
+    const {state: user_state} = useContext(UserContext);
     const {getLastDigitsCreditCard, makeTransaction} = useContext(FinancialContext);
 
-const [requestsStatus,setRequestsStatus] = useState('All');
-const [categories,setCategories] = useState('All');
-const [openDay,setOpenDay] = useState('');
-const [closeDay,setCloseDay] = useState('');
-const [visible,setVisible] = useState( false );
-const [lastDigits, setLastDigits ] = useState('');
+    const [lastDigits, setLastDigits ] = useState('');
+
+    useEffect(() => {
+        getAllRequests(user_state.myUser.walletMember ? 0 : 1, user_state.myUser.email)
+        getAllRequests(user_state.myUser.walletMember ? 0 : 1, user_state.myUser.email)
+    }, []);
+
+    let closedReqs = []
+    let closedReqsJSX = []
+    let reqToBuy = []
+    let reqToBuyJSX = []
+
+
+    const splitRequests = () => {
+        console.log("state " + JSON.stringify(state.allRequests))
+        if (state.allRequests) {
+            for (let req of state.allRequests)
+            {
+                console.log("req " + JSON.stringify(req))
+                if (req.confirmationStatus) {
+                    if (req.closedDate != null)
+                    {
+                        reqToBuy.push(req)
+                    }
+                else
+                    {
+                        closedReqs.push(req)
+                    }
+                }
+            }
+            for (let com of reqToBuy) {
+                reqToBuyJSX.push(
+                    <ListItem>
+                             <Text>
+                                {new Date(com.openDate).toDateString()} - {com.description} - {com.cost}
+                            </Text>
+                        {element(com._id)}
+                    </ListItem>
+                )
+            }
+            for (let close of closedReqs) {
+                closedReqsJSX.push(
+                    <ListItem>
+                        <TouchableOpacity onPress={() => {
+                            navigation.navigate('FullR', {"req": close}) //need to change!!!
+                        }}>
+                            <Text>
+                                {new Date(close.openDate).toDateString()} - {close.description} - {close.cost}
+                            </Text>
+                        </TouchableOpacity>
+                    </ListItem>
+                )
+            }
+        }
+    }
+
+    splitRequests()
+
+
 
 if (!lastDigits) {
-    getLastDigitsCreditCard(userState.id).then(data => setLastDigits(data));
+    getLastDigitsCreditCard(user_state.id).then(data => setLastDigits(data));
 }
 
-
-    const requestsStatusState = [
-        {value: 'Pending Approval'},
-        {value: 'Approved'},
-        {value: 'Unapproved'},
-        {value: 'All'}
-    ];
-
-    const categoriesState = [
-        {value: 'Toiletries'},
-        {value: 'Attractions'},
-        {value: 'Appliances'},
-        {value: 'Food'},
-        {value: 'Clothing'},
-        {value: 'All'}
-    ];
-
-
-    const approveTableData = {
-        tableHead: ['Open Date','Close Date','Description', 'Category', 'Cost', 'Necessity', 'Make a Transaction'
-        ],
-        tableData: [
-            ['8/8/19','10/8/19','1', '2', '3', '4','5'],
-            ['8/8/19','10/8/19','a', 'b', 'c', 'd','e'],
-            ['8/8/19','10/8/19','1', '2', '3', '789','10'],
-            ['8/8/19','10/8/19','a', 'b', 'c', 'd','s']
-        ]
-    };
-
-
-
-    const tableData = {
-        tableHead: ['Open Date','Close Date','Description', 'Category', 'Cost', 'Necessity', 'Use Bot', 'Approval Status'
-        ],
-        tableData: [
-            ['8/8/19','10/8/19','1', '2', '3', '4', '2'],
-            ['8/8/19','10/8/19','a', 'b', 'c', 'd', 'e'],
-            ['8/8/19','10/8/19','1', '2', '3', '789', '10'],
-            ['8/8/19','10/8/19','a', 'b', 'c', 'd', 's']
-        ]
-    };
 
     const alertIndex =(data)=> {
         if(!lastDigits) {
@@ -83,17 +95,16 @@ if (!lastDigits) {
                     onPress: () => undefined,
                     style: 'cancel'
                 },
-                { text: 'OK', onPress: () => makeTransaction(userState.id, data) }
+                { text: 'OK', onPress: () => makeTransaction(user_state.id, data) }
             ],
             { cancelable: false }
         );
     };
 
-    const element = (data, index) => (
+    const element = (data) => (
             <TouchableOpacity onPress={() => alertIndex(data)}>
-                <View style={styles.btn}>
-                    <Text style={styles.btnText}>Buy</Text>
-                </View>
+                <FontAwesome5 name="money-check-alt" size={24} color="black"/>
+
             </TouchableOpacity>
         );
 
@@ -101,84 +112,17 @@ if (!lastDigits) {
 
 
         return(
-        <Provider>
-            <Portal>
             <View style={styles.container}>
-        <Text style={styles.header}>Transactions</Text>
-                <View style={styles.tableContainer}>
-                    <Text style={styles.tableTitle}>Requests that Approved</Text>
-                    <Text style={styles.tableTitle}>You Can Buy It Now</Text>
-                    <Table borderStyle={{borderWidth: 2, borderColor: '#2F4730'}}>
-                        <Row data={tableData.tableHead} style={styles.tableHead} textStyle={styles.tableHeadText}/>
-                        {
-                            tableData.tableData.map((rowData, index) => (
-                                <TableWrapper key={index} style={styles.row}>
-                                    {
-                                        rowData.map((cellData, cellIndex) => (
-                                            <Cell key={cellIndex} data={cellIndex === 6 ? element(cellData, index) : cellData} textStyle={styles.tableText}/>
-                                        ))
-                                    }
-                                </TableWrapper>
-                            ))
-                        }
-                    </Table>
-                </View>
+                <Spacer>
+                  <Text style={styles.header}>Request You Can Realize</Text>
+                    {reqToBuyJSX}
+                    </Spacer>
 
-            <View style={styles.tableContainer}>
-                <Text style={styles.tableTitle}>Requests In Process</Text>
-                <Table borderStyle={{borderWidth: 2, borderColor: '#2F4730'}}>
-                    <Row data={tableData.tableHead} style={styles.tableHead} textStyle={styles.tableHeadText}/>
-                    <Rows data={tableData.tableData} textStyle={styles.tableText}/>
-                </Table>
+                    <Spacer>
+                        <Text style={styles.header}>Closed Requests</Text>
+                    {closedReqsJSX}
+                </Spacer>
             </View>
-
-
-        <View style={styles.tableContainer}>
-            <Text style={styles.tableTitle}>All Requests</Text>
-           <DropDownForm
-                data={requestsStatusState}
-                title={"Filter Requests By Status"}
-                onSubmit={setRequestsStatus}
-            />
-            <DropDownForm
-                data={categoriesState}
-                title={"Filter Requests By Category"}
-                onSubmit={setCategories}
-            />
-            <View style={{flexDirection:'row'}}>
-                <Text>Filter Requests By {'/n'} Open Date</Text>
-                <Text>Filter Requests By Close Date</Text>
-            </View>
-            <View style={{flexDirection:'row', padding:10,justifyContent: 'center', marginRight:5}}>
-            <DateForm
-                data={openDay}
-                onSubmit={setOpenDay}/>
-            <DateForm
-                data={closeDay}
-                onSubmit={setCloseDay}/>
-            </View>
-            <Modal
-                visible={visible}
-                onDismiss={()=>setVisible(false)}
-                contentContainerStyle={styles.container}
-            >
-            <Table borderStyle={{borderWidth: 2, borderColor: '#2F4730'}}>
-                <Row data={tableData.tableHead} style={styles.tableHead} textStyle={styles.tableHeadText}/>
-                <Rows data={tableData.tableData} textStyle={styles.tableText}/>
-            </Table>
-
-            </Modal>
-            <TouchableOpacity onPress={()=>{setVisible(true)}}>
-                <View style={{alignItems:'center'}}>
-                    <AntDesign name="download" size={24} color="black" />
-                <Text>Bring It On</Text>
-                </View>
-            </TouchableOpacity>
-
-        </View>
-        </View>
-            </Portal>
-        </Provider>
     );
 };
 
