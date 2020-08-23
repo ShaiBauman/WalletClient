@@ -1,5 +1,7 @@
-import React, {useContext, useState} from 'react';
+import React, {useContext, useEffect, useState} from 'react';
 import {View, StyleSheet, Modal, TouchableOpacity, ScrollView} from 'react-native'
+import {Context as StatisticsContext} from '../context/StatisticsContext'
+import {Context as UserContext} from '../context/UserContext'
 import {Text} from "react-native-elements";
 import { Dimensions } from "react-native";
 
@@ -13,6 +15,16 @@ import {
 } from "react-native-chart-kit";
 
 const StatisticsScreen = ()=>{
+
+    const user_state = useContext(UserContext).state
+    const {state, approveVsAll, approvedVsDenied, MonthlyBalance, MoneyISaved} = useContext(StatisticsContext)
+
+    useEffect(()=> {
+        approveVsAll(user_state.myUser.email)
+        approvedVsDenied(user_state.myUser.email)
+        MonthlyBalance(user_state.myUser.email)
+        MoneyISaved(user_state.myUser.email)
+    }, [])
 
     const paiData = [
         {
@@ -82,7 +94,6 @@ const StatisticsScreen = ()=>{
         useShadowColorFromDataset: false, // optional
         legendFontSize:50,
     };
-    const screenWidth = (Dimensions.get("window").width);
 
     const chartData = [
         { label: "Venezuela", value: "290" },
@@ -94,23 +105,26 @@ const StatisticsScreen = ()=>{
         { label: "US", value: "30" },
         { label: "China", value: "30" }
     ];
-    const chartConfig2 = {
-        type: "column2d",
-        width: "100%",
-        height: "400",
-        dataFormat: "json",
-        dataSource: {
-            chart: {
-                caption: "Countries With Most Oil Reserves [2017-18]",
-                subCaption: "In MMbbl = One Million barrels",
-                xAxisName: "Country",
-                yAxisName: "Reserves (MMbbl)",
-                numberSuffix: "K",
-                theme: "fusion"
-            },
-            data: chartData
-        }
-    };
+
+    let stats = []
+    stats.push(
+        <Text>
+            Your approved transactions vs all your transactions ratio is {state.approveVsAll}
+        </Text>
+    )
+    stats.push(    <Text>
+            Your approved transactions vs denied transactions ratio is {state.approvedVsDenied}
+        </Text>
+    )
+    stats.push(<Text>
+            Your target minus your expenses is {state.MonthlyBalance}
+    </Text>
+    )
+    stats.push( <Text>
+            The amount of money of your denied transactions is {state.MoneyISaved}
+    </Text>
+    )
+
 
 
     return(
@@ -119,6 +133,7 @@ const StatisticsScreen = ()=>{
 
                 <View style={styles.chartsContainer}>
                 <ScrollView>
+                    {stats}
                 <Text style={styles.chartsTitle}>Balance Monthly Expenses</Text>
                  <BarChart
                     data={barData}
