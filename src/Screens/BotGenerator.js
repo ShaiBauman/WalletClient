@@ -8,7 +8,7 @@ const BotGenerator = ({ navigation }) => {
 
     const req = navigation.getParam('req');
 
-    const { state, getBotQuest } = useContext(BotContext)
+    const { state, getBotQuest, setBotScore } = useContext(BotContext)
 
     useEffect(() => {
         getBotQuest()
@@ -33,7 +33,8 @@ const BotGenerator = ({ navigation }) => {
     }
 
     const onSubmitSteps = () => {
-        navigation.navigate("Result", {"mainParams": mainParams, "req": req})
+        setBotScore(req["_id"], mainParams.totalScore)
+        navigation.navigate("FullR", {"req": req})
     };
 
     const progressStepsStyle = {

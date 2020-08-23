@@ -22,7 +22,7 @@ const userReducer = (state, action)=>{
             return {myUser: {}, id:'', errorMessage: '', errorMessagePassword:'',
                 isResetPass:false, myFriends:[]};
         case 'answer_password':
-            return {...state, isResetPass:action.payload};
+            return {...state, isAnswerCorrect: action.payload};
         case 'add_friend':
             return { ...state, myFriends: [...state.myFriends, action.payload] };
         case 'delete_friend':
@@ -174,7 +174,7 @@ const updatePassword = dispatch => async (email, newPassword) => {
     try
     {
         const response = await serverApi.post('/user/updatePassword', {email, newPassword});
-        navigate("Singin");
+        navigate("SignIn");
     }
     catch (e) {
         dispatch({type:'add_error', payload:'The password has not been updated'});
