@@ -62,7 +62,7 @@ const FullRequest = ({ navigation }) => {
 
     friend_buttons.push(
         <TouchableOpacity onPress={() => {
-            ReactToRequest(req["_id"],req.email,1);
+            ReactToRequest(req["_id"],user_state.myUser.email,1);
 
         }}>
             <Text style={styles.button}>Approve Request</Text>
@@ -71,7 +71,7 @@ const FullRequest = ({ navigation }) => {
 
     friend_buttons.push(
         <TouchableOpacity onPress={() => {
-            ReactToRequest(req["_id"],req.email,0);
+            ReactToRequest(req["_id"],user_state.myUser.email,0);
         }}>
             <Text style={styles.button}>Reject Request</Text>
         </TouchableOpacity>
@@ -83,6 +83,7 @@ const FullRequest = ({ navigation }) => {
             <NavigationEvents
                 onWillBlur={()=>{
                     clearErrorMessage();
+                    console.log("aaa")
                     clearSuccessMessage()
                 }}/>
             <Text style={styles.title}> {req.description} </Text>
@@ -94,11 +95,18 @@ const FullRequest = ({ navigation }) => {
             <Spacer>
                 {(req.confirmationStatus < 2 && req.email === user_state.myUser.email)? edit_buttons : null}
                 { req.email !== user_state.myUser.email ? friend_buttons : null }
+                {state.successMessage ?
+                    (<Text style={styles.successMessage}>{state.successMessage}</Text>)
+                    :null}
                 {state.errorMessage ?
                     (<Text style={styles.errorMessage}>{state.errorMessage}</Text>)
                     :null}
 
-            <NavLink
+
+
+
+
+                <NavLink
                 routeName={"dashboard"}
                 text={"Return To Dashboard"}
             />

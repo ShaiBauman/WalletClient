@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { Text,View, StyleSheet, ScrollView ,TouchableOpacity} from 'react-native'
 import { Input,Button} from 'react-native-elements'
 import Spacer from "../components/Spacer";
@@ -18,8 +18,8 @@ const PurchaseScreen = ({navigation})=>{
     const [subcategories, setSubcategories] = useState([]);
    // const {getAllSubCategory} = useContext(SubCategoryContext);
 
-
-    if (!categories.length) {
+useEffect(()=>{
+  //  if (!categories.length) {
         let temp ={};
         getAllCategory().then(function(data){
             data.forEach(c =>  c.value= c.category);
@@ -30,7 +30,8 @@ const PurchaseScreen = ({navigation})=>{
             setSubcategories(temp);
             setCategories(data);
         } );
-    }
+},[])
+  //  }
 
 
 
@@ -77,7 +78,7 @@ const PurchaseScreen = ({navigation})=>{
     return(
         <View style={styles.container}>
             <Spacer>
-                <Text style={styles.titleText}>Sending a request</Text>
+                <Text style={styles.titleText}>New Request</Text>
             </Spacer>
             <ScrollView>
                 <Spacer>
@@ -217,7 +218,9 @@ const styles = StyleSheet.create({
         color:'#80B28B',
         fontWeight: "bold",
         fontSize:40,
-        margin:10
+        margin:10,
+        textShadowRadius:7,
+        textShadowColor:'#2F4730'
 
     },
     inputStyle:{
@@ -247,42 +250,45 @@ const styles = StyleSheet.create({
         alignItems: "center",
         padding: 10,
         borderColor: '#2F4730',
-        borderWidth:6,
+        borderWidth:4,
         flex:1,
         borderRadius:8,
-        fontSize: 15,
+        fontSize: 16,
         fontWeight: 'bold',
         textAlign:'center',
         backgroundColor:'#CEB386',
+        marginLeft: 10,
+        marginRight:10
 
 
     },
     button: {
         alignItems: "center",
-        padding: 10,
+        padding: 8,
         borderColor: '#2F4730',
         borderWidth:3,
         flex:1,
         flexDirection: 'column',
         justifyContent: 'space-between',
-        paddingVertical:18,
-        paddingLeft:18,
+        paddingVertical:15,
+      //  paddingLeft:15,
         backgroundColor:'#80B28B',
-        marginRight:12,
+       // marginRight:10,
         borderRadius:8,
-        fontSize: 17,
+        fontSize: 20,
         fontWeight: 'bold',
         overflow: 'hidden',
-        textAlign:'center'
-
+        textAlign:'center',
+        textShadowColor:'#FFF',
+        textShadowRadius:10,
     },
     buttonContainer: {
         flex: 1,
-        marginLeft:20,
+        marginLeft:10,
         marginRight:10,
-        flexDirection: 'row',
+        //flexDirection: 'row',
         justifyContent: 'center',
-        alignItems: 'center',
+      // alignItems: 'center',
       //  backgroundColor: '#CEB386'
     },
 });
