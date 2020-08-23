@@ -9,7 +9,7 @@ import {NavigationEvents} from "react-navigation";
 
 const FullRequest = ({ navigation }) => {
 
-    const {getRequestsByPass, deleteRequest, state, clearErrorMessage, clearSuccessMessage,
+    const {approveByPasses, deleteRequest, state, clearErrorMessage, clearSuccessMessage,
         remindFriends, ReactToRequest} = useContext(RequestContext);
     const user_state = useContext(UserContext).state;
 
@@ -28,7 +28,6 @@ const FullRequest = ({ navigation }) => {
         </TouchableOpacity>);
 
     edit_buttons.push(<TouchableOpacity onPress={() => {
-            console.log("req id: "+ req["_id"]);
             deleteRequest(req["_id"]);
             onClickListener()
 
@@ -45,7 +44,7 @@ const FullRequest = ({ navigation }) => {
         </TouchableOpacity>
     );//2
     edit_buttons.push(<TouchableOpacity onPress={() => {
-            getRequestsByPass(id,req); //need to check this function
+            approveByPasses(user_state.id,req["_id"]); //need to check this function
             onClickListener();
             navigation.navigate("dashboard")
         }}>
@@ -102,13 +101,9 @@ const FullRequest = ({ navigation }) => {
                     (<Text style={styles.errorMessage}>{state.errorMessage}</Text>)
                     :null}
 
-
-
-
-
-                <NavLink
+            <NavLink
                 routeName={"dashboard"}
-                text={"Return To Dashboard"}
+                text={"Return To Home Page"}
             />
             </Spacer>
         </Container>

@@ -36,14 +36,12 @@ useEffect(()=>{
 
 
     //categories= getAllCategory().map(u => u.name);
-    //console.log(categoryState.data);
 
     //    for(let i =0 ;i<categoryState.length;i++){
     //     if(categoryState[i].name== categoryState)
     //     subcategories=categoryState[i].subCategory;
     // }
     //
-    // console.log(subcategoryState);
    /* let subCategoryState =[
         {value: "food"},{value: "attraction"}, {value:"Home appliance"},
         {value:"clothing"},{value:"housewares"},{value:"other"}];

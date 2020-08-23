@@ -32,9 +32,6 @@ let type= 1; //friend
  getRequestsByConfirmationStatus(type,confirmationStatus,userState.myUser.email);},[]);
 
 let requests=requestState.requests;
-    console.log("req:"+(requests));
-
-console.log("user state:"+(requestState.requests))
 
     const requestsStatusState = [
         {value: 'Pending Approval'},
@@ -89,7 +86,6 @@ console.log("user state:"+(requestState.requests))
     );
 
     let requestsJsx= [];
-    console.log("request"+requests);
   if(requests){
     for(let request of requests) {
         requestsJsx.push(
@@ -107,9 +103,6 @@ console.log("user state:"+(requestState.requests))
             </ListItem>
         )
     }}
-
-
-
 return(
     <Provider>
         <Portal>
@@ -121,6 +114,7 @@ return(
                 <Text style={styles.subTitle}> Open Requests</Text>
             </Header>
             <Content>
+
                 <List>
                     {requestsJsx}
                 </List>

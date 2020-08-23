@@ -66,6 +66,9 @@ const makeTransaction = dispatch =>async (userId, requestId)=>{
         );
         if(response.data) {
             dispatch({type: 'make_transaction', payload: response.data});
+            setTimeout(2000)
+            navigate("transactions")
+
         }
     }
     catch (err)

@@ -5,47 +5,41 @@ import {Context as UserContext} from "../context/UserContext";
 import {NavigationEvents} from "react-navigation";
 
 
-const PasswordRecoveryScreen = ()=>
+const PasswordRecoveryScreen = () =>
 {
 
     const {state, clearErrorMessage, verificationPasswordAnswer,updatePassword} = useContext(UserContext);
-    const [password, setPassword] = useState('');
-    const [passwordRecoveryAnswer, setPasswordRecoveryAnswer] = useState('');
-    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState([])
+    const [email, setEmail] = useState([])
+    const [answer, setAnswer] = useState([])
 
-    let changeAnswer = []
+    let changePassJSX = []
 
-    const isAnswerCorrect = (email) => {
-        if(state.isResetPass){
-            changeAnswer.push(
-                <TextInput
-                    autoCapitalize="none"
-                    placeholder="Insert new password"
-                    value={password}
-                    onChangeText={setPassword}
-                    autoCorrect={false}
-                    selectionColor={"red"}
-                    style={styles.inputStyle}
-                    placeholderTextColor={"#2F4730"}
-                    contextMenuHidden={true}/>
-            )
-            changeAnswer.push(
-                <TouchableOpacity
-                    title="Confirm"
-                    onPress={updatePassword(email, password)}
-                >
-                    <Text style={styles.buttonSingUp}>{"Confirm"}</Text>
-                </TouchableOpacity>
-            )
-        } else {
-            changeAnswer = []
-        }
-    }
-    return(
-        <View style={styles.container}>
-            <NavigationEvents
-                onWillBlur={clearErrorMessage}/>
-            <Text style={styles.title}>Password Recovery</Text>
+    if (state.isAnswerCorrect) {
+        changePassJSX.push(
+            <TextInput
+                autoCapitalize="none"
+                placeholder="Insert new password"
+                value={password}
+                onChangeText={setPassword}
+                autoCorrect={false}
+                selectionColor={"red"}
+                style={styles.inputStyle}
+                placeholderTextColor={"#2F4730"}
+                contextMenuHidden={true}/>
+        )
+        changePassJSX.push(
+            <TouchableOpacity
+                title="Confirm"
+                onPress={() => {
+                    updatePassword(email, password)
+                }}
+            >
+                <Text style={styles.buttonSingUp}>{"Confirm"}</Text>
+            </TouchableOpacity>
+        )
+    } else {
+        changePassJSX.push(
             <TextInput
                 autoCapitalize="none"
                 placeholder="Insert Your Email"
@@ -57,28 +51,39 @@ const PasswordRecoveryScreen = ()=>
                 placeholderTextColor={"#2F4730"}
                 contextMenuHidden={true}
             />
+        )
 
+        changePassJSX.push(
             <TextInput
-                    autoCapitalize="none"
-                    placeholder="Who Is Your Favorite Lecturer?"
-                    value={passwordRecoveryAnswer}
-                    onChangeText={setPasswordRecoveryAnswer}
-                    autoCorrect={false}
-                    selectionColor={"red"}
-                    style={styles.inputStyle}
-                    placeholderTextColor={"#2F4730"}
-                    contextMenuHidden={true}
-                />
-                <TouchableOpacity
-                    title="Continue"
-                    onPress={() => {
-                        verificationPasswordAnswer(email, passwordRecoveryAnswer)
-                        isAnswerCorrect(email)}}>
-                    <Text style={styles.buttonSingUp}>{"Continue"}</Text>
-                </TouchableOpacity>
-            {console.log(changeAnswer)}
-            {changeAnswer}
-             </View>
+                autoCapitalize="none"
+                placeholder="Who Is Your Favorite Lecturer?"
+                value={answer}
+                onChangeText={setAnswer}
+                autoCorrect={false}
+                selectionColor={"red"}
+                style={styles.inputStyle}
+                placeholderTextColor={"#2F4730"}
+                contextMenuHidden={true}
+            />
+        )
+        changePassJSX.push(
+            <TouchableOpacity
+                title="Continue"
+                onPress={() => {
+                    verificationPasswordAnswer(email, answer)
+                }}>
+                <Text style={styles.buttonSingUp}>{"Continue"}</Text>
+            </TouchableOpacity>
+        )
+    }
+
+    return(
+        <View style={styles.container}>
+            <NavigationEvents
+                onWillBlur={() => clearErrorMessage()}/>
+            <Text style={styles.title}>Password Recovery</Text>
+            {changePassJSX}
+        </View>
       );
 };
 
@@ -100,8 +105,8 @@ const styles = StyleSheet.create({
     container:{
         flex: 1,
         margin:0,
-        backgroundColor:'#CEB386',
-        borderColor:'#CEB386',
+        backgroundColor:'#E9D2B3',
+        borderColor:'#E9D2B3',
     },
 
     buttonContainer: {
@@ -149,20 +154,17 @@ const styles = StyleSheet.create({
     },
     buttonSingUp: {
         textAlign: "center",
-        borderColor: '#80B28B',
-        borderWidth:3,
         paddingVertical:10,
         paddingLeft:12,
         backgroundColor:'#2F4730',
-        borderRadius:8,
         fontSize: 18,
         fontWeight: 'bold',
         overflow: 'hidden',
         color: '#80B28B',
         marginBottom:0,
-        marginLeft: 8,
+        marginLeft: 12,
         marginTop:30,
-        marginRight:8,
+        marginRight:12,
 
     },
     errorMessage:{color: 'red', textAlign:'center',marginTop:10}

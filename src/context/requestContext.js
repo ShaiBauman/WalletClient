@@ -32,6 +32,8 @@ const requestReducer = (state, action)=>{
             return {...state, errorMessage: ''}
         case 'clear_success_message':
             return {...state, successMessage: ''}
+        case 'signout':
+            return {};
         default:
             return state;
     }
@@ -50,16 +52,11 @@ const addReq = dispatch=> async (RequestDto)=>{
     console.log(Request)
     try {
         const response = await serverApi.patch('/request', {'request':RequestDto});
-        console.log(response.data);
-        if(response.data.id)
-        {dispatch({type:'add_success_message',payload: 'create success request'})
-            console.log("yes");
-               navigate('dashboard');}
+        navigate('dashboard');
 
      }
     catch (err)
     {
-        console.log(err)
         dispatch({type:'add_error', payload:'Something went wrong with add request'});
     }
 };
@@ -76,18 +73,6 @@ const updateStatus = dispatch => async ({id,email,confirmationStatus})=>{
        console.log(this.errorMessage);
    }
 
-};
-
-const addFutureApprovedRequest = dispatch=> async (
-{email,openDate,closedDate,category,cost,description,necessity,additionalDescription,
-                                                       pic,confirmationStatus})=>{
-    try {
-        const response = await serverApi.post('/request', {Request});
-    }
-    catch (err)
-    {
-        dispatch({type:'add_error', payload:'Something went wrong with approved request'});
-    }
 };
 
 const getAllRequests = dispatch=> async (userType,email)=>{
@@ -109,7 +94,7 @@ const getAllRequests = dispatch=> async (userType,email)=>{
         if(response.data !== null)
            // return response.data;
             dispatch({type: 'getRequestsByConfirmationStatus', payload: response.data});
-
+            dispatch({})
         }
         catch (err)
 
@@ -136,32 +121,16 @@ const getRequestById = dispatch=> async (id)=>{
     }
 
 };
-const getRequestsByPass=dispatch=>async (userId,request)=>{
-    const id=addReq(request)._id;
-    try{
-        const response = await serverApi.post('/request', {userId,id});
+const approveByPasses=dispatch=>async (userId,requestId)=>{
 
-    }catch (err) {
+    try{
+        const response = await serverApi.post('/request/approveByPasses', {userId,requestId});
+        dispatch({type:'add_success_message',payload: response.data})
+
+        }catch (err) {
         dispatch({type:'add_error', payload:'Something went wrong with get request'});
     }
 
-};
-
-
-const requestsIApprovedToUsers = dispatch=> async (myEmail,userType,confirmationStatus)=>{// my email= friend member
-
-    try {
-        let userType=1;
-        let confirmationStatus=1;
-        const response = await serverApi.post('/request', {myEmail,userType,confirmationStatus});
-           // return response.data;
-        dispatch({type: 'requestsIApprovedToUsers', payload: response.data});
-
-    }
-    catch (err)
-    {
-        dispatch({type:'add_error', payload:'Something went wrong with get requests '});
-    }
 };
 
 
@@ -248,8 +217,7 @@ const updateRequest = dispatch=> async (requestDto)=>{
         const response = await serverApi.post('/request/updateRequest', {'requestDto':requestDto});
         if(response.data.id)
         {dispatch({type:'add_success_message',payload: 'create success request'})
-            console.log("yes");
-            navigate('dashboard');}
+        navigate('dashboard');}
     }
     catch (err)
     {
@@ -299,11 +267,18 @@ const  ReactToRequest = dispatch=> async (id,email,confirmationStatus)=>{
 };
 
 
+//for sign out
+const logOut = dispatch=>async ()=>{
+    dispatch({type: 'signout'});
+};
+
+
+
 export const {Provider, Context} = createDataContext(
     requestReducer,
-    {addReq,updateStatus,ReactToRequest,addFutureApprovedRequest,howMuchISpentThisMonth,requestsByStatus,
+    {addReq,updateStatus,ReactToRequest,howMuchISpentThisMonth,requestsByStatus,
         getRequestsByConfirmationStatus, requestsByCategory,updateRequest,deleteRequest,requestsByCloseDate,
-        getAllRequests,requestsByOpenDate, requestsIApprovedToUsers,getRequestById, getRequestsByPass,
-        clearErrorMessage,clearSuccessMessage,remindFriends},
+        getAllRequests,requestsByOpenDate, getRequestById, approveByPasses,
+        clearErrorMessage,clearSuccessMessage,remindFriends, logOut},
     { errorMessage:'',successMessage:''}
 );

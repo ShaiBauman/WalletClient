@@ -67,22 +67,23 @@ const DialogForm = ({title, setFunc, myList})=> {
     };
 
 const styles = StyleSheet.create({
-    button: {
-        alignItems: "center",
-        padding: 10,
-        borderColor: '#2F4730',
-        borderWidth: 3,
-        flex: 1,
-        backgroundColor: '#80B28B',
-        marginRight: 10,
-        marginLeft:10,
-        marginBottom:10,
-        borderRadius: 8,
-        fontSize: 15,
-        fontWeight: 'bold',
-        overflow: 'hidden',
-        textAlign: 'center'
-    },
+
+        button: {
+            textAlign: "center",
+            padding: 10,
+            flexDirection: 'column',
+            justifyContent: 'space-between',
+            paddingVertical:18,
+            paddingLeft:18,
+            backgroundColor:'#80B28B',
+            marginRight:12,
+            fontSize: 15,
+            fontWeight: 'bold',
+            overflow: 'hidden',
+            color:'#2F4730',
+            margin:10
+
+        },
     inputStyle:{fontSize:16, borderBottomWidth:0.3,borderColor:'black', textAlignVertical: 'center'},
 
 });
