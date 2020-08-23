@@ -105,7 +105,6 @@ const AddItem = (item, item2, setFunc) =>{
                             maritalStatusScore=2
                        else //'Widower'
                             maritalStatusScore =3
-                    console.log(maritalStatusScore)
 
                     const walletMemberDto={
                            "id": state.id,
@@ -118,7 +117,6 @@ const AddItem = (item, item2, setFunc) =>{
                         "myFixedIncomes":fixedIncomes,
                         "passes":addictedStatus
                     }
-                       console.log(walletMemberDto)
                     updateUser(walletMemberDto)
                    }}
             >

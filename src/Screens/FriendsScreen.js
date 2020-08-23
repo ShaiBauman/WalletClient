@@ -7,16 +7,16 @@ const FriendsScreen = ()=>{
 
     console.disableYellowBox = true;
 
-    const {state, addFriend} = useContext(UserContext);
+    const {state, addFriend, getFriendsByEmail} = useContext(UserContext);
+
+    useEffect(()=>{
+        getFriendsByEmail(state.myUser.email)
+    }, [])
 
     const [email, setEmail] = useState('');
     const [friends, setFriends] = useState(state.myFriends);
 
-console.log(JSON.stringify(friends))
-
-
     return(
-
         <View style={styles.container}>
        <View>
         <Text style={styles.header}>My Friends</Text>
@@ -47,10 +47,9 @@ console.log(JSON.stringify(friends))
            <ScrollView>
                 <FlatList
                     showsHorizontalScrollIndicator={false}
-                    keyExtractor = {friend=> friend}
-                    data = {friends}
+                    keyExtractor = {friend=> friend.email}
+                    data = {state.myFriends}
                     renderItem={({item}) =>{
-                        console.log("friend" + JSON.stringify(item))
                         return(  <FriendForm
                             friend={item}
                         />)

@@ -76,7 +76,6 @@ const PasswordRecoveryScreen = ()=>
                         isAnswerCorrect(email)}}>
                     <Text style={styles.buttonSingUp}>{"Continue"}</Text>
                 </TouchableOpacity>
-            {console.log(changeAnswer)}
             {changeAnswer}
              </View>
       );

@@ -28,7 +28,6 @@ const FullRequest = ({ navigation }) => {
         </TouchableOpacity>);
 
     edit_buttons.push(<TouchableOpacity onPress={() => {
-            console.log("req id: "+ req["_id"]);
             deleteRequest(req["_id"]);
             onClickListener()
 

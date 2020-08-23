@@ -28,11 +28,9 @@ const TransactionScreen = ({navigation})=>{
     let reqToBuyJSX = [];
 
     const splitRequests = () => {
-        console.log("req_state " + JSON.stringify(req_state.allRequests));
         if (req_state.allRequests) {
             for (let req of req_state.allRequests)
             {
-                console.log("req " + JSON.stringify(req));
                 if (req.confirmationStatus === 1) {
                     reqToBuy.push(req)
                     }

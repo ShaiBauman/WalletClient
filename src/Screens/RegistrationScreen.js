@@ -28,9 +28,6 @@ const RegistrationScreen = ({navigation})=>{
     const [userType, setUserType] = useState('');
     const [yearOfBirth, setYearOfBirth] = useState('');
 
-
-    console.log(yearOfBirth);
-
     return(
     <View style={styles.container}>
             <Text style={styles.title}>Registration Screen</Text>
@@ -146,7 +143,6 @@ const RegistrationScreen = ({navigation})=>{
                         "yearOfBirth":yearOfBirth,
                         "walletMember":myUserType
                     }
-        console.log(userDto)
         addUser(userDto);
                 }}
                 >

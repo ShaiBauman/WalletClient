@@ -38,7 +38,6 @@ const getBotQuest = dispatch => {
   return async () => {
     try {
       const response = await botGetter.get('/question');
-      console.log("get_bot_quest")
       dispatch({ type: 'get_bot_quest', payload: response.data });
     } catch (e) {
       console.log("NetworkError")
@@ -49,7 +48,6 @@ const getBotQuest = dispatch => {
 const getMLStatus = dispatch => async (req_id, email, botScore) => {
     try {
       const response = await MLGetter.post('/req', {req_id: req_id, email: email, botScore: botScore})
-      console.log("response" + response.data)
       dispatch({ type: 'get_ml_status', payload: response.data })
     } catch (e)
     {

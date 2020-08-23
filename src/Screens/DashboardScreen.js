@@ -18,10 +18,7 @@ const DashboardScreen = ({navigation})=>{
     const {state} = useContext(UserContext);
     //const [visible,setVisible] = useState( false );
 
-  console.log(state.myUser.firstName)
-
     const card = el => {
-        console.log('Card: ' + el.name)
 
         switch(el.name)
         {

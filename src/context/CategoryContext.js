@@ -20,7 +20,6 @@ const getAllCategory = dispatch=> async () => {
     try {
         const response = await serverApi.get('/categories');
 
-        //console.log(response.data)
             dispatch({type: 'all_categories', payload: response.data});
             return response.data;
 
