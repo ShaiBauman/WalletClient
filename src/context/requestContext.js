@@ -32,6 +32,8 @@ const requestReducer = (state, action)=>{
             return {...state, errorMessage: ''}
         case 'clear_success_message':
             return {...state, successMessage: ''}
+        case 'signout':
+            return {};
         default:
             return state;
     }
@@ -264,11 +266,18 @@ const  ReactToRequest = dispatch=> async (id,email,confirmationStatus)=>{
 };
 
 
+//for sign out
+const logOut = dispatch=>async ()=>{
+    dispatch({type: 'signout'});
+};
+
+
+
 export const {Provider, Context} = createDataContext(
     requestReducer,
     {addReq,updateStatus,ReactToRequest,howMuchISpentThisMonth,requestsByStatus,
         getRequestsByConfirmationStatus, requestsByCategory,updateRequest,deleteRequest,requestsByCloseDate,
         getAllRequests,requestsByOpenDate, getRequestById, approveByPasses,
-        clearErrorMessage,clearSuccessMessage,remindFriends},
+        clearErrorMessage,clearSuccessMessage,remindFriends, logOut},
     { errorMessage:'',successMessage:''}
 );
