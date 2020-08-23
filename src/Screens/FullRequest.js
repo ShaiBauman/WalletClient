@@ -15,9 +15,6 @@ const FullRequest = ({ navigation }) => {
 
         const req = navigation.getParam('req');
 
-    const onClickListener = () => {
-        Alert.alert("", state.successMessage);
-    };
 
     const edit_buttons = [];
     const friend_buttons = [];
@@ -29,15 +26,12 @@ const FullRequest = ({ navigation }) => {
 
     edit_buttons.push(<TouchableOpacity onPress={() => {
             deleteRequest(req["_id"]);
-            onClickListener()
-
         }}>
             <Text style={styles.activeButton}>Regret Request</Text>
         </TouchableOpacity>
     );
     edit_buttons.push(<TouchableOpacity onPress={() => {
             remindFriends(req["_id"]); // need to check this function
-            onClickListener()
 
         }}>
             <Text style={styles.button}>Remind My Friends</Text>
@@ -45,8 +39,6 @@ const FullRequest = ({ navigation }) => {
     );//2
     edit_buttons.push(<TouchableOpacity onPress={() => {
             approveByPasses(user_state.id,req["_id"]); //need to check this function
-            onClickListener();
-            navigation.navigate("dashboard")
         }}>
             <Text style={styles.button}>Use One Of My Passes  </Text>
         </TouchableOpacity>
@@ -92,9 +84,6 @@ const FullRequest = ({ navigation }) => {
             <Spacer>
                 {(req.confirmationStatus < 2 && req.email === user_state.myUser.email)? edit_buttons : null}
                 { req.email !== user_state.myUser.email ? friend_buttons : null }
-                {state.errorMessage ?
-                    (<Text style={styles.errorMessage}>{state.errorMessage}</Text>)
-                    :null}
 
             <NavLink
                 routeName={"dashboard"}

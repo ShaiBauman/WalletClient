@@ -1,4 +1,4 @@
-import {AsyncStorage} from 'react-native';
+import {Alert, AsyncStorage} from 'react-native';
 import createDataContext from "./createDataContext";
 import serverApi from "../api/serverApi";
 import {navigate} from "../navigationRef";
@@ -8,10 +8,14 @@ const requestReducer = (state, action)=>{
     {
         case 'get_all_requests':
             return {...state, allRequests: action.payload};
-        case 'add_error':
+        case 'add_error': {
+            Alert.alert("", action.payload);
             return {...state, errorMessage: action.payload};
-        case 'add_success_message':
+        }
+        case 'add_success_message': {
+            Alert.alert("", action.payload);
             return {...state, successMessage: action.payload};
+        }
         case 'howMuchISpentThisMonth':
             return {...state,requests:action.payload};
         case 'requestsByStatus':
@@ -32,6 +36,8 @@ const requestReducer = (state, action)=>{
             return {...state, errorMessage: ''}
         case 'clear_success_message':
             return {...state, successMessage: ''}
+        case 'signout':
+            return {};
         default:
             return state;
     }
@@ -121,9 +127,11 @@ const approveByPasses=dispatch=>async (userId,requestId)=>{
     try{
         const response = await serverApi.post('/request/approveByPasses', {userId,requestId});
         dispatch({type:'add_success_message',payload: response.data})
+        navigate("dashboard")
 
-        }catch (err) {
-        dispatch({type:'add_error', payload:'Something went wrong with get request'});
+
+    }catch (err) {
+        dispatch({type:'add_error', payload:'Something went wrong with approve by pass'});
     }
 
 };
@@ -253,7 +261,7 @@ const  ReactToRequest = dispatch=> async (id,email,confirmationStatus)=>{
         if(confirmationStatus===2)
             message = 'Reject success'
         dispatch({type:'add_success_message',payload:message})
-        navigation.navigate("indexFriend")
+        navigate("indexFriend")
 
     }
     catch (err)
@@ -264,11 +272,18 @@ const  ReactToRequest = dispatch=> async (id,email,confirmationStatus)=>{
 };
 
 
+//for sign out
+const logOut = dispatch=>async ()=>{
+    dispatch({type: 'signout'});
+};
+
+
+
 export const {Provider, Context} = createDataContext(
     requestReducer,
     {addReq,updateStatus,ReactToRequest,howMuchISpentThisMonth,requestsByStatus,
         getRequestsByConfirmationStatus, requestsByCategory,updateRequest,deleteRequest,requestsByCloseDate,
         getAllRequests,requestsByOpenDate, getRequestById, approveByPasses,
-        clearErrorMessage,clearSuccessMessage,remindFriends},
+        clearErrorMessage,clearSuccessMessage,remindFriends, logOut},
     { errorMessage:'',successMessage:''}
 );
