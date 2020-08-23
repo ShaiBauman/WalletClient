@@ -1,6 +1,6 @@
 import React, {useContext, useEffect, useState} from 'react';
-import {View, StyleSheet, ScrollView, TouchableOpacity} from 'react-native'
-import {Text, Input,  Slider} from "react-native-elements";
+import {View, StyleSheet, ScrollView, TouchableOpacity, TextInput} from 'react-native'
+import {Text, Slider} from "react-native-elements";
 import DropDownForm from "../components/DropDownForm";
 import {Context as UserContext} from "../context/UserContext";
 import DialogForm from "../components/DialogForm";
@@ -53,7 +53,7 @@ const AddItem = (item, item2, setFunc) =>{
                 style={{marginLeft:10, marginRight:10}}
             />
                 <Text style={styles.textStyle}>Insert Your Average Expenses for Last Three Months</Text>
-                <Input
+                <TextInput
                 autoCapitalize="none"
                 autoCorrect={false}
                 inputStyle={styles.inputStyle}
@@ -64,7 +64,7 @@ const AddItem = (item, item2, setFunc) =>{
             />
 
                 <Text style={styles.textStyle}>Insert Your Monthly Target</Text>
-                <Input
+                <TextInput
                 autoCapitalize="none"
                 autoCorrect={false}
                 keyboardType = 'numeric'
@@ -73,6 +73,7 @@ const AddItem = (item, item2, setFunc) =>{
                 value={target}
                 baseColor={"#2F4730"}
                 onChangeText={setTarget}
+                bordered={true}
             />
 
              <Text style={styles.textStyle}>Select Your Marital Status</Text>
@@ -129,10 +130,20 @@ const AddItem = (item, item2, setFunc) =>{
     );
 };
 
+
+WalletProfileScreen.navigationOptions =()=> {
+    return {
+        header: null
+    };
+};
+
+
+
+
 const styles = StyleSheet.create({
     container:{
-        backgroundColor:'#CEB386',
-        borderColor:'#CEB386',
+        backgroundColor:'#E9D2B3',
+        borderColor:'#E9D2B3',
         flex:1
     },
 
@@ -155,37 +166,22 @@ const styles = StyleSheet.create({
         marginBottom: 0
     },
     inputStyle:{
-        textAlign: "center",
-        alignItems: "center",
-        borderColor: '#2F4730',
-
-    },
-    button: {
-        alignItems: "center",
-        padding: 10,
-        borderColor: '#2F4730',
-        borderWidth:3,
-        flexDirection: 'column',
-        justifyContent: 'space-between',
-        paddingVertical:18,
-        paddingLeft:18,
-        backgroundColor:'#80B28B',
+        height: 50,
+        fontSize:18,
         marginRight:12,
-        borderRadius:8,
-        fontSize: 15,
-        fontWeight: 'bold',
-        overflow: 'hidden',
-
+        marginLeft:12,
+        marginBottom:0,
+        marginTop:15,
+        borderWidth:0.5,
+        borderColor:'black',
+        textAlign: "center",
     },
     buttonGoOn: {
         textAlign: "center",
-        borderColor: '#80B28B',
-        borderWidth:3,
         justifyContent: 'space-between',
         paddingVertical:20,
         paddingLeft:12,
         backgroundColor:'#2F4730',
-        borderRadius:8,
         fontSize: 15,
         fontWeight: 'bold',
         overflow: 'hidden',

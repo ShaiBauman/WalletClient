@@ -30,7 +30,7 @@ const RegistrationScreen = ({navigation})=>{
 
     return(
     <View style={styles.container}>
-            <Text style={styles.title}>Registration Screen</Text>
+            <Text style={styles.title}>Registration</Text>
         <Text style={styles.subtitle}>Insert your details, please...</Text>
         <View>
             <DropDownForm
@@ -175,8 +175,8 @@ const styles = StyleSheet.create({
     container:{
         flex: 1,
         margin:0,
-        backgroundColor:'#CEB386',
-        borderColor:'#CEB386',
+        backgroundColor:'#E9D2B3',
+        borderColor:'#E9D2B3',
     },
 
     header:{
@@ -228,12 +228,9 @@ const styles = StyleSheet.create({
     },
     buttonSingUp: {
         textAlign: "center",
-        borderColor: '#80B28B',
-        borderWidth:3,
         paddingVertical:10,
         paddingLeft:12,
         backgroundColor:'#2F4730',
-        borderRadius:8,
         fontSize: 18,
         fontWeight: 'bold',
         overflow: 'hidden',

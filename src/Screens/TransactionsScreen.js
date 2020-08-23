@@ -27,51 +27,6 @@ const TransactionScreen = ({navigation})=>{
     let reqToBuy = [];
     let reqToBuyJSX = [];
 
-    const splitRequests = () => {
-        if (req_state.allRequests) {
-            for (let req of req_state.allRequests)
-            {
-                if (req.confirmationStatus === 1) {
-                    reqToBuy.push(req)
-                    }
-                else if (req.confirmationStatus === 2)
-                    {
-                        closedReqs.push(req)
-                    }
-
-            }
-            for (let com of reqToBuy) {
-                reqToBuyJSX.push(
-                    <ListItem>
-                        <Left>
-                             <Text style={styles.list}>
-                                {new Date(com.openDate).toDateString()} - {com.description} - {com.cost}
-                            </Text>
-                        </Left>
-                        <Right>
-                        {element(com._id)}
-                        </Right>
-                    </ListItem>
-                )
-            }
-            for (let close of closedReqs) {
-                closedReqsJSX.push(
-                    <ListItem>
-                        <TouchableOpacity onPress={() => {
-                            navigation.navigate('FullR', {"req": close}) //need to change!!!
-                        }}>
-                            <Text style={styles.list}>
-                                {new Date(close.openDate).toDateString()} - {close.description} - {close.cost}
-                            </Text>
-                        </TouchableOpacity>
-                    </ListItem>
-                )
-            }
-        }
-    };
-
-    splitRequests();
-
 if (!lastDigits) {
     getLastDigitsCreditCard(user_state.id).then(data => setLastDigits(data));
 }
@@ -97,12 +52,60 @@ if (!lastDigits) {
         );
     };
 
-    const element = (data) => (
-            <TouchableOpacity onPress={() => alertIndex(data)}>
+    const element = (data) => {
+        return (
+            <TouchableOpacity onPress={() => {
+                alertIndex(data)
+            }}>
                 <FontAwesome5 name="money-check-alt" size={24} color="black"/>
 
             </TouchableOpacity>
-        );
+        )};
+
+    const splitRequests = () => {
+        if (req_state.allRequests) {
+            for (let req of req_state.allRequests)
+            {
+                if (req.confirmationStatus === 1) {
+                    reqToBuy.push(req)
+                }
+                else if (req.confirmationStatus === 2)
+                {
+                    closedReqs.push(req)
+                }
+
+            }
+            for (let com of reqToBuy) {
+                reqToBuyJSX.push(
+                    <ListItem>
+                        <Left>
+                            <Text style={styles.list}>
+                                {new Date(com.openDate).toDateString()} - {com.description} - {com.cost}
+                            </Text>
+                        </Left>
+                        <Right>
+                            {element(com["_id"])}
+                        </Right>
+                    </ListItem>
+                )
+            }
+            for (let close of closedReqs) {
+                closedReqsJSX.push(
+                    <ListItem>
+                        <TouchableOpacity onPress={() => {
+                            navigation.navigate('FullR', {"req": close}) //need to change!!!
+                        }}>
+                            <Text style={styles.list}>
+                                {new Date(close.openDate).toDateString()} - {close.description} - {close.cost}
+                            </Text>
+                        </TouchableOpacity>
+                    </ListItem>
+                )
+            }
+        }
+    };
+
+    splitRequests();
 
         return(
                     <Container style={styles.container}>

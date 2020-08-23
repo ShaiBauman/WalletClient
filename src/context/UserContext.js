@@ -104,7 +104,6 @@ const addFriend = dispatch=> async (userId, friendEmail)=> {
 
 
 // for user already has login
-//need to change
 const tryLocalSignIn = dispatch => async ()=>
 {
     const id = await AsyncStorage.getItem('id');
@@ -126,7 +125,7 @@ const tryLocalSignIn = dispatch => async ()=>
 const login = dispatch=> async (email, password)=>{
     //make api request to login with that email and password
     if (email === "") {
-        email = "fake8@gmail.com";
+        email = "fake3@gmail.com";
         password = '123456'
     }
     try {
