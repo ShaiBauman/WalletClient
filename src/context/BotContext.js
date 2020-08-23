@@ -1,6 +1,5 @@
 import createDataContext from './createDataContext';
-import botGetter from "../api/botGetter";
-import MLGetter from "../api/MLGetter";
+import serverApi from "../api/serverApi";
 
 const BotReducer = (state, action) => {
   switch (action.type) {
@@ -37,7 +36,7 @@ const getBotQuestion = (question_array, num_of_question) => {
 const getBotQuest = dispatch => {
   return async () => {
     try {
-      const response = await botGetter.get('/question');
+      const response = await serverApi.get('/question');
       dispatch({ type: 'get_bot_quest', payload: response.data });
     } catch (e) {
       console.log("NetworkError")
@@ -45,9 +44,9 @@ const getBotQuest = dispatch => {
   };
 };
 
-const getMLStatus = dispatch => async (req_id, email, botScore) => {
+const setBotScore = dispatch => async (reqId, botScore) => {
     try {
-      const response = await MLGetter.post('/req', {req_id: req_id, email: email, botScore: botScore})
+      const response = await serverApi.post('/bot/insertBotScore', {reqId: reqId, botScore: botScore})
       dispatch({ type: 'get_ml_status', payload: response.data })
     } catch (e)
     {
@@ -57,6 +56,6 @@ const getMLStatus = dispatch => async (req_id, email, botScore) => {
 
 export const { Context, Provider } = createDataContext(
   BotReducer,
-  { getBotQuest, getMLStatus },
+  { getBotQuest, setBotScore },
   []
 );
