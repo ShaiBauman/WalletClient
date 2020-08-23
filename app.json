@@ -9,9 +9,9 @@
     ],
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/WLT.jpeg",
+    "icon": "./assets/WLT.png",
     "splash": {
-      "image": "./assets/WLT.jpeg",
+      "image": "./assets/WLT.png",
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
