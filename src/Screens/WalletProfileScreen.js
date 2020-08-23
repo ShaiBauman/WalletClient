@@ -5,6 +5,7 @@ import DropDownForm from "../components/DropDownForm";
 import {Context as UserContext} from "../context/UserContext";
 import DialogForm from "../components/DialogForm";
 import {Portal, Provider} from "react-native-paper";
+import Spacer from "../components/Spacer";
 
 
 const WalletProfileScreen = (navigation)=>{
@@ -36,6 +37,7 @@ const AddItem = (item, item2, setFunc) =>{
         <Provider>
             <Portal>
         <View style={styles.container}>
+            <Spacer><Spacer><Spacer></Spacer></Spacer></Spacer>
             <Text style={styles.header}>My Profile</Text>
             <ScrollView>
 
@@ -144,7 +146,8 @@ const styles = StyleSheet.create({
     container:{
         backgroundColor:'#E9D2B3',
         borderColor:'#E9D2B3',
-        flex:1
+        flex:1,
+        borderWidth: 10
     },
 
     header:{
@@ -159,10 +162,10 @@ const styles = StyleSheet.create({
         backgroundColor: '#CEB386'
     },
     textStyle:{
-      fontSize: 12,
+      fontSize: 14,
         textAlign: "center",
         fontWeight: "bold",
-        marginTop: 4,
+        marginTop: 12,
         marginBottom: 0
     },
     inputStyle:{
@@ -172,7 +175,7 @@ const styles = StyleSheet.create({
         marginLeft:12,
         marginBottom:0,
         marginTop:15,
-        borderWidth:0.5,
+        borderWidth:0.7,
         borderColor:'black',
         textAlign: "center",
     },

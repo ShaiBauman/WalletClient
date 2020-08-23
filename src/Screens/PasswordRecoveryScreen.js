@@ -105,8 +105,8 @@ const styles = StyleSheet.create({
     container:{
         flex: 1,
         margin:0,
-        backgroundColor:'#CEB386',
-        borderColor:'#CEB386',
+        backgroundColor:'#E9D2B3',
+        borderColor:'#E9D2B3',
     },
 
     buttonContainer: {
