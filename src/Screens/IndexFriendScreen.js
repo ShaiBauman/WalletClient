@@ -31,7 +31,6 @@ let type= 1; //friend
  getRequestsByConfirmationStatus(type,confirmationStatus,userState.myUser.email);},[]);
 
 let requests=requestState.requests;
-console.log("user state:"+JSON.stringify(requestState.requests))
 
     const requestsStatusState = [
         {value: 'Pending Approval'},
@@ -86,7 +85,6 @@ console.log("user state:"+JSON.stringify(requestState.requests))
     );
 
     let requestsJsx= [];
-    console.log("request"+requests);
   if(requests){
     for(let request of requests) {
         requestsJsx.push(
