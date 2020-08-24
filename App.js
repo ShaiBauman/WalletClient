@@ -3,6 +3,7 @@ import { createAppContainer, createSwitchNavigator } from 'react-navigation';
 import { createStackNavigator } from 'react-navigation-stack';
 //import { createBottomTabNavigator } from 'react-navigation-tabs';
 import {Provider as UserProvider} from "./src/context/UserContext";
+import {Provider as StatProvider} from "./src/context/StatisticsContext";
 import {Provider as RequestProvider} from "./src/context/requestContext";
 import {Provider as CategoryProvider} from "./src/context/CategoryContext";
 import {Provider as FinancialProvider} from "./src/context/FinancialContext";
@@ -66,17 +67,19 @@ const App = createAppContainer(navigator);
 
 export default ()=>{
   return(
-      <BotContext>
-            <RequestProvider>
-                <CategoryProvider>
-                  <UserProvider>
-                      <FinancialProvider>
-                        <App ref={(navigator)=>{setNavigator(navigator)}}/>
-                      </FinancialProvider>
-                  </UserProvider>
-                </CategoryProvider>
-            </RequestProvider>
-      </BotContext>
+      <StatProvider>
+          <BotContext>
+                <RequestProvider>
+                    <CategoryProvider>
+                      <UserProvider>
+                          <FinancialProvider>
+                            <App ref={(navigator)=>{setNavigator(navigator)}}/>
+                          </FinancialProvider>
+                      </UserProvider>
+                    </CategoryProvider>
+                </RequestProvider>
+          </BotContext>
+      </StatProvider>
   );
 };
 
