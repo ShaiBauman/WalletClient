@@ -70,7 +70,7 @@ const FullRequest = ({ navigation }) => {
 
     friend_buttons.push(
         <TouchableOpacity onPress={() => {
-            ReactToRequest(req["_id"],user_state.myUser.email,0);
+            ReactToRequest(req["_id"],user_state.myUser.email,2);
         }}>
             <Text style={styles.button}>Reject Request</Text>
         </TouchableOpacity>

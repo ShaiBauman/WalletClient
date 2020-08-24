@@ -144,7 +144,7 @@ return(
 
 
         <Spacer>
-            <Text style={styles.subTitle}> My relief segmentation</Text>
+            <Text style={styles.subTitle}> My Statistics</Text>
             <View style={{ flexDirection: 'row',alignSelf:'center'}}>
             <TouchableOpacity style={styles.statistics}
                               onPress={()=>{navigation.navigate('assistanceStatistics')}}
@@ -153,12 +153,12 @@ return(
                 <Text style={styles.statisticTxt}>{"Statistics"}</Text>
             </TouchableOpacity>
 
-            <TouchableOpacity style={styles.statistics}
-                            //  onPress={()=>{navigation.navigate('assistanceStatistics')}}
+        {/*    <TouchableOpacity style={styles.statistics}
+                              onPress={()=>{navigation.navigate('assistanceStatistics')}}
             >
                 <Ionicons style={styles.graphIcon}name="md-done-all"  />
                 <Text style={styles.statisticTxt}>{"Future Approved"}</Text>
-            </TouchableOpacity>
+            </TouchableOpacity>*/}
 </View>
 
         </Spacer>

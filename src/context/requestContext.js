@@ -34,6 +34,11 @@ const requestReducer = (state, action)=>{
             return {...state, successMessage: ''}
         case 'signout':
             return {};
+        case 'reactToRequest':
+            console.log ("ac "+action.payload )
+            console.log ("ac "+state.requests )
+
+            return {...state,requests:state.requests.filter((req)=>req.id !== action.payload)}
         default:
             return state;
     }
@@ -49,7 +54,7 @@ const clearSuccessMessage = dispatch=>()=>{
 
 
 const addReq = dispatch=> async (RequestDto)=>{
-    console.log(Request)
+    console.log(JSON.stringify(Request))
     try {
         const response = await serverApi.patch('/request', {'request':RequestDto});
         navigate('dashboard');
@@ -254,7 +259,9 @@ const remindFriends = dispatch=> async (requestId)=>{
 const  ReactToRequest = dispatch=> async (id,email,confirmationStatus)=>{
     try {
         const response = await serverApi.post('/request/reactToRequest',{id,email,confirmationStatus});
+        console.log("answ"+id+ email+confirmationStatus+response.data)
         dispatch({type:'add_success_message',payload:response.data})
+        dispatch({type:'reactToRequest',payload:id})
         console.log("ans:"+response.data)
         navigate("indexFriend")
 
