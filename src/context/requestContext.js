@@ -34,6 +34,11 @@ const requestReducer = (state, action)=>{
             return {...state, successMessage: ''}
         case 'signout':
             return {};
+        case 'reactToRequest':
+            console.log ("ac "+action.payload )
+            console.log ("ac "+state.requests )
+
+            return {...state,requests:state.requests.filter((req)=>req.id !== action.payload)}
         default:
             return state;
     }
@@ -49,7 +54,7 @@ const clearSuccessMessage = dispatch=>()=>{
 
 
 const addReq = dispatch=> async (RequestDto)=>{
-    console.log(Request)
+    console.log(JSON.stringify(Request))
     try {
         const response = await serverApi.patch('/request', {'request':RequestDto});
         navigate('dashboard');
@@ -90,14 +95,17 @@ const getAllRequests = dispatch=> async (userType,email)=>{
 
         try {
             const response = await serverApi.post('/request/getRequestByConfirmationStatus', {userType,confirmationStatus,email});
-
+        console.log("getRequestsByConfirmationStatus"+userType+confirmationStatus+email);
         if(response.data !== null)
            // return response.data;
             dispatch({type: 'getRequestsByConfirmationStatus', payload: response.data});
             dispatch({})
         }
         catch (err)
+
         {
+            console.log("getRequestsByConfirmationStatus"+userType+confirmationStatus+email);
+
             dispatch({type:'add_error', payload:'Something went wrong with get all requests'});
         }
     };
@@ -250,12 +258,12 @@ const remindFriends = dispatch=> async (requestId)=>{
 
 const  ReactToRequest = dispatch=> async (id,email,confirmationStatus)=>{
     try {
-        const response = await serverApi.post('/request/remindFriend',{id,email,confirmationStatus});
-        let message = 'approve success'
-        if(confirmationStatus===2)
-            message = 'Reject success'
-        dispatch({type:'add_success_message',payload:message})
-        navigation.navigate("indexFriend")
+        const response = await serverApi.post('/request/reactToRequest',{id,email,confirmationStatus});
+        console.log("answ"+id+ email+confirmationStatus+response.data)
+        dispatch({type:'add_success_message',payload:response.data})
+        dispatch({type:'reactToRequest',payload:id})
+        console.log("ans:"+response.data)
+        navigate("indexFriend")
 
     }
     catch (err)

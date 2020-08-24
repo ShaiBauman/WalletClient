@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { Text,View, StyleSheet, ScrollView ,TouchableOpacity} from 'react-native'
 import { Input,Button} from 'react-native-elements'
 import Spacer from "../components/Spacer";
@@ -12,14 +12,17 @@ import { data } from "react-native-chart-kit/data";
 
 const PurchaseScreen = ({navigation})=>{
     const userState = useContext(UserContext).state;
-    const {state, addReq, getRequestsByPass } = useContext(requestContext);
+
+    const req = navigation.getParam('req');
+
+    const {addReq} = useContext(requestContext);
     const {getAllCategory} = useContext(CategoryContext);
+
     const [categories, setCategories] = useState([]);
     const [subcategories, setSubcategories] = useState([]);
-   // const {getAllSubCategory} = useContext(SubCategoryContext);
 
-
-    if (!categories.length) {
+useEffect(()=>{
+  //  if (!categories.length) {
         let temp ={};
         getAllCategory().then(function(data){
             data.forEach(c =>  c.value= c.category);
@@ -30,21 +33,12 @@ const PurchaseScreen = ({navigation})=>{
             setSubcategories(temp);
             setCategories(data);
         } );
-    }
+},[])
 
 
+    let arr1 = [];
+    let arr2= [];
 
-    //categories= getAllCategory().map(u => u.name);
-
-    //    for(let i =0 ;i<categoryState.length;i++){
-    //     if(categoryState[i].name== categoryState)
-    //     subcategories=categoryState[i].subCategory;
-    // }
-    //
-   /* let subCategoryState =[
-        {value: "food"},{value: "attraction"}, {value:"Home appliance"},
-        {value:"clothing"},{value:"housewares"},{value:"other"}];
-*/
     let necessaryMeasureState =[{value: "NotNecessary"},{value: "littleNecessary"},{value: "midNecessary"},
         {value:"veryNecessary"}];
     let necessaryMeasureStateEnum ={"NotNecessary":1,"littleNecessary":2,"midNecessary":3,"veryNecessary":4};
@@ -63,137 +57,96 @@ const PurchaseScreen = ({navigation})=>{
     const [category,setCategory]=useState('');
     const [subCategory,setSubCategory]=useState('');
     const [necessaryMeasure,setNecessaryMeasure]=useState('');
-    const [description,setDescription]=useState('');
-    const [price,setPrice]=useState(0);
-    const [remark,setRemark]=useState('');
+    const [description,setDescription]=useState(req?req.description:'');
+    const [price,setPrice]=useState(req?req.price:'');
+    const [remark,setRemark]=useState(req?req.additionalDescription:'');
 
     const funcPicture = ()=>{
         console.log("func picture");
     };
 
+    arr1.push(<Text style={styles.textStyle}>Category</Text>)
+    arr1.push(<DropDownForm
+        data={categories}
+        title={"Category"}
+        onSubmit={setCategory}
+    />)
+    arr1.push(<Text style={styles.textStyle}>subCategory</Text>)
+    arr1.push(<DropDownForm
+        data={subcategories[category] || []}
+        title={"subCategory"}
+        onSubmit={setSubCategory}
+    />)
+    arr2.push(<Text style={styles.textStyle}>Describe your product</Text>)
+    arr2.push(<Input
+        value={description}
+        onChangeText={setDescription}
+        style={styles.inputStyle}
+        autoCapitalize="none"
+        autoCorrect={false}
+        placeholder="Description"
+    />)
+    arr1.push(<Text style={styles.textStyle}>How much it costs?</Text>)
+    arr1.push(<Input
+        value={price}
+        onChangeText={setPrice}
+        style={styles.inputStyle}
+        autoCapitalize="none"
+        autoCorrect={false}
+        placeholder="Price"
+        keyboardType = 'numeric'
+
+    />)
+    arr1.push(<Text style={styles.textStyle}>Necessity</Text>)
+    arr1.push(<DropDownForm
+        data={necessaryMeasureState}
+        title={"Necessity"}
+        onSubmit={setNecessaryMeasure}
+    />)
+    arr2.push(    <Text style={styles.textStyle}>Additional text</Text>)
+    arr2.push(<Input
+        // label={"Remarks"}
+        value={remark}
+        onChangeText={setRemark}
+        style={styles.inputStyle}
+        autoCapitalize="none"
+        autoCorrect={false}
+        placeholder="Remarks"
+
+    />)
 
     return(
         <View style={styles.container}>
-            <Spacer>
-                <Text style={styles.titleText}>Sending a request</Text>
-            </Spacer>
             <ScrollView>
-                <Spacer>
-                    <Text style={styles.textStyle}>Category</Text>
-                <DropDownForm
-                    data={categories}
-                    title={"Category"}
-                    onSubmit={setCategory}
-                />
-                </Spacer>
+                <Text style={styles.titleText}>New Request</Text>
+                {!req?arr1:null}
+                {arr2}
 
-                <Spacer>
-                    <Text style={styles.textStyle}>subCategory</Text>
-                    <DropDownForm
-                        data={subcategories[category] || []}
-                        title={"subCategory"}
-                        onSubmit={setSubCategory}
-                    />
-                </Spacer>
+            <TouchableOpacity
+                onPress={()=>{
+                    const requestDto = {
+                        email: userState.myUser.email,
+                        openDate: null,
+                        closedDate:"",
+                        category: category,
+                        subCategory:subCategory,
+                        cost: price,
+                        description: description,
+                        necessity: necessaryMeasureStateEnum[necessaryMeasure],
+                        additionalDescription: remark,
+                        pic: "",
+                        friendsConfirmation: friendConfirmation,
+                        confirmationStatus: false,// open ,approved, inProcess;
+                        botScore:30
+                    }
+                    addReq(requestDto)
+                }}
+            >
 
-
-                <Spacer>
-                    <Text style={styles.textStyle}>Describe your product</Text>
-                <Input
-                    value={description}
-                    onChangeText={setDescription}
-                    style={styles.inputStyle}
-                    autoCapitalize="none"
-                    autoCorrect={false}
-                    placeholder="Description"
-                />
-                </Spacer>
-
-                <Spacer>
-                    <Text style={styles.textStyle}>How much it costs?</Text>
-                <Input
-                    //secureTextEntry={true}
-                  //  label={"Price"}
-                    value={price}
-                    onChangeText={setPrice}
-                    style={styles.inputStyle}
-                    autoCapitalize="none"
-                    autoCorrect={false}
-                    placeholder="Price"
-                    keyboardType = 'numeric'
-
-                />
-                </Spacer>
-
-                <Spacer>
-                    <Text style={styles.textStyle}>Necessity</Text>
-                <DropDownForm
-                    data={necessaryMeasureState}
-                    title={"Necessity"}
-                    onSubmit={setNecessaryMeasure}
-                />
-                </Spacer>
-
-                <Spacer>
-                    <Text style={styles.textStyle}>Additional text</Text>
-                <Input
-                   // label={"Remarks"}
-                    value={remark}
-                    onChangeText={setRemark}
-                    style={styles.inputStyle}
-                    autoCapitalize="none"
-                    autoCorrect={false}
-                    placeholder="Remarks"
-
-                />
-                </Spacer>
-
-            <Spacer>
-
-                <TouchableOpacity
-                    onPress={funcPicture}
-                >
-                    <Text style={styles.Button}>
-                        {"Insert Picture"}</Text>
-
-                </TouchableOpacity>
-            </Spacer>
-
-                <Spacer>
-                    <View style={styles.buttonContainer}>
-
-                        <TouchableOpacity
-                            onPress={()=>{
-                            const requestDto = {
-                                email: userState.myUser.email,
-                                openDate: null,
-                                closedDate:"",
-                                category: category,
-                                subCategory:subCategory,
-                                cost: price,
-                                description: description,
-                                necessity: necessaryMeasureStateEnum[necessaryMeasure],
-                                additionalDescription: remark,
-                                pic: "",
-                                friendsConfirmation: friendConfirmation,
-                                confirmationStatus: false,// open ,approved, inProcess;
-                                botScore:30
-                            }
-                                addReq(requestDto)
-                                navigation.navigate('dashboard');
-                            }}
-                        >
-
-                            <Text style={styles.button}>{"Send"}</Text>
-                        </TouchableOpacity>
-
-
-                    </View>
-                </Spacer>
+                <Text style={styles.button}>{"Send"}</Text>
+            </TouchableOpacity>
             </ScrollView>
-
-
-        </View>
+            </View>
     );
 };
 /*
@@ -215,7 +168,9 @@ const styles = StyleSheet.create({
         color:'#80B28B',
         fontWeight: "bold",
         fontSize:40,
-        margin:10
+        margin:10,
+        textShadowRadius:7,
+        textShadowColor:'#2F4730'
 
     },
     inputStyle:{
@@ -245,44 +200,49 @@ const styles = StyleSheet.create({
         alignItems: "center",
         padding: 10,
         borderColor: '#2F4730',
-        borderWidth:6,
+        borderWidth:4,
         flex:1,
         borderRadius:8,
-        fontSize: 15,
+        fontSize: 16,
         fontWeight: 'bold',
         textAlign:'center',
         backgroundColor:'#CEB386',
+        marginLeft: 10,
+        marginRight:10
 
 
     },
     button: {
         alignItems: "center",
-        padding: 10,
+        padding: 8,
         borderColor: '#2F4730',
         borderWidth:3,
         flex:1,
         flexDirection: 'column',
         justifyContent: 'space-between',
-        paddingVertical:18,
-        paddingLeft:18,
+        paddingVertical:15,
+      //  paddingLeft:15,
         backgroundColor:'#80B28B',
-        marginRight:12,
+       // marginRight:10,
         borderRadius:8,
-        fontSize: 17,
+        fontSize: 20,
         fontWeight: 'bold',
         overflow: 'hidden',
-        textAlign:'center'
-
+        textAlign:'center',
+        textShadowColor:'#FFF',
+        textShadowRadius:10,
     },
     buttonContainer: {
         flex: 1,
-        marginLeft:20,
+        marginLeft:10,
         marginRight:10,
-        flexDirection: 'row',
+        //flexDirection: 'row',
         justifyContent: 'center',
-        alignItems: 'center',
+      // alignItems: 'center',
       //  backgroundColor: '#CEB386'
     },
 });
 
 export default PurchaseScreen;
+
+

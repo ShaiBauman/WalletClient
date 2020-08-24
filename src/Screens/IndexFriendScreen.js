@@ -9,6 +9,7 @@ import { Foundation } from '@expo/vector-icons';
 import MyMenu from "../components/MyMenu";
 import { Ionicons } from '@expo/vector-icons';
 import { Container, Header, Content, List, ListItem, Separator,Right,Icon} from 'native-base';
+import { color } from "react-native-reanimated";
 
 const IndexFriendScreen = ({navigation})=>{
     const requestState= useContext(RequestContext).state;
@@ -88,7 +89,7 @@ let requests=requestState.requests;
   if(requests){
     for(let request of requests) {
         requestsJsx.push(
-            <ListItem>
+            <ListItem key={request["_id"]}>
                 <Text>
                     {request.description} by {request.email}
                 </Text>
@@ -109,13 +110,12 @@ return(
 
         <Text style={styles.titleText}>Hello {userState.myUser.firstName} {userState.myUser.lastName},</Text>
         <Container>
-            <Header />
+            <Header style={{textAlign:'center',backgroundColor:'#D76B49'}}>
+                <Text style={styles.subTitle}> Open Requests</Text>
+            </Header>
             <Content>
 
                 <List>
-                    <Separator bordered>
-                        <Text> Open Requests</Text>
-                    </Separator>
                     {requestsJsx}
                 </List>
             </Content>
@@ -141,34 +141,10 @@ return(
             }
         </Table>*/}
 
-        <Spacer>
-            <TouchableOpacity style={styles.Button}
-                            /*  onPress={()=>{
-                                  const approve = {
-                                      email: userState.myUser.email,
-                                      openDate: null,
-                                      closedDate:null,
-                                      category: category,
-                                      subCategory:subCategory,
-                                      cost: price,
-                                      description: description,
-                                      necessity: necessaryMeasureStateEnum[necessaryMeasure],
-                                      additionalDescription: remark,
-                                      pic: null,
-                                      friendsConfirmation: friendConfirmation,
-                                      confirmationStatus: false,// open ,approved, inProcess;
-                                      botScore:null
-                                  }
-                                  addFutureApprovedRequest(appove)
-                              }}*/
-            >
-                <Text style={styles.ButText}>
-                    {"Add a future approved purchase"}</Text>
-            </TouchableOpacity>
-        </Spacer>
+
 
         <Spacer>
-            <Text style={styles.subTitle}> My relief segmentation</Text>
+            <Text style={styles.subTitle}> My Statistics</Text>
             <View style={{ flexDirection: 'row',alignSelf:'center'}}>
             <TouchableOpacity style={styles.statistics}
                               onPress={()=>{navigation.navigate('assistanceStatistics')}}
@@ -177,12 +153,12 @@ return(
                 <Text style={styles.statisticTxt}>{"Statistics"}</Text>
             </TouchableOpacity>
 
-            <TouchableOpacity style={styles.statistics}
-                            //  onPress={()=>{navigation.navigate('assistanceStatistics')}}
+        {/*    <TouchableOpacity style={styles.statistics}
+                              onPress={()=>{navigation.navigate('assistanceStatistics')}}
             >
                 <Ionicons style={styles.graphIcon}name="md-done-all"  />
                 <Text style={styles.statisticTxt}>{"Future Approved"}</Text>
-            </TouchableOpacity>
+            </TouchableOpacity>*/}
 </View>
 
         </Spacer>
@@ -194,8 +170,9 @@ return(
 
 const styles = StyleSheet.create({
     titleText:{textAlign: 'center',color:'#80B28B',fontWeight: 'bold',fontSize:40,margin:10,textShadowRadius:7,textShadowColor:'#2F4730'},
-    subTitle:{fontWeight:'bold',color:'#2F4730',fontSize: 20,textAlign:'center', textDecorationLine: 'underline',padding: 5},
-    container: { flex: 1, padding: 16, paddingTop: 15, backgroundColor: '#FFF' },
+    subTitle:{fontWeight:'bold',color:'#2F4730',fontSize: 20,textAlign:'center', textDecorationLine: 'underline',
+        padding: 5,textShadowRadius:20,textShadowColor:'#FFF'},
+    container: { flex: 1, padding: 16, paddingTop: 15, backgroundColor: '#E9D2B3' },
     head: { justifyContent: 'center',height: 42, backgroundColor: '#80B28B' },
     text: { fontSize:12, textAlign: 'center' ,margin: 2,fontWeight:'bold',color:'#2F4730' },
     row: { flexDirection: 'row', backgroundColor: '#E9D2B3'},
@@ -203,9 +180,9 @@ const styles = StyleSheet.create({
         backgroundColor: '#80B28B', borderColor:"#2F4730", borderWidth:0.5},
     btnText: { textAlign: 'center', color: '#2F4730',fontWeight:'bold',fontSize:12},
     Button:{margin:5,alignItems: 'center', backgroundColor:'#80B28B',
-        borderColor: '#2F4730', borderWidth:4,borderRadius:8},
+        borderColor: '#2F4730', borderWidth:2,borderRadius:8},
     ButText:{color:'#2F4730',fontWeight: 'bold',fontSize: 16,textAlign:'center'},
-    statistics:{margin:15,paddingTop:35,alignSelf:'center',height:150,width:150,backgroundColor:'#D76B49',  borderColor: '#E9D2B3', borderWidth:4,borderRadius:8},
+    statistics:{margin:15,paddingTop:35,alignSelf:'center',height:150,width:150,backgroundColor:'#D76B49',  borderColor: '#FFF', borderWidth:4,borderRadius:8},
     statisticTxt:{fontSize:20,textAlign:'center',color:'#FFF'},
     graphIcon:{color:'#FFF',alignSelf: 'center', fontSize:45}
 });
