@@ -63,7 +63,8 @@ const AddItem = (item, item2, setFunc) =>{
                 value={avgExpensesLastThreeMonths }
                 onChangeText={avgExpensesLastThreeMonths}
                 keyboardType = 'numeric'
-            />
+                placeholderTextColor={"#2F4730"}
+                />
 
                 <Text style={styles.textStyle}>Insert Your Monthly Target</Text>
                 <TextInput
@@ -76,7 +77,9 @@ const AddItem = (item, item2, setFunc) =>{
                 baseColor={"#2F4730"}
                 onChangeText={setTarget}
                 bordered={true}
-            />
+                placeholderTextColor={"#2F4730"}
+
+                />
 
              <Text style={styles.textStyle}>Select Your Marital Status</Text>
                 <DropDownForm
@@ -95,7 +98,7 @@ const AddItem = (item, item2, setFunc) =>{
                     setFunc={setFixedIncomes}
                     myList={fixedIncomes}
                 />
-            </ScrollView>
+
 
             <TouchableOpacity
                 onPress={()=> {
@@ -125,7 +128,8 @@ const AddItem = (item, item2, setFunc) =>{
             >
                 <Text style={styles.buttonGoOn}>{"Go On!"}</Text>
             </TouchableOpacity>
-
+                <Spacer></Spacer>
+            </ScrollView>
         </View>
             </Portal>
         </Provider>
@@ -175,7 +179,7 @@ const styles = StyleSheet.create({
         marginLeft:12,
         marginBottom:0,
         marginTop:15,
-        borderWidth:0.7,
+        borderWidth:0.8,
         borderColor:'black',
         textAlign: "center",
     },
@@ -190,9 +194,9 @@ const styles = StyleSheet.create({
         overflow: 'hidden',
         color: '#80B28B',
         marginBottom:60,
-        marginLeft: 8,
-        marginTop:0,
-        marginRight:8,
+        marginLeft: 12,
+        marginTop:10,
+        marginRight:12,
     }
 });
 

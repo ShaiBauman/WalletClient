@@ -20,7 +20,7 @@ const userReducer = (state, action)=>{
             return {...state, errorMessage: action.payload};
         case 'signout':
             return {myUser: {}, id:'', errorMessage: '', errorMessagePassword:'',
-                isResetPass:false, myFriends:[]};
+                isResetPass:false, myFriends:[], passes:0};
         case 'answer_password':
             return {...state, isAnswerCorrect: action.payload};
         case 'add_friend':
@@ -31,6 +31,8 @@ const userReducer = (state, action)=>{
             return {...state, myFriends: action.payload}
         case 'signin':
             return {errorMessage: '', id: action.payload};
+        case 'update_passes':
+            return {...state, passes: action.payload}
         default:
             return state;
     }
@@ -125,7 +127,7 @@ const tryLocalSignIn = dispatch => async ()=>
 const login = dispatch=> async (email, password)=>{
     //make api request to login with that email and password
     if (email === "") {
-        email = "fake950@gmail.com";
+        email = "fake100@gmail.com";
         password = '123456'
     }
     try {
@@ -236,10 +238,27 @@ const getUserById = dispatch => async (id)=>{
 
 }
 */
+
+const getPasses =  dispatch=> async (email)=> {
+    try {
+        const response = await serverApi.post('/user/passes', {email});
+
+        dispatch({type: 'update_passes', payload: response.data});
+
+    }
+    catch (e) {
+        dispatch({type:'add_error', payload:'Something went wrong with get passes'});
+    }
+
+}
+
+
 export const {Provider, Context} = createDataContext(
     userReducer,
     { addUser, updateUser, getFriendsByEmail, clearErrorMessage, getUserByEmail,
-        tryLocalSignIn, login, signOut, addFriend, deleteFriend, verificationPasswordAnswer,updatePassword },
-    { id: '', myUser: {}, isResetPass: false, errorMessage:'', errorMessagePassword:'',myFriends:[]
+        tryLocalSignIn, login, signOut, addFriend,
+        deleteFriend, verificationPasswordAnswer,updatePassword, getPasses },
+    { id: '', myUser: {}, isResetPass: false,
+        errorMessage:'', errorMessagePassword:'',myFriends:[], passes:0
     }
 );

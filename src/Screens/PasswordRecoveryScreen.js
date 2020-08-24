@@ -33,6 +33,7 @@ const PasswordRecoveryScreen = () =>
                 title="Confirm"
                 onPress={() => {
                     updatePassword(email, password)
+                    state.isResetPass = false
                 }}
             >
                 <Text style={styles.buttonSingUp}>{"Confirm"}</Text>
@@ -84,7 +85,7 @@ const PasswordRecoveryScreen = () =>
             <Text style={styles.title}>Password Recovery</Text>
             {changePassJSX}
         </View>
-      );
+    );
 };
 
 PasswordRecoveryScreen.navigationOptions =()=> {

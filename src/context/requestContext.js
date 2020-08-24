@@ -1,4 +1,4 @@
-import {AsyncStorage} from 'react-native';
+import {Alert, AsyncStorage} from 'react-native';
 import createDataContext from "./createDataContext";
 import serverApi from "../api/serverApi";
 import {navigate} from "../navigationRef";
@@ -8,10 +8,14 @@ const requestReducer = (state, action)=>{
     {
         case 'get_all_requests':
             return {...state, allRequests: action.payload};
-        case 'add_error':
+        case 'add_error': {
+            Alert.alert("", action.payload);
             return {...state, errorMessage: action.payload};
-        case 'add_success_message':
+        }
+        case 'add_success_message': {
+            Alert.alert("", action.payload);
             return {...state, successMessage: action.payload};
+        }
         case 'howMuchISpentThisMonth':
             return {...state,requests:action.payload};
         case 'requestsByStatus':
@@ -131,9 +135,11 @@ const approveByPasses=dispatch=>async (userId,requestId)=>{
     try{
         const response = await serverApi.post('/request/approveByPasses', {userId,requestId});
         dispatch({type:'add_success_message',payload: response.data})
+        navigate("dashboard")
 
-        }catch (err) {
-        dispatch({type:'add_error', payload:'Something went wrong with get request'});
+
+    }catch (err) {
+        dispatch({type:'add_error', payload:'Something went wrong with approve by pass'});
     }
 
 };
@@ -259,10 +265,9 @@ const remindFriends = dispatch=> async (requestId)=>{
 const  ReactToRequest = dispatch=> async (id,email,confirmationStatus)=>{
     try {
         const response = await serverApi.post('/request/reactToRequest',{id,email,confirmationStatus});
-        console.log("answ"+id+ email+confirmationStatus+response.data)
         dispatch({type:'add_success_message',payload:response.data})
         dispatch({type:'reactToRequest',payload:id})
-        console.log("ans:"+response.data)
+        const response = await serverApi.post('/request/remindFriend',{id,email,confirmationStatus});
         navigate("indexFriend")
 
     }
