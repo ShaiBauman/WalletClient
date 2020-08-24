@@ -12,45 +12,42 @@ const TransactionScreen = ({navigation})=>{
     const {getApprovedReq, getPaidReq, getRequestById, changeApprovedToPaid } = useContext(RequestContext);
     const {getLastDigitsCreditCard, makeTransaction} = useContext(FinancialContext);
 
-    const [lastDigits, setLastDigits ] = useState('');
-
     useEffect(() => {
         getPaidReq(user_state.myUser.email);
         getApprovedReq(user_state.myUser.email);
     }, []);
 
-    if (!lastDigits) {
-        getLastDigitsCreditCard(user_state.id).then(data => setLastDigits(data));
-    }
     let closedReqsJSX = [];
     let reqToBuyJSX = [];
 
-if (!lastDigits) {
-    getLastDigitsCreditCard(user_state.id).then(data => setLastDigits(data));
-}
-
     const alertIndex =(data)=> {
-        if(!lastDigits) {
-            Alert.alert("There is no credit card to charge", "Please add your credit card" );
-            return;
-        }
+        getLastDigitsCreditCard(user_state.id).then(function (data) {
+            const lastDigits = data;
 
-        Alert.alert(
-            'Buy',
-            'Are you sure that you want to load your prepaid card that ends in '+lastDigits+'?',
-            [
-                {
-                    text: 'Cancel',
-                    onPress: () => undefined,
-                    style: 'cancel'
-                },
-                { text: 'OK', onPress: () => {
-                    makeTransaction(user_state.id, data["_id"])
-                    changeApprovedToPaid(user_state.id, data)
-                } }
-            ],
-            { cancelable: false }
-        );
+            if(!lastDigits) {
+                Alert.alert("There is no credit card to charge", "Please add your credit card" );
+                return;
+            }
+
+            Alert.alert(
+                'Buy',
+                'Are you sure that you want to load your prepaid card that ends in '+lastDigits+'?',
+                [
+                    {
+                        text: 'Cancel',
+                        onPress: () => undefined,
+                        style: 'cancel'
+                    },
+                    { text: 'OK', onPress: () => {
+                            makeTransaction(user_state.id, data["_id"]);
+                            changeApprovedToPaid(user_state.id, data)
+                        } }
+                ],
+                { cancelable: false }
+            );
+
+        });
+
     };
 
     const element = (data) => {
