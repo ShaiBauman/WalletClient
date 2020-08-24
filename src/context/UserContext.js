@@ -1,4 +1,4 @@
-import {AsyncStorage} from '@react-native-community/async-storage';
+import AsyncStorage from '@react-native-community/async-storage';
 import createDataContext from "./createDataContext";
 import serverApi from "../api/serverApi";
 import {navigate} from "../navigationRef";
