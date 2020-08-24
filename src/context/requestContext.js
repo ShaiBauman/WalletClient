@@ -32,6 +32,8 @@ const requestReducer = (state, action)=>{
             return {...state,requests:action.payload};
         case 'getRequestsByConfirmationStatus':
             return {...state,requests:action.payload};
+        case 'delete_request':
+            return {...state, requests: state.requests.filter((req) => req["_id"] !== action.payload)}
         case 'changeApprovedToPaid':
             return {...state,
                 ApprovedReq: state.ApprovedReq.filter((req) => req["_id"] !== action.payload.req["_id"]),
@@ -265,6 +267,7 @@ const updateRequest = dispatch=> async (requestDto)=>{
     const deleteRequest = dispatch=> async (id)=>{
     try {
         const response = await serverApi.post('/request/deleteRequest',{id});
+        dispatch({type:'delete_request', payload: id})
         dispatch({type:'add_success_message',payload: response.data})
         navigate('openReqs');
     }
