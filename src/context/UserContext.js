@@ -127,7 +127,7 @@ const tryLocalSignIn = dispatch => async ()=>
 const login = dispatch=> async (email, password)=>{
     //make api request to login with that email and password
     if (email === "") {
-        email = "fake100@gmail.com";
+        email = "fake455@gmail.com";
         password = '123456'
     }
     try {
@@ -212,7 +212,7 @@ const deleteFriend = dispatch=> async (userId, friendEmail)=> {
     try {
         const response = await serverApi.post('/user/deleteWalletFriend', {userId, friendEmail});
 
-        dispatch({type: 'delete_user', payload: response.data});
+        dispatch({type: 'delete_friend', payload: response.data});
 
     }
     catch (e) {

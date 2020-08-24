@@ -32,6 +32,14 @@ const requestReducer = (state, action)=>{
             return {...state,requests:action.payload};
         case 'getRequestsByConfirmationStatus':
             return {...state,requests:action.payload};
+        case 'changeApprovedToPaid':
+            return {...state,
+                ApprovedReq: state.ApprovedReq.filter((req) => req["_id"] !== action.payload.req["_id"]),
+                PaidReq: [...state.PaidReq, action.payload.req]}
+        case 'getApprovedReq':
+            return {...state,ApprovedReq:action.payload};
+        case 'getPaidReq':
+            return {...state,PaidReq:action.payload};
         case 'clear_error_message':
             return {...state, errorMessage: ''}
         case 'clear_success_message':
@@ -39,10 +47,7 @@ const requestReducer = (state, action)=>{
         case 'signout':
             return {};
         case 'reactToRequest':
-            console.log ("ac "+action.payload )
-            console.log ("ac "+state.requests )
-
-            return {...state,requests:state.requests.filter((req)=>req.id !== action.payload)}
+            return {...state,requests:state.requests.filter((req)=>req["_id"] !== action.payload)}
         default:
             return state;
     }
@@ -94,22 +99,43 @@ const getAllRequests = dispatch=> async (userType,email)=>{
         dispatch({type:'add_error', payload:'Something went wrong with get all requests'});
     }
 }
-
+const changeApprovedToPaid = dispatch => async (userId, req) => {
+    dispatch({type: 'changeApprovedToPaid', payload: {userId, req}});
+}
+const getApprovedReq = dispatch => async (email)=>{
+    try {
+        const response = await serverApi.post('/request/getRequestByConfirmationStatus',
+            {"userType":1,"confirmationStatus":1,email});
+        if(response.data !== null)
+            dispatch({type: 'getApprovedReq', payload: response.data});
+    }
+    catch (err)
+    {
+        dispatch({type:'add_error', payload:'Something went wrong with getApprovedReq'});
+    }
+};
+const getPaidReq = dispatch => async (email)=>{
+    try {
+        const response = await serverApi.post('/request/getRequestByConfirmationStatus',
+            {"userType":1,"confirmationStatus":2,email});
+        if(response.data !== null)
+            dispatch({type: 'getPaidReq', payload: response.data});
+    }
+    catch (err)
+    {
+        dispatch({type:'add_error', payload:'Something went wrong with getPaidReq'});
+    }
+};
     const getRequestsByConfirmationStatus = dispatch=> async (userType,confirmationStatus,email)=>{
 
         try {
             const response = await serverApi.post('/request/getRequestByConfirmationStatus', {userType,confirmationStatus,email});
-        console.log("getRequestsByConfirmationStatus"+userType+confirmationStatus+email);
         if(response.data !== null)
-           // return response.data;
             dispatch({type: 'getRequestsByConfirmationStatus', payload: response.data});
-            dispatch({})
         }
         catch (err)
 
         {
-            console.log("getRequestsByConfirmationStatus"+userType+confirmationStatus+email);
-
             dispatch({type:'add_error', payload:'Something went wrong with get all requests'});
         }
     };
@@ -251,6 +277,7 @@ const updateRequest = dispatch=> async (requestDto)=>{
 const remindFriends = dispatch=> async (requestId)=>{
     try {
         const response = await serverApi.post('/request/remindFriend',{requestId});
+        console.log("response.data "+response.data)
         dispatch({type:'add_success_message',payload: response.data})
             navigate('openReqs');
 
@@ -267,7 +294,7 @@ const  ReactToRequest = dispatch=> async (id,email,confirmationStatus)=>{
         const response = await serverApi.post('/request/reactToRequest',{id,email,confirmationStatus});
         dispatch({type:'add_success_message',payload:response.data})
         dispatch({type:'reactToRequest',payload:id})
-        const response = await serverApi.post('/request/remindFriend',{id,email,confirmationStatus});
+        await serverApi.post('/request/remindFriend',{id,email,confirmationStatus});
         navigate("indexFriend")
 
     }
@@ -289,8 +316,8 @@ const logOut = dispatch=>async ()=>{
 export const {Provider, Context} = createDataContext(
     requestReducer,
     {addReq,updateStatus,ReactToRequest,howMuchISpentThisMonth,requestsByStatus,
-        getRequestsByConfirmationStatus, requestsByCategory,updateRequest,deleteRequest,requestsByCloseDate,
-        getAllRequests,requestsByOpenDate, getRequestById, approveByPasses,
-        clearErrorMessage,clearSuccessMessage,remindFriends, logOut},
+        getRequestsByConfirmationStatus, getPaidReq, getApprovedReq, requestsByCategory,updateRequest,deleteRequest,
+        requestsByCloseDate, getAllRequests,requestsByOpenDate, getRequestById, approveByPasses,
+        clearErrorMessage,clearSuccessMessage,remindFriends, logOut, changeApprovedToPaid},
     { errorMessage:'',successMessage:''}
 );

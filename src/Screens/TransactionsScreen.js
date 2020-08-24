@@ -9,22 +9,20 @@ import { FontAwesome5 } from '@expo/vector-icons';
 const TransactionScreen = ({navigation})=>{
     const user_state = useContext(UserContext).state;
    const req_state = useContext(RequestContext).state;
-    const {getAllRequests } = useContext(RequestContext);
+    const {getApprovedReq, getPaidReq, getRequestById, changeApprovedToPaid } = useContext(RequestContext);
     const {getLastDigitsCreditCard, makeTransaction} = useContext(FinancialContext);
 
     const [lastDigits, setLastDigits ] = useState('');
 
     useEffect(() => {
-        getAllRequests(user_state.myUser.walletMember ? 0 : 1, user_state.myUser.email);
-        getAllRequests(user_state.myUser.walletMember ? 0 : 1, user_state.myUser.email);
+        getPaidReq(user_state.myUser.email);
+        getApprovedReq(user_state.myUser.email);
     }, []);
 
     if (!lastDigits) {
         getLastDigitsCreditCard(user_state.id).then(data => setLastDigits(data));
     }
-    let closedReqs = [];
     let closedReqsJSX = [];
-    let reqToBuy = [];
     let reqToBuyJSX = [];
 
 if (!lastDigits) {
@@ -46,7 +44,10 @@ if (!lastDigits) {
                     onPress: () => undefined,
                     style: 'cancel'
                 },
-                { text: 'OK', onPress: () => makeTransaction(user_state.id, data) }
+                { text: 'OK', onPress: () => {
+                    makeTransaction(user_state.id, data["_id"])
+                    changeApprovedToPaid(user_state.id, data)
+                } }
             ],
             { cancelable: false }
         );
@@ -61,66 +62,52 @@ if (!lastDigits) {
 
             </TouchableOpacity>
         )};
-
-    const splitRequests = () => {
-        if (req_state.allRequests) {
-            for (let req of req_state.allRequests)
-            {
-                if (req.confirmationStatus === 1) {
-                    reqToBuy.push(req)
-                }
-                else if (req.confirmationStatus === 2)
-                {
-                    closedReqs.push(req)
-                }
-
-            }
-            for (let com of reqToBuy) {
-                reqToBuyJSX.push(
-                    <ListItem>
-                        <Left>
-                            <Text style={styles.list}>
-                                {new Date(com.openDate).toDateString()} - {com.description} - {com.cost}
-                            </Text>
-                        </Left>
-                        <Right>
-                            {element(com["_id"])}
-                        </Right>
-                    </ListItem>
-                )
-            }
-            for (let close of closedReqs) {
-                closedReqsJSX.push(
-                    <ListItem>
-                        <TouchableOpacity onPress={() => {
-                            navigation.navigate('FullR', {"req": close}) //need to change!!!
-                        }}>
-                            <Text style={styles.list}>
-                                {new Date(close.openDate).toDateString()} - {close.description} - {close.cost}
-                            </Text>
-                        </TouchableOpacity>
-                    </ListItem>
-                )
-            }
-        }
-    };
-
-    splitRequests();
-
-        return(
-                    <Container style={styles.container}>
-                        <Content>
-                            <Separator bordered>
-                        <Text style={styles.title}>Request You Can Realize Now</Text>
-                         </Separator>
-                    {reqToBuyJSX}
-                            <Separator bordered>
-                        <Text style={styles.title}>Closed Requests</Text>
-                            </Separator>
-                    {closedReqsJSX}
-                </Content>
-            </Container>
+    if (req_state.ApprovedReq) {
+    for (let com of req_state.ApprovedReq) {
+        reqToBuyJSX.push(
+            <ListItem>
+                <Left>
+                    <Text style={styles.list}>
+                        {new Date(com.openDate).toDateString()} - {com.description} - {com.cost}
+                    </Text>
+                </Left>
+                <Right>
+                    {element(com)}
+                </Right>
+            </ListItem>
         )
+    }
+    }
+    if (req_state.PaidReq) {
+        for (let close of req_state.PaidReq) {
+            closedReqsJSX.push(
+                <ListItem>
+                    <TouchableOpacity onPress={() => {
+                        navigation.navigate('FullR', {"req": close})
+                    }}>
+                        <Text style={styles.list}>
+                            {new Date(close.openDate).toDateString()} - {close.description} - {close.cost}
+                        </Text>
+                    </TouchableOpacity>
+                </ListItem>
+            )
+        }
+    }
+
+    return(
+                <Container style={styles.container}>
+                    <Content>
+                        <Separator bordered>
+                    <Text style={styles.title}>Request You Can Realize Now</Text>
+                     </Separator>
+                {reqToBuyJSX}
+                        <Separator bordered>
+                    <Text style={styles.title}>Closed Requests</Text>
+                        </Separator>
+                {closedReqsJSX}
+            </Content>
+        </Container>
+    )
 };
 
 const styles = StyleSheet.create({

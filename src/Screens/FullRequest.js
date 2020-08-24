@@ -86,12 +86,6 @@ const FullRequest = ({ navigation }) => {
             <Spacer>
                 {(req.confirmationStatus < 2 && req.email === user_state.myUser.email)? edit_buttons : null}
                 { req.email !== user_state.myUser.email ? friend_buttons : null }
-                {state.successMessage ?
-                    (<Text style={styles.successMessage}>{state.successMessage}</Text>)
-                    :null}
-                {state.errorMessage ?
-                    (<Text style={styles.errorMessage}>{state.errorMessage}</Text>)
-                    :null}
 
             <NavLink
                 routeName={"dashboard"}

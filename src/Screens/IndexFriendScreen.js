@@ -90,16 +90,16 @@ let requests=requestState.requests;
     for(let request of requests) {
         requestsJsx.push(
             <ListItem key={request["_id"]}>
+                <TouchableOpacity onPress={()=> {
+                    navigation.navigate('FullR',{'req':request});
+                }}>
                 <Text>
                     {request.description} by {request.email}
                 </Text>
                 <Right>
-                    <TouchableOpacity onPress={()=> {
-                        navigation.navigate('FullR',{'req':request});
-                    }}>
                      <Icon name="arrow-forward" />
-                    </TouchableOpacity>
                 </Right>
+            </TouchableOpacity>
             </ListItem>
         )
     }}
