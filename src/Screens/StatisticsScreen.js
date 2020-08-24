@@ -113,7 +113,8 @@ const StatisticsScreen = ()=>{
         </Text>
     )
     stats.push(    <Text>
-            Your approved transactions vs denied transactions ratio is {state.approvedVsDenied}
+            Your approved transactions are {state.approvedVsDenied["Approved"]}
+            Your denied transactions are {state.approvedVsDenied["Denied"]}
         </Text>
     )
     stats.push(<Text>
