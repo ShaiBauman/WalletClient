@@ -7,8 +7,6 @@ const financialReducer = (state, action)=>{
     {
         case 'add_credit_card':
             return {...state, lastDigits: action.payload};
-        case 'make_transaction':
-            return {...state, lastDigits: action.payload};
         case 'add_error':
             return {...state, errorMessage: action.payload};
         default:
@@ -66,9 +64,7 @@ const makeTransaction = dispatch =>async (userId, requestId)=>{
             error => console.log(error)
         );
         if(response.data) {
-            dispatch({type: 'make_transaction', payload: response.data});
-            navigate("transactions")
-
+            navigate("transactions");
         }
     }
     catch (err)

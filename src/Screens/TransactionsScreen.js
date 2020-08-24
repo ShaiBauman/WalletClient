@@ -8,30 +8,29 @@ import { FontAwesome5 } from '@expo/vector-icons';
 
 const TransactionScreen = ({navigation})=>{
     const user_state = useContext(UserContext).state;
-   const req_state = useContext(RequestContext).state;
+    const req_state = useContext(RequestContext).state;
+    const financial_state = useContext(FinancialContext).state;
     const {getApprovedReq, getPaidReq, getRequestById, changeApprovedToPaid } = useContext(RequestContext);
     const {getLastDigitsCreditCard, makeTransaction} = useContext(FinancialContext);
 
     useEffect(() => {
         getPaidReq(user_state.myUser.email);
         getApprovedReq(user_state.myUser.email);
+        getLastDigitsCreditCard(user_state.id);
     }, []);
 
     let closedReqsJSX = [];
     let reqToBuyJSX = [];
 
     const alertIndex =(data)=> {
-        getLastDigitsCreditCard(user_state.id).then(function (data) {
-            const lastDigits = data;
-
-            if(!lastDigits) {
+            if(!financial_state.lastDigits) {
                 Alert.alert("There is no credit card to charge", "Please add your credit card" );
                 return;
             }
 
             Alert.alert(
                 'Buy',
-                'Are you sure that you want to load your prepaid card that ends in '+lastDigits+'?',
+                'Are you sure that you want to load your prepaid card that ends in '+financial_state.lastDigits+'?',
                 [
                     {
                         text: 'Cancel',
@@ -45,8 +44,6 @@ const TransactionScreen = ({navigation})=>{
                 ],
                 { cancelable: false }
             );
-
-        });
 
     };
 

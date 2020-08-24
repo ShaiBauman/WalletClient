@@ -10,7 +10,7 @@ const RegistrationScreen = ({navigation})=>{
     console.disableYellowBox = true;
 
 
-    const {state, addUser, clearErrorMessage} = useContext(UserContext);
+    const {state, RegisterNewUser, clearErrorMessage} = useContext(UserContext);
 
     const userTypeState = [
         {value: 'wallet'},
@@ -143,7 +143,7 @@ const RegistrationScreen = ({navigation})=>{
                         "yearOfBirth":yearOfBirth,
                         "walletMember":myUserType
                     }
-        addUser(userDto);
+        RegisterNewUser(userDto);
                 }}
                 >
                <Text style={styles.buttonSingUp}>{"Sign up"}</Text>

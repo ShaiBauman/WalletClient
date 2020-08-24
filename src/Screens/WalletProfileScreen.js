@@ -18,7 +18,7 @@ const WalletProfileScreen = (navigation)=>{
 
 
     let maritalStatusState =[     //    Bachelor = 0,Married=1, Divorcee=2, Widower=3
-        {value: "Bachelor"},{value: "Married"}, {value:"Divorcee"},{value:"Widower"}];
+        {value: "Single"},{value: "Married"}, {value:"Divorcee"},{value:"Widower"}];
 
     const [target, setTarget] = useState(state.myUser.target);
     const [avgExpensesLastThreeMonths, setAvgExpensesLastThreeMonths] = useState(0);

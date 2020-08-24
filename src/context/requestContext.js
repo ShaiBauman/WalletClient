@@ -32,6 +32,8 @@ const requestReducer = (state, action)=>{
             return {...state,requests:action.payload};
         case 'getRequestsByConfirmationStatus':
             return {...state,requests:action.payload};
+        case 'delete_request':
+            return {...state, requests: state.requests.filter((req) => req["_id"] !== action.payload)}
         case 'changeApprovedToPaid':
             return {...state,
                 ApprovedReq: state.ApprovedReq.filter((req) => req["_id"] !== action.payload.req["_id"]),
@@ -105,7 +107,7 @@ const changeApprovedToPaid = dispatch => async (userId, req) => {
 const getApprovedReq = dispatch => async (email)=>{
     try {
         const response = await serverApi.post('/request/getRequestByConfirmationStatus',
-            {"userType":1,"confirmationStatus":1,email});
+            {"userType":0,"confirmationStatus":1,email});
         if(response.data !== null)
             dispatch({type: 'getApprovedReq', payload: response.data});
     }
@@ -117,7 +119,7 @@ const getApprovedReq = dispatch => async (email)=>{
 const getPaidReq = dispatch => async (email)=>{
     try {
         const response = await serverApi.post('/request/getRequestByConfirmationStatus',
-            {"userType":1,"confirmationStatus":2,email});
+            {"userType":0,"confirmationStatus":2,email});
         if(response.data !== null)
             dispatch({type: 'getPaidReq', payload: response.data});
     }
@@ -265,6 +267,7 @@ const updateRequest = dispatch=> async (requestDto)=>{
     const deleteRequest = dispatch=> async (id)=>{
     try {
         const response = await serverApi.post('/request/deleteRequest',{id});
+        dispatch({type:'delete_request', payload: id})
         dispatch({type:'add_success_message',payload: response.data})
         navigate('openReqs');
     }
