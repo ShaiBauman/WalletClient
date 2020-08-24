@@ -39,9 +39,9 @@ useEffect(()=>{
     let arr1 = [];
     let arr2= [];
 
-    let necessaryMeasureState =[{value: "NotNecessary"},{value: "littleNecessary"},{value: "midNecessary"},
-        {value:"veryNecessary"}];
-    let necessaryMeasureStateEnum ={"NotNecessary":1,"littleNecessary":2,"midNecessary":3,"veryNecessary":4};
+    let necessaryMeasureState =[{value: "Not Necessary"},{value: "Little"},{value: "Medium"},
+        {value:"Very Necessary"}];
+    let necessaryMeasureStateEnum ={"Not Necessary":1,"Little":2,"Medium":3,"Very Necessary":4};
 
     const friendConfirmation = [];
     const emails = userState.myUser.myWalletMembers;
