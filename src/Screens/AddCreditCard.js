@@ -1,4 +1,4 @@
-import React, {useContext, useState} from 'react';
+import React, {useContext, useState, useEffect} from 'react';
 import {View, StyleSheet, Text, Button} from 'react-native';
 import { CreditCardInput } from "react-native-credit-card-input";
 import {Context as UserContext} from "../context/UserContext";
@@ -7,15 +7,16 @@ import {Context as FinancialContext} from "../context/FinancialContext";
 const AddCreditCard = ({navigation})=>{
 
     const userState = useContext(UserContext).state;
+    const financial_state = useContext(FinancialContext).state;
     const {addCreditCard, getLastDigitsCreditCard} = useContext(FinancialContext);
 
     const [isValid, setIsValid] = useState(false);
     const [data, setData] = useState({});
-    const [lastDigits, setLastDigits ] = useState('');
 
-    if(!lastDigits) {
-        getLastDigitsCreditCard(userState.id).then(data => setLastDigits(data));
-    }
+    useEffect(() => {
+        getLastDigitsCreditCard(userState.id);
+    }, []);
+
 
     const _onChange = (form)=> {
         setIsValid(form.valid);
@@ -30,8 +31,9 @@ const AddCreditCard = ({navigation})=>{
     };
 
     let lastDigitsText =<Text></Text>;
-    if (lastDigits) {
-        lastDigitsText = <Text style={{fontSize: 18}}>Your saved credit card ends in {lastDigits}</Text>
+
+    if (financial_state.lastDigits) {
+        lastDigitsText = <Text style={{fontSize: 18}}>Your saved credit card ends in {financial_state.lastDigits}</Text>
     }
 
     return(

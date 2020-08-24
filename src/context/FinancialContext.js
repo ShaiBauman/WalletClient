@@ -8,7 +8,7 @@ const financialReducer = (state, action)=>{
         case 'add_credit_card':
             return {...state, lastDigits: action.payload};
         case 'make_transaction':
-            return {...state, lastDigits: action.payload};
+            return {...state};
         case 'add_error':
             return {...state, errorMessage: action.payload};
         default:
