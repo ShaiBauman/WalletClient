@@ -105,7 +105,7 @@ const changeApprovedToPaid = dispatch => async (userId, req) => {
 const getApprovedReq = dispatch => async (email)=>{
     try {
         const response = await serverApi.post('/request/getRequestByConfirmationStatus',
-            {"userType":1,"confirmationStatus":1,email});
+            {"userType":0,"confirmationStatus":1,email});
         if(response.data !== null)
             dispatch({type: 'getApprovedReq', payload: response.data});
     }
@@ -117,7 +117,7 @@ const getApprovedReq = dispatch => async (email)=>{
 const getPaidReq = dispatch => async (email)=>{
     try {
         const response = await serverApi.post('/request/getRequestByConfirmationStatus',
-            {"userType":1,"confirmationStatus":2,email});
+            {"userType":0,"confirmationStatus":2,email});
         if(response.data !== null)
             dispatch({type: 'getPaidReq', payload: response.data});
     }
