@@ -10,7 +10,7 @@ const RegistrationScreen = ({navigation})=>{
     console.disableYellowBox = true;
 
 
-    const {state, addUser, clearErrorMessage} = useContext(UserContext);
+    const {state, RegisterNewUser, clearErrorMessage} = useContext(UserContext);
 
     const userTypeState = [
         {value: 'wallet'},
@@ -28,12 +28,9 @@ const RegistrationScreen = ({navigation})=>{
     const [userType, setUserType] = useState('');
     const [yearOfBirth, setYearOfBirth] = useState('');
 
-
-    console.log(yearOfBirth);
-
     return(
     <View style={styles.container}>
-            <Text style={styles.title}>Registration Screen</Text>
+            <Text style={styles.title}>Registration</Text>
         <Text style={styles.subtitle}>Insert your details, please...</Text>
         <View>
             <DropDownForm
@@ -89,7 +86,7 @@ const RegistrationScreen = ({navigation})=>{
                />
             <TextInput
                 autoCapitalize="none"
-                placeholder="Password Recovery - Insert your Elementary School name..."
+                placeholder="Password Recovery - Insert Your Favorite Lecturer Name"
                 value={answerPassword}
                 onChangeText={setAnswerPassword}
                 autoCorrect={false}
@@ -146,8 +143,7 @@ const RegistrationScreen = ({navigation})=>{
                         "yearOfBirth":yearOfBirth,
                         "walletMember":myUserType
                     }
-        console.log(userDto)
-        addUser(userDto);
+        RegisterNewUser(userDto);
                 }}
                 >
                <Text style={styles.buttonSingUp}>{"Sign up"}</Text>
@@ -179,8 +175,8 @@ const styles = StyleSheet.create({
     container:{
         flex: 1,
         margin:0,
-        backgroundColor:'#CEB386',
-        borderColor:'#CEB386',
+        backgroundColor:'#E9D2B3',
+        borderColor:'#E9D2B3',
     },
 
     header:{
@@ -232,12 +228,9 @@ const styles = StyleSheet.create({
     },
     buttonSingUp: {
         textAlign: "center",
-        borderColor: '#80B28B',
-        borderWidth:3,
         paddingVertical:10,
         paddingLeft:12,
         backgroundColor:'#2F4730',
-        borderRadius:8,
         fontSize: 18,
         fontWeight: 'bold',
         overflow: 'hidden',

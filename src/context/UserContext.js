@@ -1,4 +1,4 @@
-import {AsyncStorage} from 'react-native';
+import AsyncStorage from '@react-native-community/async-storage';
 import createDataContext from "./createDataContext";
 import serverApi from "../api/serverApi";
 import {navigate} from "../navigationRef";
@@ -6,10 +6,8 @@ import {navigate} from "../navigationRef";
 const userReducer = (state, action)=>{
     switch(action.type)
     {
-        case 'add_user':
-            return {...state,errorMessage: '', myUser: action.payload};
-        case 'add_id':
-            return {...state,errorMessage: '', id: action.payload};
+        case 'log_in':
+            return {...state,errorMessage: '', id: action.payload["_id"], myUser: action.payload};
        case 'add_error':
             return {...state, errorMessagePassword: action.payload};
         case 'clear_error_message':
@@ -18,12 +16,19 @@ const userReducer = (state, action)=>{
             return {...state, errorMessagePassword: ''};
         case 'entrance_error':
             return {...state, errorMessage: action.payload};
-        case 'signout':
-            return {myUser: {}, id:'', errorMessage: ''};
+        case 'sign_out':
+            return {myUser: {}, id:'', errorMessage: '', errorMessagePassword:'',
+                isResetPass:false, myFriends:[], passes:0};
         case 'answer_password':
-            return {...state, isResetPass:action.payload};
+            return {...state, isAnswerCorrect: action.payload};
         case 'add_friend':
-            return action.payload;
+            return { ...state, myFriends: [...state.myFriends, action.payload] };
+        case 'delete_friend':
+            return {...state, myFriends: state.myFriends.filter((friend) => friend.email !== action.payload.email)};
+        case 'add_myFriends':
+            return {...state, myFriends: action.payload}
+        case 'update_passes':
+            return {...state, passes: action.payload}
         default:
             return state;
     }
@@ -33,24 +38,20 @@ const clearErrorMessage = dispatch=>()=>{
     dispatch({type: 'clear_error_message'});
 };
 // for registration V
-const addUser = dispatch=> async (userDto)=>{
-
+const RegisterNewUser = dispatch=> async (userDto)=>{
     try {
         const response = await serverApi.post('/user/signIn', {userDto});
-        await AsyncStorage.setItem('id', response.data,_id);
-        console.log(response.data + ' check');
-        dispatch({type: 'add_user', payload: response.data});
-        dispatch({type: 'add_id', payload: response.data._id});
+        await AsyncStorage.setItem('id', response.data["_id"], null);
+        dispatch({type: 'log_in', payload: response.data});
 
         if(response.data.walletMember) //the user is a wallet and a friend
         {
           navigate('Profile');
         }
-        else //the user is a friend
+        else if(response.data["friendMember"]) //the user is a friend only
         {
-            navigate('indexMember');
+            navigate('indexFriend');
         }
-        console.log(response.data.walletMember)
     }
       catch (err)
     {
@@ -65,10 +66,7 @@ const updateUser = dispatch => async (walletMemberDto) =>{
     try {
 
         const response = await serverApi.patch('/user', {walletMemberDto});
-       // await AsyncStorage.setItem('user', response.data);
-
-        dispatch({type: 'add_user', payload: response.data});
-        console.log(response.data);
+        dispatch({type: 'log_in', payload: response.data});
         navigate('dashboard');
 
     }
@@ -89,27 +87,27 @@ const getImageById = dispatch=> ()=>{
 */
 
 const addFriend = dispatch=> async (userId, friendEmail)=> {
-try {
-    console.log(userId+' '+friendEmail)
-    const response = await serverApi.post('/user/addWalletFriend', {userId, friendEmail});
+    try {
+        const response = await serverApi.post('/user/addWalletFriend', {userId, friendEmail});
 
-    dispatch({type:'add_friend', payload:response.data});
-}
-catch (e) {
-    dispatch({type:'add_error', payload:'Something went wrong with add friend'});
-}
+        dispatch({type: 'add_friend', payload: response.data});
+
+    }
+    catch (e) {
+        dispatch({type:'add_error', payload:'Something went wrong with add friend'});
+    }
 
 }
 
 
 // for user already has login
-//need to change
 const tryLocalSignIn = dispatch => async ()=>
 {
     const id = await AsyncStorage.getItem('id');
     if(id)
     {
-        dispatch({type: 'signin', payload: id});
+        const response = await serverApi.get('/user/' + id, undefined);
+        dispatch({type: 'log_in', payload: response.data});
         navigate('dashboard');
     }
     else
@@ -122,15 +120,23 @@ const tryLocalSignIn = dispatch => async ()=>
 // for Login V
 const login = dispatch=> async (email, password)=>{
     //make api request to login with that email and password
+    // if (email === "") {
+    //     email = "fake455@gmail.com";
+    //     password = '123456'
+    // }
     try {
 
         const response = await serverApi.post('/user/logIn', {email,password});
-        await AsyncStorage.setItem('id', response.data._id);
-        dispatch({type: 'add_user', payload: response.data});
-        dispatch({type: 'add_id', payload: response.data._id});
-        navigate('dashboard');
+        await AsyncStorage.setItem('id', response.data["_id"], null);
+        dispatch({type: 'log_in', payload: response.data});
+        dispatch({type: 'add_id', payload: response.data["_id"]});
 
-        // ***need to add case of friend****
+
+        if(response.data.walletMember)
+           navigate('dashboard');
+        else
+            navigate('indexFriend');
+
     }
     catch (err)
     {
@@ -142,8 +148,8 @@ const login = dispatch=> async (email, password)=>{
 //for sign out
 const signOut = dispatch=>async ()=>{
     await AsyncStorage.removeItem('id');
-    dispatch({type: 'signout'});
-    navigate('Signin');
+    dispatch({type: 'sign_out'});
+    navigate('SignIn');
 };
 
 //check answer for recovery password
@@ -151,7 +157,6 @@ const verificationPasswordAnswer = dispatch => async (email, answer) =>{
     try
     {
        const response = await serverApi.post('/user/verificationPasswordAnswer', {email, answer});
-        console.log("answer:" + response.data)
            dispatch({type: 'answer_password', payload: response.data})
             if(!response.data)
                 dispatch({type: 'add_error', payload: 'Wrong answer, try again'})
@@ -164,34 +169,55 @@ const verificationPasswordAnswer = dispatch => async (email, answer) =>{
 const updatePassword = dispatch => async (email, newPassword) => {
     try
     {
-        const response = await serverApi.post('/user/updatePassword', {email, newPassword});
-        navigate("Singin");
+        await serverApi.post('/user/updatePassword', {email, newPassword});
+        navigate("SignIn");
     }
     catch (e) {
         dispatch({type:'add_error', payload:'The password has not been updated'});
     }
 };
 
-const getUserByEmail = dispatch => async (email)=>{
-
+const getFriendsByEmail = dispatch => async (email) => {
     try{
-
-    const response = await serverApi.post('/user/byEmail', {email});
-        dispatch({type: 'add_friend', payload: response.data})
-
-    }
-    catch (e) {
+        const response = await serverApi.post('/user/usersInfo', {email})
+        dispatch({type: 'add_myFriends', payload:response.data})
+    } catch (e) {
         dispatch({type:'add_error', payload:'warning'});
 
     }
+}
 
+const deleteFriend = dispatch=> async (userId, friendEmail)=> {
+    try {
+        const response = await serverApi.post('/user/deleteWalletFriend', {userId, friendEmail});
+
+        dispatch({type: 'delete_friend', payload: response.data});
+
+    } catch (e) {
+        dispatch({type: 'add_error', payload: 'Something went wrong with delete friend'});
+    }
+}
+
+const getPasses =  dispatch=> async (email)=> {
+    try {
+        const response = await serverApi.post('/user/passes', {email});
+
+        dispatch({type: 'update_passes', payload: response.data});
+
+    }
+    catch (e) {
+        dispatch({type:'add_error', payload:'Something went wrong with get passes'});
+    }
 
 }
 
+
 export const {Provider, Context} = createDataContext(
     userReducer,
-    { addUser, updateUser, clearErrorMessage, getUserByEmail,
-        tryLocalSignIn, login, signOut, addFriend,verificationPasswordAnswer,updatePassword },
-    { id: '', myUser: {}, isResetPass: false, errorMessage:'', errorMessagePassword:''
+    {updateUser, getFriendsByEmail, clearErrorMessage,
+        tryLocalSignIn, login, signOut, addFriend, RegisterNewUser,
+        deleteFriend, verificationPasswordAnswer,updatePassword, getPasses },
+    { id: '', myUser: {}, isResetPass: false,
+        errorMessage:'', errorMessagePassword:'',myFriends:[], passes:0
     }
 );

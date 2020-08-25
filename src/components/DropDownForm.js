@@ -1,6 +1,6 @@
 import React from "react";
 import {View, StyleSheet, Text, FlatList, ScrollView} from 'react-native';
-import {Dropdown}  from 'react-native-material-dropdown';
+import {Dropdown}  from 'react-native-material-dropdown-v2';
 
 
 const DropDownForm = ({data, onSubmit,title})=>{

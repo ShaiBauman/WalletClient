@@ -1,6 +1,6 @@
 {
   "expo": {
-    "name": "HelloWorld",
+    "name": "WallLetApp",
     "slug": "wall-let-client",
     "platforms": [
       "ios",
@@ -9,9 +9,9 @@
     ],
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/icon.png",
+    "icon": "./assets/WLT.png",
     "splash": {
-      "image": "./assets/splash.png",
+      "image": "./assets/WLT.png",
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
@@ -22,7 +22,7 @@
       "**/*"
     ],
     "android": {
-      "package": "com.yuvapps.wallet",
+      "package": "com.YuvApps.walletapp",
       "versionCode": 1
     },
     "ios": {

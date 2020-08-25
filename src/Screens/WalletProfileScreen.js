@@ -1,25 +1,29 @@
-import React, {useContext, useState} from 'react';
-import {View, StyleSheet, ScrollView, TouchableOpacity} from 'react-native'
-import {Text, Input,  Slider} from "react-native-elements";
+import React, {useContext, useEffect, useState} from 'react';
+import {View, StyleSheet, ScrollView, TouchableOpacity, TextInput} from 'react-native'
+import {Text, Slider} from "react-native-elements";
 import DropDownForm from "../components/DropDownForm";
 import {Context as UserContext} from "../context/UserContext";
 import DialogForm from "../components/DialogForm";
+import {Portal, Provider} from "react-native-paper";
+import Spacer from "../components/Spacer";
 
 
 const WalletProfileScreen = (navigation)=>{
 
     console.disableYellowBox = true;
 
+
+
     const {state, updateUser } = useContext(UserContext);
 
 
     let maritalStatusState =[     //    Bachelor = 0,Married=1, Divorcee=2, Widower=3
-        {value: "Bachelor"},{value: "Married"}, {value:"Divorcee"},{value:"Widower"}];
+        {value: "Single"},{value: "Married"}, {value:"Divorcee"},{value:"Widower"}];
 
-    const [target, setTarget] = useState(0);
+    const [target, setTarget] = useState(state.myUser.target);
     const [avgExpensesLastThreeMonths, setAvgExpensesLastThreeMonths] = useState(0);
-    const [maritalStatus, setMaritalStatus] = useState('');
-    const [addictedStatus, setAddictedStatus] = useState(addictedStatus);
+    const [maritalStatus, setMaritalStatus] = useState(state.myUser.maritalStatus);
+    const [addictedStatus, setAddictedStatus] = useState(state.myUser.addictedStatus);
     const [fixedIncomes, setFixedIncomes] = useState(state.myUser.myFixedIncomes);
     const [fixedExpenses, setFixedExpenses] = useState(state.myUser.myFixedExpenses);
 
@@ -29,12 +33,11 @@ const AddItem = (item, item2, setFunc) =>{
     setFunc(item.concat(setFunc));
 }
 
-
-    console.log(maritalStatus);
-    console.log(fixedExpenses);
-
     return(
+        <Provider>
+            <Portal>
         <View style={styles.container}>
+            <Spacer><Spacer><Spacer></Spacer></Spacer></Spacer>
             <Text style={styles.header}>My Profile</Text>
             <ScrollView>
 
@@ -52,7 +55,7 @@ const AddItem = (item, item2, setFunc) =>{
                 style={{marginLeft:10, marginRight:10}}
             />
                 <Text style={styles.textStyle}>Insert Your Average Expenses for Last Three Months</Text>
-                <Input
+                <TextInput
                 autoCapitalize="none"
                 autoCorrect={false}
                 inputStyle={styles.inputStyle}
@@ -60,10 +63,11 @@ const AddItem = (item, item2, setFunc) =>{
                 value={avgExpensesLastThreeMonths }
                 onChangeText={avgExpensesLastThreeMonths}
                 keyboardType = 'numeric'
-            />
+                placeholderTextColor={"#2F4730"}
+                />
 
                 <Text style={styles.textStyle}>Insert Your Monthly Target</Text>
-                <Input
+                <TextInput
                 autoCapitalize="none"
                 autoCorrect={false}
                 keyboardType = 'numeric'
@@ -72,7 +76,10 @@ const AddItem = (item, item2, setFunc) =>{
                 value={target}
                 baseColor={"#2F4730"}
                 onChangeText={setTarget}
-            />
+                bordered={true}
+                placeholderTextColor={"#2F4730"}
+
+                />
 
              <Text style={styles.textStyle}>Select Your Marital Status</Text>
                 <DropDownForm
@@ -91,7 +98,7 @@ const AddItem = (item, item2, setFunc) =>{
                     setFunc={setFixedIncomes}
                     myList={fixedIncomes}
                 />
-            </ScrollView>
+
 
             <TouchableOpacity
                 onPress={()=> {
@@ -104,7 +111,6 @@ const AddItem = (item, item2, setFunc) =>{
                             maritalStatusScore=2
                        else //'Widower'
                             maritalStatusScore =3
-                    console.log(maritalStatusScore)
 
                     const walletMemberDto={
                            "id": state.id,
@@ -117,22 +123,35 @@ const AddItem = (item, item2, setFunc) =>{
                         "myFixedIncomes":fixedIncomes,
                         "passes":addictedStatus
                     }
-                       console.log(walletMemberDto)
                     updateUser(walletMemberDto)
                    }}
             >
                 <Text style={styles.buttonGoOn}>{"Go On!"}</Text>
             </TouchableOpacity>
-
+                <Spacer></Spacer>
+            </ScrollView>
         </View>
+            </Portal>
+        </Provider>
     );
 };
 
+
+WalletProfileScreen.navigationOptions =()=> {
+    return {
+        header: null
+    };
+};
+
+
+
+
 const styles = StyleSheet.create({
     container:{
-        backgroundColor:'#CEB386',
-        borderColor:'#CEB386',
-        flex:1
+        backgroundColor:'#E9D2B3',
+        borderColor:'#E9D2B3',
+        flex:1,
+        borderWidth: 10
     },
 
     header:{
@@ -147,53 +166,37 @@ const styles = StyleSheet.create({
         backgroundColor: '#CEB386'
     },
     textStyle:{
-      fontSize: 12,
+      fontSize: 14,
         textAlign: "center",
         fontWeight: "bold",
-        marginTop: 4,
+        marginTop: 12,
         marginBottom: 0
     },
     inputStyle:{
-        textAlign: "center",
-        alignItems: "center",
-        borderColor: '#2F4730',
-
-    },
-    button: {
-        alignItems: "center",
-        padding: 10,
-        borderColor: '#2F4730',
-        borderWidth:3,
-        flexDirection: 'column',
-        justifyContent: 'space-between',
-        paddingVertical:18,
-        paddingLeft:18,
-        backgroundColor:'#80B28B',
+        height: 50,
+        fontSize:18,
         marginRight:12,
-        borderRadius:8,
-        fontSize: 15,
-        fontWeight: 'bold',
-        overflow: 'hidden',
-
+        marginLeft:12,
+        marginBottom:0,
+        marginTop:15,
+        borderWidth:0.8,
+        borderColor:'black',
+        textAlign: "center",
     },
     buttonGoOn: {
         textAlign: "center",
-        borderColor: '#80B28B',
-        borderWidth:3,
-
         justifyContent: 'space-between',
         paddingVertical:20,
         paddingLeft:12,
         backgroundColor:'#2F4730',
-        borderRadius:8,
         fontSize: 15,
         fontWeight: 'bold',
         overflow: 'hidden',
         color: '#80B28B',
         marginBottom:60,
-        marginLeft: 8,
-        marginTop:0,
-        marginRight:8,
+        marginLeft: 12,
+        marginTop:10,
+        marginRight:12,
     }
 });
 

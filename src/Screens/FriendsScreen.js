@@ -1,4 +1,4 @@
-import React, {useContext, useState} from 'react';
+import React, {useContext, useEffect, useState} from 'react';
 import {View, StyleSheet, Text, ScrollView, FlatList, TouchableOpacity, TextInput} from 'react-native'
 import FriendForm from "../components/FriendForm";
 import {Context as UserContext} from "../context/UserContext";
@@ -7,31 +7,28 @@ const FriendsScreen = ()=>{
 
     console.disableYellowBox = true;
 
-    const {state, addFriend} = useContext(UserContext);
+    const {state, addFriend, getFriendsByEmail} = useContext(UserContext);
 
-
-    const flag = false;
-
+    useEffect(()=>{
+        getFriendsByEmail(state.myUser.email)
+    }, [])
 
     const [email, setEmail] = useState('');
-    const [friends, setFriends] = useState(state.myUser.myWalletMembers);
-
-
-
+    const [friends, setFriends] = useState(state.myFriends);
 
     return(
-
         <View style={styles.container}>
-            <Text style={styles.header}>My Friends</Text>
+       <View>
+        <Text style={styles.header}>My Friends</Text>
 
             <TextInput
                 autoCapitalize="none"
                 textContentType='email'
-                placeholder="Insert Email Of Friend "
+                placefholder="Insert Email Of Friend "
                 value={email}
                 onChangeText={setEmail}
                 autoCorrect={false}
-                selectionColor={"red"}
+                selectionColor={"black"}
                 style={styles.inputStyle}
                 placeholderTextColor={"#2F4730"}
                 contextMenuHidden={true}
@@ -40,25 +37,27 @@ const FriendsScreen = ()=>{
                 title="Add Friend"
                 onPress={()=>{
                     addFriend(state.id,email);
-                    setFriends(state.myUser.myWalletMembers)
+                    setFriends(state.myFriends)
                     setEmail('');
             }}
             >
                 <Text style={styles.button}>{"Add Friend"}</Text>
             </TouchableOpacity>
-            <ScrollView>
+       </View>
+           <ScrollView>
                 <FlatList
-                    horizontal
                     showsHorizontalScrollIndicator={false}
-                    keyExtractor = {friend=> friend.id}
-                    data = {friends}
+                    keyExtractor = {friend=> friend.email}
+                    data = {state.myFriends}
                     renderItem={({item}) =>{
-                        return  <FriendForm
+                        return(  <FriendForm
                             friend={item}
-                        />
+                        />)
                     }}
                 />
+
             </ScrollView>
+
         </View>
     );
 };
@@ -75,30 +74,31 @@ const styles = StyleSheet.create({
         fontWeight: 'bold'
     },
     button:{
-        alignItems: "center",
-        padding: 10,
+        textAlign: "center",
         borderColor: '#2F4730',
         borderWidth:3,
-        flexDirection: 'column',
-        justifyContent: 'space-between',
-        paddingVertical:18,
-        paddingLeft:18,
+        paddingVertical:6,
+        paddingHorizontal:50,
         backgroundColor:'#80B28B',
-        marginRight:12,
+        marginRight:20,
+        marginLeft: 14,
         borderRadius:8,
         fontSize: 15,
         fontWeight: 'bold',
-        overflow: 'hidden'
     },
     inputStyle:{
         height: 30,
         fontSize:12,
         marginRight:23,
-        marginLeft:10,
+        marginLeft:15,
         marginBottom:10,
+        marginTop:10,
         borderBottomWidth:0.3,
         borderColor:'black',
-        textAlign: 'center'
+        borderWidth: 1,
+        textAlign: "center",
+        alignItems: "center",
+
     },
 });
 
