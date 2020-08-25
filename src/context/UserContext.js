@@ -106,8 +106,8 @@ const tryLocalSignIn = dispatch => async ()=>
     const id = await AsyncStorage.getItem('id');
     if(id)
     {
-        const response = await serverApi.get('/user', {id});
-        dispatch({type: 'log_in', payload: response.data})
+        const response = await serverApi.get('/user/' + id, undefined);
+        dispatch({type: 'log_in', payload: response.data});
         navigate('dashboard');
     }
     else
