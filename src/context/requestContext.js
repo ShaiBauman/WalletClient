@@ -65,9 +65,9 @@ const clearSuccessMessage = dispatch=>()=>{
 
 
 const addReq = dispatch=> async (RequestDto)=>{
-    console.log(JSON.stringify(Request))
     try {
-        const response = await serverApi.patch('/request', {'request':RequestDto});
+        console.log("RequestDto "+ JSON.stringify(RequestDto))
+        await serverApi.patch('/request', {'request':RequestDto});
         navigate('dashboard');
 
      }
@@ -297,7 +297,7 @@ const  ReactToRequest = dispatch=> async (id,email,confirmationStatus)=>{
         const response = await serverApi.post('/request/reactToRequest',{id,email,confirmationStatus});
         dispatch({type:'add_success_message',payload:response.data})
         dispatch({type:'reactToRequest',payload:id})
-        await serverApi.post('/request/remindFriend',{id,email,confirmationStatus});
+        await serverApi.post('/request/remindFriend',{requestId:id});
         navigate("indexFriend")
 
     }
