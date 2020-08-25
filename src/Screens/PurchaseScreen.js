@@ -6,7 +6,6 @@ import DropDownForm from "../components/DropDownForm";
 import { Context as requestContext } from "../context/requestContext";
 import { Context as CategoryContext } from "../context/CategoryContext";
 import { Context as UserContext } from "../context/UserContext";
-
 import { data } from "react-native-chart-kit/data";
 
 
@@ -61,9 +60,6 @@ useEffect(()=>{
     const [price,setPrice]=useState(req?req.price:'');
     const [remark,setRemark]=useState(req?req.additionalDescription:'');
 
-    const funcPicture = ()=>{
-        console.log("func picture");
-    };
 
     arr1.push(<Text style={styles.textStyle}>Category</Text>)
     arr1.push(<DropDownForm
@@ -103,7 +99,7 @@ useEffect(()=>{
         title={"Necessity"}
         onSubmit={setNecessaryMeasure}
     />)
-    arr2.push(    <Text style={styles.textStyle}>Additional text</Text>)
+    arr2.push(<Text style={styles.textStyle}>Additional text</Text>)
     arr2.push(<Input
         // label={"Remarks"}
         value={remark}
@@ -126,7 +122,7 @@ useEffect(()=>{
                 onPress={()=>{
                     const requestDto = {
                         email: userState.myUser.email,
-                        openDate: null,
+                        openDate: "",
                         closedDate:"",
                         category: category,
                         subCategory:subCategory,
