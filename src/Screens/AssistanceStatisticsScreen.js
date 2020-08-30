@@ -92,7 +92,7 @@ const AssistanceStatisticsScreen = ()=>{
             />
         )
     }
-    
+
     return(
         <View style={styles.container}>
             <Text style={styles.header}>My Statistics</Text>

@@ -5,6 +5,7 @@ import {Context as RequestContext} from '../context/requestContext'
 import {Context as UserContext} from '../context/UserContext'
 import { Container, Content,  ListItem, Text, Separator, Right, Left } from 'native-base';
 import { FontAwesome5 } from '@expo/vector-icons';
+import Spinner from "react-native-loading-spinner-overlay";
 
 const TransactionScreen = ({navigation})=>{
     const user_state = useContext(UserContext).state;
@@ -98,6 +99,11 @@ const TransactionScreen = ({navigation})=>{
                         <Separator bordered>
                     <Text style={styles.title}>Closed Requests</Text>
                         </Separator>
+                        <Spinner
+                            visible={user_state.is_loading}
+                            textContent={'Loading...'}
+                            textStyle={styles.spinnerTextStyle}
+                        />
                 {closedReqsJSX}
             </Content>
         </Container>
@@ -109,6 +115,9 @@ const styles = StyleSheet.create({
         flex: 1,
 
         borderWidth: 2
+    },
+    spinnerTextStyle: {
+        color: '#FFF'
     },
     title:{
         color: "black",

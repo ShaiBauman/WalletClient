@@ -13,6 +13,7 @@ import {
     ContributionGraph,
     StackedBarChart
 } from "react-native-chart-kit";
+import Spinner from "react-native-loading-spinner-overlay";
 
 const StatisticsScreen = ()=>{
 
@@ -111,6 +112,11 @@ const StatisticsScreen = ()=>{
                     <Text style={styles.chartsTitle}>Monthly Spending By Category</Text>
                     {pie}
                 </ScrollView>
+                    <Spinner
+                        visible={user_state.is_loading}
+                        textContent={'Loading...'}
+                        textStyle={styles.spinnerTextStyle}
+                    />
             </View>
 
         </View>
@@ -123,6 +129,9 @@ const styles = StyleSheet.create({
         margin:5,
         backgroundColor:'#80B28B',
         borderColor:'#80B28B',
+    },
+    spinnerTextStyle: {
+        color: '#FFF'
     },
     header:{
         color: "black",

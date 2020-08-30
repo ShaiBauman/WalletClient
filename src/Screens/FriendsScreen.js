@@ -1,5 +1,14 @@
 import React, {useContext, useEffect, useState} from 'react';
-import {View, StyleSheet, Text, ScrollView, FlatList, TouchableOpacity, TextInput} from 'react-native'
+import {
+    View,
+    StyleSheet,
+    Text,
+    ScrollView,
+    FlatList,
+    TouchableOpacity,
+    TextInput,
+    ActivityIndicator
+} from 'react-native'
 import FriendForm from "../components/FriendForm";
 import {Context as UserContext} from "../context/UserContext";
 
@@ -55,6 +64,8 @@ const FriendsScreen = ()=>{
                         />)
                     }}
                 />
+               {console.log(state.is_loading +"is_load")}
+               {state.is_loading && <ActivityIndicator  color={'#fff'} />}
 
             </ScrollView>
 

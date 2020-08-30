@@ -4,6 +4,7 @@ import {NavigationEvents} from "react-navigation";
 import {Context as UserContext} from "../context/UserContext";
 import AuthForm from "../components/AuthForm";
 import NavLink from "../components/NavLink";
+import Spinner from "react-native-loading-spinner-overlay";
 
 
 const SignInScreen = ()=>{
@@ -35,6 +36,11 @@ const SignInScreen = ()=>{
                 routeName={"Registration"}
                 text={"Don't have an account? Sign up instead"}
             />
+            <Spinner
+                visible={state.is_loading}
+                textContent={'Loading...'}
+                textStyle={styles.spinnerTextStyle}
+            />
         </View>
     );
 };
@@ -52,6 +58,9 @@ const styles = StyleSheet.create({
         paddingTop: 10,
         backgroundColor: '#E9D2B3',
         padding: 8,
+    },
+    spinnerTextStyle: {
+        color: '#FFF'
     },
     tinyLogo: {
         width: 100,
