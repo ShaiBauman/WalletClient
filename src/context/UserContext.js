@@ -78,13 +78,6 @@ const updateUser = dispatch => async (walletMemberDto) =>{
     }
 
 };
-/*
-const getImageById = dispatch=> ()=>{
-
-};
-
-
-*/
 
 const addFriend = dispatch=> async (userId, friendEmail)=> {
     try {
@@ -120,10 +113,10 @@ const tryLocalSignIn = dispatch => async ()=>
 // for Login V
 const login = dispatch=> async (email, password)=>{
     //make api request to login with that email and password
-    // if (email === "") {
-    //     email = "fake455@gmail.com";
-    //     password = '123456'
-    // }
+    if (email === "") {
+        email = "shai.bauman@gmail.com";
+        password = '123456'
+    }
     try {
 
         const response = await serverApi.post('/user/logIn', {email,password});

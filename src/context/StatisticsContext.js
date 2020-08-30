@@ -1,12 +1,18 @@
 import createDataContext from "./createDataContext";
 import serverApi from "../api/serverApi";
+import {Alert} from "react-native";
 
 const statisticsReducer = (state, action)=>{
     switch(action.type)
     {
 
         case 'add_error':
+            Alert.alert("", action.payload);
             return {...state, errorMessage: action.payload};
+        case 'myWalletMembers':
+            return {...state, myWalletMembers: action.payload}
+        case 'infoAboutFriend':
+            return {...state, infoAboutFriend: action.payload}
         case 'approveVsAll':
             return {...state, approveVsAll: action.payload}
         case 'approvedVsDenied':
@@ -15,10 +21,32 @@ const statisticsReducer = (state, action)=>{
             return {...state, MonthlyBalance: action.payload }
         case 'MoneyISaved':
             return {...state, MoneyISaved: action.payload }
+        case 'expenseByCategory':
+            return {...state, expenseByCategory: action.payload}
         default:
             return state;
     }
 };
+
+const myWalletMembers = dispatch => async (myEmail) => {
+    try {
+        const response = await serverApi.post('/statistics/myWalletMembers', {myEmail})
+        dispatch({type:'myWalletMembers', payload: response.data})
+    }
+    catch (e) {
+        dispatch({type:'add_error', payload:'warning'})
+    }
+}
+
+const infoAboutFriend = dispatch => async (myEmail, walletMemberEmail) => {
+    try {
+        const response = await serverApi.post('/statistics/infoAboutFriend', {myEmail, walletMemberEmail})
+        dispatch({type:'infoAboutFriend', payload: response.data})
+    }
+    catch (e) {
+        dispatch({type:'add_error', payload:'warning'})
+    }
+}
 
 const approveVsAll = dispatch => async (email)=>{
     try{
@@ -61,9 +89,20 @@ const MoneyISaved = dispatch => async (email)=>{
     }
 }
 
+const expenseByCategory = dispatch => async (email) => {
+    try{
+        const response = await serverApi.post('/statistics/expenseByCategory', {email})
+        dispatch({type:'expenseByCategory', payload: response.data})
+    }
+    catch (e) {
+        dispatch({type: 'add_error', payload: 'Sorry'})
+    }
+}
+
 
 export const {Provider, Context} = createDataContext(
     statisticsReducer,
-    { approveVsAll, approvedVsDenied, MonthlyBalance, MoneyISaved },
+    { myWalletMembers, approveVsAll, approvedVsDenied, MonthlyBalance, MoneyISaved, expenseByCategory,
+        infoAboutFriend},
     {approveVsAll:0, approvedVsDenied:0, MonthlyBalance:0, MoneyISaved:0}
 );

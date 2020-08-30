@@ -1,29 +1,82 @@
-import React from 'react';
+import React, {useContext, useEffect, useState} from 'react';
 import {View, StyleSheet, ScrollView} from 'react-native'
 import {Text} from "react-native-elements";
+import {Context as StatisticsContext} from '../context/StatisticsContext'
+import {Context as UserContext} from '../context/UserContext'
 import { Dimensions } from "react-native";
 
-import {BarChart,ProgressChart} from "react-native-chart-kit";
+import {
+    LineChart,
+    BarChart,
+    PieChart,
+    ProgressChart,
+    ContributionGraph,
+    StackedBarChart
+} from "react-native-chart-kit";
 import { data } from "react-native-chart-kit/data";
+import DropDownForm from "../components/DropDownForm";
 
 const AssistanceStatisticsScreen = ()=>{
-    const dataRings = {
-        labels: ["Approved", "Refused", "Open"],
-        data: [0.6, 0.2, 0.1],
 
-    };
+    const user_state = useContext(UserContext).state
+    const {state, myWalletMembers, infoAboutFriend} = useContext(StatisticsContext)
+    let friend_list = []
 
+    const [friend,setFriend]=useState(friend_list);
+    console.log("state.myWalletMembers" + state.myWalletMembers)
+    useEffect(() => {
+        myWalletMembers(user_state.myUser.email)
+    }, [])
 
-        const barData = {
-            labels: ["friend 1", "friend 2", "friend 3", "friend 4", "friend 5", "friend 6"],
-            datasets: [
-                {
-                    data: [20, 45, 28, 80, 99, 43]
-                }
-            ]
-        };
+    if (typeof state.myWalletMembers !== 'undefined') {
+        for (let email of state.myWalletMembers) {
+            friend_list.push({value: email})
+        }
+        setFriend(friend_list)
+    }
 
+    let chart = []
 
+    if(typeof state.infoAboutFriend !== 'undefined') {
+        console.log("state.infoAboutFriend"+ state.infoAboutFriend)
+        const paiData = [
+            {
+                name: "Approved",
+                population: state.infoAboutFriend["Approved"],
+                color: "rgba(131, 167, 234, 1)",
+                legendFontColor: "#2F4730",
+                legendFontSize: 15
+            },
+            {
+                name: "Denied",
+                population: state.infoAboutFriend["Denied"],
+                color: "rgb(200, 110, 120)",
+                legendFontColor: "#2F4730",
+                legendFontSize: 15
+            },
+            {
+                name: "Didn't Response",
+                population: state.infoAboutFriend["DidntResponse"],
+                color: "rgb(170, 227, 90)",
+                legendFontColor: "#2F4730",
+                legendFontSize: 15
+            }
+        ];
+
+        chart.push(
+            <PieChart
+                data={paiData}
+                width={320}
+                height={220}
+                chartConfig={chartConfig}
+                accessor="population"
+                backgroundColor="transparent"
+                paddingLeft="15"
+                absolute={true}
+                bgColor={"transparent"}
+            />
+        )
+    }
 
     const chartConfig = {
         backgroundGradientFrom: "#2F4730",
@@ -38,71 +91,26 @@ const AssistanceStatisticsScreen = ()=>{
     };
 
 
-    const screenWidth = (Dimensions.get("window").width);
-
-    const chartData = [
-        { label: "Venezuela", value: "290" },
-        { label: "Saudi", value: "260" },
-        { label: "Canada", value: "180" },
-        { label: "Iran", value: "140" },
-        { label: "Russia", value: "115" },
-        { label: "UAE", value: "100" },
-        { label: "US", value: "30" },
-        { label: "China", value: "30" }
-    ];
-    const chartConfig2 = {
-        type: "column2d",
-        width: "100%",
-        height: "400",
-        dataFormat: "json",
-        dataSource: {
-            chart: {
-                caption: "Countries With Most Oil Reserves [2017-18]",
-                subCaption: "In MMbbl = One Million barrels",
-                xAxisName: "Country",
-                yAxisName: "Reserves (MMbbl)",
-                numberSuffix: "K",
-                theme: "fusion"
-            },
-            data: chartData
-        }
-    };
-
-
     return(
         <View style={styles.container}>
             <Text style={styles.header}>My Statistics</Text>
 
             <View style={styles.chartsContainer}>
                 <ScrollView>
+                    <DropDownForm
+                        data={friend}
+                        title={"Choose A Friend"}
+                        onSubmit={(friend) => {
+                            console.log(friend+" friend")
+                            setFriend(friend),
+                                infoAboutFriend(user_state.myUser.email,friend)
+                        }
+                        }
+                    />
                     <Text style={styles.chartsTitle}>Balance requests</Text>
-
-                    <ProgressChart
-                       //style={styles.container1}
-                        data={dataRings}
-                        width={300}
-                        height={220}
-                        strokeWidth={14}
-                        radius={32}
-                        chartConfig={chartConfig}
-                        hideLegend={false}
-                    />
-
-
-                    <Text style={styles.chartsTitle}>Monthly savings for my friends</Text>
-                    <BarChart
-                        style={styles.container1}
-                        data={barData}
-                        width={320}
-                        height={240}
-                        yAxisLabel="₪"
-                        withHorizontalLabels={true}
-                        chartConfig={chartConfig}
-                        verticalLabelRotation={20}
-                        showBarTops={true}
-                    />
-
-
+    <View style={{backgroundColor: "rgb(109, 153, 118)"}}>
+                    {chart}
+    </View>
                 </ScrollView>
             </View>
 
