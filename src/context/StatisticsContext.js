@@ -34,7 +34,7 @@ const myWalletMembers = dispatch => async (myEmail) => {
         dispatch({type:'myWalletMembers', payload: response.data})
     }
     catch (e) {
-        dispatch({type:'add_error', payload:'warning'})
+        dispatch({type:'add_error', payload:'warning1'})
     }
 }
 
@@ -44,17 +44,17 @@ const infoAboutFriend = dispatch => async (myEmail, walletMemberEmail) => {
         dispatch({type:'infoAboutFriend', payload: response.data})
     }
     catch (e) {
-        dispatch({type:'add_error', payload:'warning'})
+        dispatch({type:'add_error', payload:'warning2'})
     }
 }
-
+//how many request opened VS how many approved
 const approveVsAll = dispatch => async (email)=>{
     try{
         const response = await serverApi.post('/statistics/approveVsAll', {email});
         dispatch({type: 'approveVsAll', payload: response.data})
     }
     catch (e) {
-        dispatch({type:'add_error', payload:'warning'});
+        dispatch({type:'add_error', payload:'warning3'});
 
     }
 }
@@ -64,7 +64,7 @@ const approvedVsDenied = dispatch => async (email)=>{
         dispatch({type: 'approvedVsDenied', payload: response.data})
     }
     catch (e) {
-        dispatch({type:'add_error', payload:'warning'});
+        dispatch({type:'add_error', payload:'warning4'});
 
     }
 }
@@ -74,7 +74,7 @@ const MonthlyBalance = dispatch => async (email)=>{
         dispatch({type: 'MonthlyBalance', payload: response.data})
     }
     catch (e) {
-        dispatch({type:'add_error', payload:'warning'});
+        dispatch({type:'add_error', payload:'warning5'});
 
     }
 }
@@ -84,7 +84,7 @@ const MoneyISaved = dispatch => async (email)=>{
         dispatch({type: 'MoneyISaved', payload: response.data})
     }
     catch (e) {
-        dispatch({type:'add_error', payload:'warning'});
+        dispatch({type:'add_error', payload:'warning5'});
 
     }
 }

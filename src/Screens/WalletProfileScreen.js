@@ -54,7 +54,7 @@ const AddItem = (item, item2, setFunc) =>{
                 thumbTintColor="#80B28B"
                 style={{marginLeft:10, marginRight:10}}
             />
-                <Text style={styles.textStyle}>Insert Your Average Expenses for Last Three Months</Text>
+                <Text style={styles.textStyle}>Insert Your Average Expenses for Last Three Months:</Text>
                 <TextInput
                 autoCapitalize="none"
                 autoCorrect={false}
@@ -66,7 +66,7 @@ const AddItem = (item, item2, setFunc) =>{
                 placeholderTextColor={"#2F4730"}
                 />
 
-                <Text style={styles.textStyle}>Insert Your Monthly Target</Text>
+                <Text style={styles.textStyle}>Insert Your Monthly Target:</Text>
                 <TextInput
                 autoCapitalize="none"
                 autoCorrect={false}
@@ -81,7 +81,7 @@ const AddItem = (item, item2, setFunc) =>{
 
                 />
 
-             <Text style={styles.textStyle}>Select Your Marital Status</Text>
+             <Text style={styles.textStyle}>Select Your Marital Status:</Text>
                 <DropDownForm
                 data={maritalStatusState}
                 title={"Marital Status"}
@@ -167,7 +167,6 @@ const styles = StyleSheet.create({
     },
     textStyle:{
       fontSize: 14,
-        textAlign: "center",
         fontWeight: "bold",
         marginTop: 12,
         marginBottom: 0
@@ -181,7 +180,6 @@ const styles = StyleSheet.create({
         marginTop:15,
         borderWidth:0.8,
         borderColor:'black',
-        textAlign: "center",
     },
     buttonGoOn: {
         textAlign: "center",

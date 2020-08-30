@@ -58,23 +58,9 @@ const StatisticsScreen = ()=>{
     };
 
     let stats = []
-    stats.push(
-        <Text>
-            Your approved transactions vs all your transactions ratio is {state.approveVsAll}
-        </Text>
-    )
-    stats.push(    <Text>
-            Your approved transactions are {state.approvedVsDenied["Approved"]}
-            Your denied transactions are {state.approvedVsDenied["Denied"]}
-        </Text>
-    )
-    stats.push(<Text>
-            Your target minus your expenses is {state.MonthlyBalance}
-    </Text>
-    )
-    stats.push( <Text>
-            The amount of money of your denied transactions is {state.MoneyISaved}
-    </Text>
+   stats.push(
+        <Text style={styles.text1}>Percentage of requests approved for me</Text>)
+    stats.push(<Text style={styles.text2}>{((state.approveVsAll)*100).toFixed()}%</Text>
     )
 
     let pie = []
@@ -104,16 +90,14 @@ const StatisticsScreen = ()=>{
     return(
         <View style={styles.container}>
             <Text style={styles.header}>My Statistics</Text>
-
-                <View style={styles.chartsContainer}>
                 <ScrollView>
                     {stats}
                     <Text style={styles.chartsTitle}>Monthly Spending By Category</Text>
+                    <View style={styles.chartsContainer}>
                     {pie}
+                    </View>
                 </ScrollView>
-            </View>
-
-        </View>
+                </View>
     );
 };
 
@@ -130,11 +114,24 @@ const styles = StyleSheet.create({
         fontSize:30,
         textShadowRadius: 20,
         fontWeight: "bold",
-        marginBottom:0,
+        marginBottom:20,
 
     },
 
     title:{
+        fontWeight: "bold",
+        textAlign: 'center',
+        fontSize: 20,
+        marginBottom: 20
+
+    },
+
+    text1:{
+        textAlign: 'center',
+        fontSize: 20,
+
+    },
+    text2:{
         fontWeight: "bold",
         textAlign: 'center',
         fontSize: 25,
@@ -142,8 +139,7 @@ const styles = StyleSheet.create({
     },
 
     chartsContainer:{
-        marginLeft:5,
-        marginRight:5,
+        margin:15,
         flexDirection: 'column',
         alignItems: 'center',
         flex:1,
