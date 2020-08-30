@@ -24,7 +24,6 @@ import FriendsScreen from "./src/Screens/FriendsScreen";
 import AssistanceStatisticsScreen from "./src/Screens/AssistanceStatisticsScreen";
 import PasswordRecoveryScreen from "./src/Screens/PasswordRecoveryScreen";
 import BotGenerator from "./src/Screens/BotGenerator";
-import ResultScreen from "./src/Screens/ResultScreen";
 import OpenRequests from "./src/Screens/OpenRequests";
 import FullRequest from "./src/Screens/FullRequest";
 
@@ -51,7 +50,6 @@ const navigator = createStackNavigator({
         walletFriends: FriendsScreen,
         //}
         Generator: BotGenerator,
-        Result: ResultScreen,
         openReqs: OpenRequests,
         FullR: FullRequest
     },

@@ -17,69 +17,31 @@ import {
 const StatisticsScreen = ()=>{
 
     const user_state = useContext(UserContext).state
-    const {state, approveVsAll, approvedVsDenied, MonthlyBalance, MoneyISaved} = useContext(StatisticsContext)
+    const {state, approveVsAll, approvedVsDenied, MonthlyBalance, MoneyISaved, expenseByCategory} = useContext(StatisticsContext)
 
     useEffect(()=> {
         approveVsAll(user_state.myUser.email)
         approvedVsDenied(user_state.myUser.email)
         MonthlyBalance(user_state.myUser.email)
         MoneyISaved(user_state.myUser.email)
+        expenseByCategory(user_state.myUser.email)
     }, [])
-
-    const paiData = [
-        {
-            name: "Appliances",
-            population: 3,
-            color: "rgba(131, 167, 234, 1)",
-            legendFontColor: "#2F4730",
-            legendFontSize: 15
-        },
-        {
-            name: "Clothing",
-            population: 9,
-            color: "rgb(200, 110, 120)",
-            legendFontColor: "#2F4730",
-            legendFontSize: 15
-        },
-        {
-            name: "Food",
-            population: 27,
-            color: "rgb(170, 227, 90)",
-            legendFontColor: "#2F4730",
-            legendFontSize: 15
-        },
-        {
-            name: "Attractions",
-            population: 12,
-            color: "rgb(82, 200, 170)",
-            legendFontColor: "#2F4730",
-            legendFontSize: 15
-        },
-        {
-            name: "Toiletries",
-            population: 4,
-            color: "rgb(40, 160, 200)",
-            legendFontColor: "#2F4730",
-            legendFontSize: 15
-        }
-    ];
 
 
     const barData = {
-        labels: ["January", "February", "March", "April", "May", "June"],
-        datasets: [
-            {
-                data: [20, 45, 28, 80, 99, 43]
-            }
-        ]
+        labels: [],
+        datasets: [{data: []}]
     };
-
-    const stackedBarData = {
-        labels: ["January", "February", "March", "April", "May", "June"],
-        legend: ["Approve", "Unapproved"],
-        data: [[60, 60], [30, 30], [72, 10], [20, 90], [10, 50],[60, 40]],
-        barColors: ["blue", "red"]
-    };
+    let no_data = true
+    if (JSON.stringify(state.expenseByCategory) !== '{}') {
+        no_data = false
+        console.log(state.expenseByCategory !== {})
+        console.log(state.expenseByCategory)
+        for (const label in state.expenseByCategory) {
+            barData.labels.push(label)
+            barData.datasets[0].data.push(state.expenseByCategory[label])
+        }
+    }
 
 
     const chartConfig = {
@@ -94,17 +56,6 @@ const StatisticsScreen = ()=>{
         useShadowColorFromDataset: false, // optional
         legendFontSize:50,
     };
-
-    const chartData = [
-        { label: "Venezuela", value: "290" },
-        { label: "Saudi", value: "260" },
-        { label: "Canada", value: "180" },
-        { label: "Iran", value: "140" },
-        { label: "Russia", value: "115" },
-        { label: "UAE", value: "100" },
-        { label: "US", value: "30" },
-        { label: "China", value: "30" }
-    ];
 
     let stats = []
     stats.push(
@@ -126,6 +77,28 @@ const StatisticsScreen = ()=>{
     </Text>
     )
 
+    let pie = []
+    console.log("no_data " + no_data)
+
+    if (!no_data) {
+        pie.push(
+            <BarChart
+                data={barData}
+                width={320}
+                height={240}
+                yAxisLabel="₪"
+                withHorizontalLabels={true}
+                chartConfig={chartConfig}
+                verticalLabelRotation={20}
+                showBarTops={true}
+            />
+            )
+    } else {
+        pie.push(<Text>
+            No Data Assigned Yet..
+        </Text>)
+    }
+
 
 
     return(
@@ -135,43 +108,8 @@ const StatisticsScreen = ()=>{
                 <View style={styles.chartsContainer}>
                 <ScrollView>
                     {stats}
-                <Text style={styles.chartsTitle}>Balance Monthly Expenses</Text>
-                 <BarChart
-                    data={barData}
-                    width={320}
-                    height={240}
-                    yAxisLabel="₪"
-                    withHorizontalLabels={true}
-                    chartConfig={chartConfig}
-                    verticalLabelRotation={20}
-                    showBarTops={true}
-                />
-                <Text style={styles.chartsTitle}>Monthly Spending By Category</Text>
-                    <View style={{backgroundColor: "rgb(109, 153, 118)"}}>
-                        <PieChart
-                        data={paiData}
-                        width={320}
-                        height={220}
-                        chartConfig={chartConfig}
-                        accessor="population"
-                        backgroundColor="transparent"
-                        paddingLeft="15"
-                        absolute={true}
-                        bgColor={"transparent"}
-                    />
-                    </View>
-
-                <Text style={styles.chartsTitle}> Monthly Approval Status</Text>
-                <StackedBarChart
-                    data={stackedBarData}
-                    width={320}
-                    height={220}
-                    chartConfig={chartConfig}
-                    verticalLabelRotation={30}
-                    withHorizontalLabels={true}
-                    barPercentage={0.2}
-
-                />
+                    <Text style={styles.chartsTitle}>Monthly Spending By Category</Text>
+                    {pie}
                 </ScrollView>
             </View>
 

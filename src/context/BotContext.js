@@ -1,8 +1,15 @@
 import createDataContext from './createDataContext';
 import serverApi from "../api/serverApi";
+import {navigate} from "../navigationRef";
+import {Alert} from "react-native";
+
 
 const BotReducer = (state, action) => {
   switch (action.type) {
+    case 'add_success_message': {
+      Alert.alert("", action.payload);
+      return {...state, successMessage: action.payload};
+    }
     case 'get_bot_quest':
       let bot_arr = getBotQuestion(action.payload, 6);
       return {...state, bot_arr: bot_arr}
@@ -44,13 +51,15 @@ const getBotQuest = dispatch => {
   };
 };
 
-const setBotScore = dispatch => async (reqId, botScore) => {
+const setBotScore = dispatch => async (req, botScore) => {
     try {
-      const response = await serverApi.post('/bot/insertBotScore', {reqId: reqId, botScore: botScore})
-      dispatch({ type: 'get_ml_status', payload: response.data })
+      await serverApi.post('/bot/insertBotScore', {reqId: req["_id"], botScore: botScore})
+      dispatch({type: 'add_success_message', payload: 'Thank You! You Can Check The Transactions Area If Our ML ' +
+            'Approved Your Request'})
+      navigate("dashboard", {"req": req})
     } catch (e)
     {
-      console.log("ML Problem")
+      console.log("insertBotScore Problem")
     }
   }
 

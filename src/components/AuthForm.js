@@ -4,7 +4,7 @@ import Spacer from "./Spacer";
 import {Text} from "react-native-elements";
 
 
-const AuthForm = ({header, errorMessage, onSubmit, submitButtonText})=>{
+const AuthForm = ({header, onSubmit, submitButtonText})=>{
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
 
@@ -35,9 +35,6 @@ const AuthForm = ({header, errorMessage, onSubmit, submitButtonText})=>{
                 autoCorrect={false}
                 autoCapitalize="none"
             />
-            {errorMessage ?
-                (<Text style={styles.errorMessage}>{errorMessage}</Text>)
-                :null}
             <Spacer>
                 <TouchableOpacity
                     title={submitButtonText}

@@ -33,8 +33,7 @@ const BotGenerator = ({ navigation }) => {
     }
 
     const onSubmitSteps = () => {
-        setBotScore(req["_id"], mainParams.totalScore)
-        navigation.navigate("dashboard", {"req": req})
+        setBotScore(req, mainParams.totalScore)
     };
 
     const progressStepsStyle = {
