@@ -17,30 +17,41 @@ import { data } from "react-native-chart-kit/data";
 import DropDownForm from "../components/DropDownForm";
 
 const AssistanceStatisticsScreen = ()=>{
+    const dataRings = {
+        labels: ["Approved", "Refused", "Open"],
+        data: [0.6, 0.2, 0.1],
 
-    const user_state = useContext(UserContext).state
-    const {state, myWalletMembers, infoAboutFriend} = useContext(StatisticsContext)
-    let friend_list = []
+    };
 
-    const [friend,setFriend]=useState(friend_list);
-    console.log("state.myWalletMembers" + state.myWalletMembers)
-    useEffect(() => {
-        myWalletMembers(user_state.myUser.email)
-    }, [])
 
-    if (typeof state.myWalletMembers !== 'undefined') {
-        for (let email of state.myWalletMembers) {
-            friend_list.push({value: email})
-        }
-        setFriend(friend_list)
-    }
+        const barData = {
+            labels: ["friend 1", "friend 2", "friend 3", "friend 4", "friend 5", "friend 6"],
+            datasets: [
+                {
+                    data: [20, 45, 28, 80, 99, 43]
+                }
+            ]
+        };
 
-    let chart = []
+
+
+    const chartConfig = {
+        backgroundGradientFrom: "#2F4730",
+        backgroundGradientFromOpacity: 5,
+        backgroundGradientTo: "#2F4730",
+        backgroundGradientToOpacity: 0.5,
+        color: (opacity = 1) => `rgba(40, 85, 60, ${opacity})`,
+        strokeWidth: 2, // optional, default 3
+        barPercentage: 0.5,
+        useShadowColorFromDataset: false // optional
+
+    };
 
     if(typeof state.infoAboutFriend !== 'undefined') {
-        console.log("state.infoAboutFriend"+ state.infoAboutFriend)
+        console.log("state.infoAboutFriend"+ JSON.stringify(state.infoAboutFriend))
         const paiData = [
             {
+                key: state.infoAboutFriend["Approved"],
                 name: "Approved",
                 population: state.infoAboutFriend["Approved"],
                 color: "rgba(131, 167, 234, 1)",
@@ -48,6 +59,7 @@ const AssistanceStatisticsScreen = ()=>{
                 legendFontSize: 15
             },
             {
+                key: state.infoAboutFriend["Denied"],
                 name: "Denied",
                 population: state.infoAboutFriend["Denied"],
                 color: "rgb(200, 110, 120)",
@@ -55,6 +67,7 @@ const AssistanceStatisticsScreen = ()=>{
                 legendFontSize: 15
             },
             {
+                key: state.infoAboutFriend["DidntResponse"],
                 name: "Didn't Response",
                 population: state.infoAboutFriend["DidntResponse"],
                 color: "rgb(170, 227, 90)",
@@ -78,19 +91,6 @@ const AssistanceStatisticsScreen = ()=>{
         )
     }
 
-    const chartConfig = {
-        backgroundGradientFrom: "#2F4730",
-        backgroundGradientFromOpacity: 5,
-        backgroundGradientTo: "#2F4730",
-        backgroundGradientToOpacity: 0.5,
-        color: (opacity = 1) => `rgba(40, 85, 60, ${opacity})`,
-        strokeWidth: 2, // optional, default 3
-        barPercentage: 0.5,
-        useShadowColorFromDataset: false // optional
-
-    };
-
-
     return(
         <View style={styles.container}>
             <Text style={styles.header}>My Statistics</Text>
@@ -102,7 +102,6 @@ const AssistanceStatisticsScreen = ()=>{
                         title={"Choose A Friend"}
                         onSubmit={(friend) => {
                             console.log(friend+" friend")
-                            setFriend(friend),
                                 infoAboutFriend(user_state.myUser.email,friend)
                         }
                         }

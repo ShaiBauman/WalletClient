@@ -6,6 +6,8 @@ import {navigate} from "../navigationRef";
 const userReducer = (state, action)=>{
     switch(action.type)
     {
+        case 'loading':
+            return {...state, is_loading: action.payload}
         case 'log_in':
             return {...state,errorMessage: '', id: action.payload["_id"], myUser: action.payload};
        case 'add_error':
@@ -40,10 +42,11 @@ const clearErrorMessage = dispatch=>()=>{
 // for registration V
 const RegisterNewUser = dispatch=> async (userDto)=>{
     try {
+        dispatch({type: 'loading', payload: true})
         const response = await serverApi.post('/user/signIn', {userDto});
         await AsyncStorage.setItem('id', response.data["_id"], null);
         dispatch({type: 'log_in', payload: response.data});
-
+        dispatch({type: 'loading', payload: false})
         if(response.data.walletMember) //the user is a wallet and a friend
         {
           navigate('Profile');
@@ -56,6 +59,7 @@ const RegisterNewUser = dispatch=> async (userDto)=>{
       catch (err)
     {
         dispatch({type:'entrance_error', payload:'Something went wrong with registration'});
+        dispatch({type: 'loading', payload: false})
     }
 };
 
@@ -64,9 +68,10 @@ const RegisterNewUser = dispatch=> async (userDto)=>{
 const updateUser = dispatch => async (walletMemberDto) =>{
 
     try {
-
+        dispatch({type: 'loading', payload: true})
         const response = await serverApi.patch('/user', {walletMemberDto});
         dispatch({type: 'log_in', payload: response.data});
+        dispatch({type: 'loading', payload: false})
         navigate('dashboard');
 
     }
@@ -74,20 +79,23 @@ const updateUser = dispatch => async (walletMemberDto) =>{
     {
         dispatch({type:'entrance_error', payload:'Something went wrong with update profile'});
         console.log(this.errorMessage);
-
+        dispatch({type: 'loading', payload: false})
     }
 
 };
 
 const addFriend = dispatch=> async (userId, friendEmail)=> {
     try {
+        dispatch({type: 'loading', payload: true})
         const response = await serverApi.post('/user/addWalletFriend', {userId, friendEmail});
 
         dispatch({type: 'add_friend', payload: response.data});
+        dispatch({type: 'loading', payload: false})
 
     }
     catch (e) {
         dispatch({type:'add_error', payload:'Something went wrong with add friend'});
+        dispatch({type: 'loading', payload: false})
     }
 
 }
@@ -96,15 +104,18 @@ const addFriend = dispatch=> async (userId, friendEmail)=> {
 // for user already has login
 const tryLocalSignIn = dispatch => async ()=>
 {
+    dispatch({type: 'loading', payload: true})
     const id = await AsyncStorage.getItem('id');
     if(id)
     {
         const response = await serverApi.get('/user/' + id, undefined);
         dispatch({type: 'log_in', payload: response.data});
+        dispatch({type: 'loading', payload: false})
         navigate('dashboard');
     }
     else
     {
+        dispatch({type: 'loading', payload: false})
         navigate('registration');
     }
 
@@ -113,8 +124,9 @@ const tryLocalSignIn = dispatch => async ()=>
 // for Login V
 const login = dispatch=> async (email, password)=>{
     //make api request to login with that email and password
+    dispatch({type: 'loading', payload: true})
     if (email === "") {
-        email = "shai.bauman@gmail.com";
+        email = "fake6@gmail.com";
         password = '123456'
     }
     try {
@@ -124,7 +136,7 @@ const login = dispatch=> async (email, password)=>{
         dispatch({type: 'log_in', payload: response.data});
         dispatch({type: 'add_id', payload: response.data["_id"]});
 
-
+        dispatch({type: 'loading', payload: false})
         if(response.data.walletMember)
            navigate('dashboard');
         else
@@ -134,14 +146,17 @@ const login = dispatch=> async (email, password)=>{
     catch (err)
     {
         dispatch({type:'entrance_error', payload:'Wrong email or password'});
+        dispatch({type: 'loading', payload: false})
     }
 
 };
 
 //for sign out
 const signOut = dispatch=>async ()=>{
+    dispatch({type: 'loading', payload: true})
     await AsyncStorage.removeItem('id');
     dispatch({type: 'sign_out'});
+    dispatch({type: 'loading', payload: false})
     navigate('SignIn');
 };
 
@@ -149,57 +164,69 @@ const signOut = dispatch=>async ()=>{
 const verificationPasswordAnswer = dispatch => async (email, answer) =>{
     try
     {
+        dispatch({type: 'loading', payload: true})
        const response = await serverApi.post('/user/verificationPasswordAnswer', {email, answer});
            dispatch({type: 'answer_password', payload: response.data})
             if(!response.data)
                 dispatch({type: 'add_error', payload: 'Wrong answer, try again'})
+        dispatch({type: 'loading', payload: false})
     }
     catch (e) {
         dispatch({type:'add_error', payload:'Something went wrong'});
+        dispatch({type: 'loading', payload: false})
     }
 };
 
 const updatePassword = dispatch => async (email, newPassword) => {
     try
     {
+        dispatch({type: 'loading', payload: true})
         await serverApi.post('/user/updatePassword', {email, newPassword});
+        dispatch({type: 'loading', payload: false})
         navigate("SignIn");
     }
     catch (e) {
         dispatch({type:'add_error', payload:'The password has not been updated'});
+        dispatch({type: 'loading', payload: false})
     }
 };
 
 const getFriendsByEmail = dispatch => async (email) => {
     try{
+        dispatch({type: 'loading', payload: true})
         const response = await serverApi.post('/user/usersInfo', {email})
         dispatch({type: 'add_myFriends', payload:response.data})
+        dispatch({type: 'loading', payload: false})
     } catch (e) {
         dispatch({type:'add_error', payload:'warning'});
-
+        dispatch({type: 'loading', payload: false})
     }
 }
 
 const deleteFriend = dispatch=> async (userId, friendEmail)=> {
     try {
+        dispatch({type: 'loading', payload: true})
         const response = await serverApi.post('/user/deleteWalletFriend', {userId, friendEmail});
 
         dispatch({type: 'delete_friend', payload: response.data});
-
+        dispatch({type: 'loading', payload: false})
     } catch (e) {
         dispatch({type: 'add_error', payload: 'Something went wrong with delete friend'});
+        dispatch({type: 'loading', payload: false})
     }
 }
 
 const getPasses =  dispatch=> async (email)=> {
     try {
+        dispatch({type: 'loading', payload: true})
         const response = await serverApi.post('/user/passes', {email});
 
         dispatch({type: 'update_passes', payload: response.data});
-
+        dispatch({type: 'loading', payload: false})
     }
     catch (e) {
         dispatch({type:'add_error', payload:'Something went wrong with get passes'});
+        dispatch({type: 'loading', payload: false})
     }
 
 }

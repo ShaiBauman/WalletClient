@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from 'react';
-import { Text,View, StyleSheet, ScrollView ,TouchableOpacity} from 'react-native'
+import { Text,View, StyleSheet, ScrollView ,TouchableOpacity, ActivityIndicator} from 'react-native'
 import { Input,Button} from 'react-native-elements'
 import Spacer from "../components/Spacer";
 import DropDownForm from "../components/DropDownForm";
@@ -7,14 +7,14 @@ import { Context as requestContext } from "../context/requestContext";
 import { Context as CategoryContext } from "../context/CategoryContext";
 import { Context as UserContext } from "../context/UserContext";
 import { data } from "react-native-chart-kit/data";
-
+import Spinner from 'react-native-loading-spinner-overlay';
 
 const PurchaseScreen = ({navigation})=>{
     const userState = useContext(UserContext).state;
 
     const req = navigation.getParam('req');
 
-    const {addReq} = useContext(requestContext);
+    const {state, addReq} = useContext(requestContext);
     const {getAllCategory} = useContext(CategoryContext);
 
     const [categories, setCategories] = useState([]);
@@ -117,7 +117,12 @@ useEffect(()=>{
                 <Text style={styles.titleText}>New Request</Text>
                 {!req?arr1:null}
                 {arr2}
-
+                {console.log(state.is_loading + " load")}
+                <Spinner
+                    visible={state.is_loading}
+                    textContent={'Loading...'}
+                    textStyle={styles.spinnerTextStyle}
+                />
             <TouchableOpacity
                 onPress={()=>{
                     const requestDto = {
@@ -158,6 +163,9 @@ const styles = StyleSheet.create({
         justifyContent:'center',
         backgroundColor:"#E9D2B3",
         padding:8,
+    },
+    spinnerTextStyle: {
+        color: '#FFF'
     },
     titleText:{
         textAlign: 'center',

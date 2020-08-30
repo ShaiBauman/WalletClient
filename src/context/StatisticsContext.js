@@ -5,7 +5,8 @@ import {Alert} from "react-native";
 const statisticsReducer = (state, action)=>{
     switch(action.type)
     {
-
+        case 'loading':
+            return {...state, is_loading: action.payload}
         case 'add_error':
             Alert.alert("", action.payload);
             return {...state, errorMessage: action.payload};
@@ -34,57 +35,68 @@ const myWalletMembers = dispatch => async (myEmail) => {
         dispatch({type:'myWalletMembers', payload: response.data})
     }
     catch (e) {
-        dispatch({type:'add_error', payload:'warning1'})
+        dispatch({type:'add_error', payload:'warning'})
     }
 }
 
 const infoAboutFriend = dispatch => async (myEmail, walletMemberEmail) => {
     try {
+        dispatch({type: 'loading', payload: true})
         const response = await serverApi.post('/statistics/infoAboutFriend', {myEmail, walletMemberEmail})
         dispatch({type:'infoAboutFriend', payload: response.data})
+        dispatch({type: 'loading', payload: false})
     }
     catch (e) {
-        dispatch({type:'add_error', payload:'warning2'})
+        dispatch({type:'add_error', payload:'warning'})
+        dispatch({type: 'loading', payload: false})
     }
 }
-//how many request opened VS how many approved
+
 const approveVsAll = dispatch => async (email)=>{
     try{
+        dispatch({type: 'loading', payload: true})
         const response = await serverApi.post('/statistics/approveVsAll', {email});
         dispatch({type: 'approveVsAll', payload: response.data})
+        dispatch({type: 'loading', payload: false})
     }
     catch (e) {
-        dispatch({type:'add_error', payload:'warning3'});
-
+        dispatch({type:'add_error', payload:'warning'});
+        dispatch({type: 'loading', payload: false})
     }
 }
 const approvedVsDenied = dispatch => async (email)=>{
     try{
+        dispatch({type: 'loading', payload: true})
         const response = await serverApi.post('/statistics/approvedVsDenied', {email});
         dispatch({type: 'approvedVsDenied', payload: response.data})
+        dispatch({type: 'loading', payload: false})
     }
     catch (e) {
-        dispatch({type:'add_error', payload:'warning4'});
-
+        dispatch({type:'add_error', payload:'warning'});
+        dispatch({type: 'loading', payload: false})
     }
 }
 const MonthlyBalance = dispatch => async (email)=>{
     try{
+        dispatch({type: 'loading', payload: true})
         const response = await serverApi.post('/statistics/MonthlyBalance', {email});
         dispatch({type: 'MonthlyBalance', payload: response.data})
+        dispatch({type: 'loading', payload: false})
     }
     catch (e) {
-        dispatch({type:'add_error', payload:'warning5'});
+        dispatch({type:'add_error', payload:'warning'});
+        dispatch({type: 'loading', payload: false})
 
     }
 }
 const MoneyISaved = dispatch => async (email)=>{
     try{
+
         const response = await serverApi.post('/statistics/MoneyISaved', {email});
         dispatch({type: 'MoneyISaved', payload: response.data})
     }
     catch (e) {
-        dispatch({type:'add_error', payload:'warning5'});
+        dispatch({type:'add_error', payload:'warning'});
 
     }
 }
@@ -102,7 +114,6 @@ const expenseByCategory = dispatch => async (email) => {
 
 export const {Provider, Context} = createDataContext(
     statisticsReducer,
-    { myWalletMembers, approveVsAll, approvedVsDenied, MonthlyBalance, MoneyISaved, expenseByCategory,
-        infoAboutFriend},
+    { approveVsAll, approvedVsDenied, MonthlyBalance, MoneyISaved },
     {approveVsAll:0, approvedVsDenied:0, MonthlyBalance:0, MoneyISaved:0}
 );

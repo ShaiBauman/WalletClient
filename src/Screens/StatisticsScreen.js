@@ -13,6 +13,7 @@ import {
     ContributionGraph,
     StackedBarChart
 } from "react-native-chart-kit";
+import Spinner from "react-native-loading-spinner-overlay";
 
 const StatisticsScreen = ()=>{
 
@@ -26,6 +27,44 @@ const StatisticsScreen = ()=>{
         MoneyISaved(user_state.myUser.email)
         expenseByCategory(user_state.myUser.email)
     }, [])
+
+    const paiData = [
+        {
+            name: "Appliances",
+            population: 3,
+            color: "rgba(131, 167, 234, 1)",
+            legendFontColor: "#2F4730",
+            legendFontSize: 15
+        },
+        {
+            name: "Clothing",
+            population: 9,
+            color: "rgb(200, 110, 120)",
+            legendFontColor: "#2F4730",
+            legendFontSize: 15
+        },
+        {
+            name: "Food",
+            population: 27,
+            color: "rgb(170, 227, 90)",
+            legendFontColor: "#2F4730",
+            legendFontSize: 15
+        },
+        {
+            name: "Attractions",
+            population: 12,
+            color: "rgb(82, 200, 170)",
+            legendFontColor: "#2F4730",
+            legendFontSize: 15
+        },
+        {
+            name: "Toiletries",
+            population: 4,
+            color: "rgb(40, 160, 200)",
+            legendFontColor: "#2F4730",
+            legendFontSize: 15
+        }
+    ];
 
 
     const barData = {
@@ -58,9 +97,23 @@ const StatisticsScreen = ()=>{
     };
 
     let stats = []
-   stats.push(
-        <Text style={styles.text1}>Percentage of requests approved for me</Text>)
-    stats.push(<Text style={styles.text2}>{((state.approveVsAll)*100).toFixed()}%</Text>
+    stats.push(
+        <Text>
+            Your approved transactions vs all your transactions ratio is {state.approveVsAll}
+        </Text>
+    )
+    stats.push(    <Text>
+            Your approved transactions are {state.approvedVsDenied["Approved"]}
+            Your denied transactions are {state.approvedVsDenied["Denied"]}
+        </Text>
+    )
+    stats.push(<Text>
+            Your target minus your expenses is {state.MonthlyBalance}
+    </Text>
+    )
+    stats.push( <Text>
+            The amount of money of your denied transactions is {state.MoneyISaved}
+    </Text>
     )
 
     let pie = []
@@ -90,14 +143,21 @@ const StatisticsScreen = ()=>{
     return(
         <View style={styles.container}>
             <Text style={styles.header}>My Statistics</Text>
+
+                <View style={styles.chartsContainer}>
                 <ScrollView>
                     {stats}
                     <Text style={styles.chartsTitle}>Monthly Spending By Category</Text>
-                    <View style={styles.chartsContainer}>
                     {pie}
-                    </View>
                 </ScrollView>
-                </View>
+                    <Spinner
+                        visible={user_state.is_loading}
+                        textContent={'Loading...'}
+                        textStyle={styles.spinnerTextStyle}
+                    />
+            </View>
+
+        </View>
     );
 };
 
@@ -108,30 +168,20 @@ const styles = StyleSheet.create({
         backgroundColor:'#80B28B',
         borderColor:'#80B28B',
     },
+    spinnerTextStyle: {
+        color: '#FFF'
+    },
     header:{
         color: "black",
         textAlign: 'center',
         fontSize:30,
         textShadowRadius: 20,
         fontWeight: "bold",
-        marginBottom:20,
+        marginBottom:0,
 
     },
 
     title:{
-        fontWeight: "bold",
-        textAlign: 'center',
-        fontSize: 20,
-        marginBottom: 20
-
-    },
-
-    text1:{
-        textAlign: 'center',
-        fontSize: 20,
-
-    },
-    text2:{
         fontWeight: "bold",
         textAlign: 'center',
         fontSize: 25,
@@ -139,7 +189,8 @@ const styles = StyleSheet.create({
     },
 
     chartsContainer:{
-        margin:15,
+        marginLeft:5,
+        marginRight:5,
         flexDirection: 'column',
         alignItems: 'center',
         flex:1,
