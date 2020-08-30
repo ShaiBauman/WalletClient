@@ -2,10 +2,11 @@ import React, {useContext} from 'react';
 import {Context as RequestContext} from '../context/requestContext'
 import {Context as UserContext} from '../context/UserContext'
 import { Container,Text} from 'native-base';
-import {StyleSheet, TouchableOpacity, Alert} from "react-native";
+import {StyleSheet, TouchableOpacity, Alert, ScrollView} from "react-native";
 import NavLink from "../components/NavLink";
 import Spacer from "../components/Spacer";
 import {NavigationEvents} from "react-navigation";
+import Spinner from "react-native-loading-spinner-overlay";
 
 const FullRequest = ({ navigation }) => {
 
@@ -70,7 +71,11 @@ const FullRequest = ({ navigation }) => {
 
       return (
         <Container style={styles.container}>
-
+            <Spinner
+                visible={state.is_loading}
+                textContent={'Loading...'}
+                textStyle={styles.spinnerTextStyle}
+            />
             <NavigationEvents
                 onWillBlur={()=>{
                     clearErrorMessage();
@@ -139,7 +144,9 @@ button: {
         textAlign: "center",
         fontWeight: 'bold'
     },
-
+    spinnerTextStyle: {
+        color: '#FFF'
+    },
     subTitle:{
         fontSize: 20,
         textAlign: "center",

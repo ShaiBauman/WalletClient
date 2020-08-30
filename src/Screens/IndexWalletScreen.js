@@ -12,13 +12,12 @@ const IndexWalletScreen = ()=>{
         getPasses(user_state.myUser.email);
         MonthlyBalance(user_state.myUser.email)
         MoneyISaved(user_state.myUser.email)
-        expenseByCategory(user_state.myUser.email)
     },[]);
 
 
     const user_state = useContext(UserContext).state
     const {getPasses} = useContext(UserContext);
-    const {state, MonthlyBalance, MoneyISaved, expenseByCategory} = useContext(StatisticsContext)
+    const {state, MonthlyBalance, MoneyISaved} = useContext(StatisticsContext)
 
     const LeftContent = props => <Avatar.Icon {...props} icon="account" />
 

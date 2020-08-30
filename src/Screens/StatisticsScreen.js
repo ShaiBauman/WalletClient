@@ -102,18 +102,10 @@ const StatisticsScreen = ()=>{
             Your approved transactions vs all your transactions ratio is {state.approveVsAll}
         </Text>
     )
-    stats.push(    <Text>
-            Your approved transactions are {state.approvedVsDenied["Approved"]}
-            Your denied transactions are {state.approvedVsDenied["Denied"]}
+    stats.push(
+        <Text style={{fontWeight:"bold"}}>
+           {state.approveVsAll}
         </Text>
-    )
-    stats.push(<Text>
-            Your target minus your expenses is {state.MonthlyBalance}
-    </Text>
-    )
-    stats.push( <Text>
-            The amount of money of your denied transactions is {state.MoneyISaved}
-    </Text>
     )
 
     let pie = []
@@ -148,7 +140,9 @@ const StatisticsScreen = ()=>{
                 <ScrollView>
                     {stats}
                     <Text style={styles.chartsTitle}>Monthly Spending By Category</Text>
-                    {pie}
+                    <View style={styles.chartsContainer}>
+                        {pie}
+                    </View>
                 </ScrollView>
                     <Spinner
                         visible={user_state.is_loading}

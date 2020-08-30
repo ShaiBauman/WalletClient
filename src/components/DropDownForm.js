@@ -1,6 +1,7 @@
 import React from "react";
 import {View, StyleSheet, Text, FlatList, ScrollView} from 'react-native';
 import {Dropdown}  from 'react-native-material-dropdown-v2';
+import {Portal, Provider} from "react-native-paper";
 
 
 const DropDownForm = ({data, onSubmit,title})=>{
@@ -15,13 +16,14 @@ const DropDownForm = ({data, onSubmit,title})=>{
         });
     }*/
     return(
-        <Dropdown
+       <Dropdown
             label={title}
             data={data}
             baseColor={"#2F4730"}
             onChangeText={onSubmit}
             containerStyle={styles.container}
         />
+
     );
 };
 
