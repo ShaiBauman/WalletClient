@@ -4,7 +4,7 @@ import {Text, Slider} from "react-native-elements";
 import DropDownForm from "../components/DropDownForm";
 import {Context as UserContext} from "../context/UserContext";
 import DialogForm from "../components/DialogForm";
-import {Portal, Provider} from "react-native-paper";
+import {Portal, Provider, Modal} from "react-native-paper";
 import Spacer from "../components/Spacer";
 
 
@@ -93,11 +93,13 @@ const AddItem = (item, item2, setFunc) =>{
                     setFunc={setFixedExpenses}
                     myList={fixedExpenses}
                 />
+
                 <DialogForm
                     title={"Edit Fixed Income"}
                     setFunc={setFixedIncomes}
                     myList={fixedIncomes}
                 />
+
 
 
             <TouchableOpacity
@@ -129,6 +131,7 @@ const AddItem = (item, item2, setFunc) =>{
                 <Text style={styles.buttonGoOn}>{"Go On!"}</Text>
             </TouchableOpacity>
                 <Spacer></Spacer>
+
             </ScrollView>
         </View>
             </Portal>

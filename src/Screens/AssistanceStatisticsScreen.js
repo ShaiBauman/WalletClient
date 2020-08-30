@@ -17,23 +17,25 @@ import { data } from "react-native-chart-kit/data";
 import DropDownForm from "../components/DropDownForm";
 
 const AssistanceStatisticsScreen = ()=>{
-    const dataRings = {
-        labels: ["Approved", "Refused", "Open"],
-        data: [0.6, 0.2, 0.1],
 
-    };
+    const user_state = useContext(UserContext).state
+    const {state, myWalletMembers, infoAboutFriend} = useContext(StatisticsContext)
+    let friend_list = []
 
+    const [friend,setFriend]=useState(friend_list);
+    useEffect(() => {
+        myWalletMembers(user_state.myUser.email)
+    }, [])
 
-        const barData = {
-            labels: ["friend 1", "friend 2", "friend 3", "friend 4", "friend 5", "friend 6"],
-            datasets: [
-                {
-                    data: [20, 45, 28, 80, 99, 43]
-                }
-            ]
-        };
+    if (typeof state.myWalletMembers !== 'undefined' && JSON.stringify(friend) === "[]") {
+        for (let email of state.myWalletMembers) {
+            friend_list.push({value: email})
+        }
 
+        setFriend(friend_list)
+    }
 
+    let chart = []
 
     const chartConfig = {
         backgroundGradientFrom: "#2F4730",
@@ -102,14 +104,14 @@ const AssistanceStatisticsScreen = ()=>{
                         title={"Choose A Friend"}
                         onSubmit={(friend) => {
                             console.log(friend+" friend")
-                                infoAboutFriend(user_state.myUser.email,friend)
+                            infoAboutFriend(user_state.myUser.email,friend)
                         }
                         }
                     />
                     <Text style={styles.chartsTitle}>Balance requests</Text>
-    <View style={{backgroundColor: "rgb(109, 153, 118)"}}>
-                    {chart}
-    </View>
+                    <View style={{backgroundColor: "E9D2B3"}}>
+                        {chart}
+                    </View>
                 </ScrollView>
             </View>
 
@@ -154,7 +156,7 @@ const styles = StyleSheet.create({
 
     container1: {
         flex: 1,
-        backgroundColor: '#80B28B',
+        backgroundColor: '#E9D2B3',
         margin:10,
         borderRadius:8,
         height: 210,

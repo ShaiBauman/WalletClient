@@ -1,5 +1,5 @@
 import React, { useContext, useState,useEffect } from 'react';
-import { View, StyleSheet, Text, Alert, TouchableOpacity } from 'react-native'
+import {View, StyleSheet, Text, Alert, TouchableOpacity, ScrollView} from 'react-native'
 import { Cell, Row, Table, TableWrapper } from "react-native-table-component";
 import {Menu, Portal, Provider, Modal} from "react-native-paper";
 import {Context as UserContext} from "../context/UserContext";
@@ -10,6 +10,7 @@ import MyMenu from "../components/MyMenu";
 import { Ionicons } from '@expo/vector-icons';
 import { Container, Header, Content, List, ListItem, Separator,Right,Icon} from 'native-base';
 import { color } from "react-native-reanimated";
+import Spinner from "react-native-loading-spinner-overlay";
 
 const IndexFriendScreen = ({navigation})=>{
     const requestState= useContext(RequestContext).state;
@@ -120,29 +121,6 @@ return(
                 </List>
             </Content>
         </Container>
-        {/*<Table borderStyle={{borderWidth: 2, borderColor: '#2F4730'}}>
-
-        <MyMenu navigation={navigation}/>
-        <Text style={styles.titleText}>Hello {state.myUser.firstName+' '+state.myUser.lastName},</Text>
-        <Text style={styles.subTitle}> Open Requests</Text>
-        <Table borderStyle={{borderWidth: 2, borderColor: '#2F4730'}}>
-
-            <Row data={tableData.tableHead} style={styles.head} textStyle={styles.text}/>
-            {
-                tableData.tableData.map((rowData, index) => (
-                    <TableWrapper key={index} style={styles.row}>
-                        {
-                            rowData.map((cellData, cellIndex) => (
-                                <Cell key={cellIndex} data={cellIndex === 4 ? element(cellData, index) : cellData} textStyle={styles.text}/>
-                            ))
-                        }
-                    </TableWrapper>
-                ))
-            }
-        </Table>*/}
-
-
-
         <Spacer>
             <Text style={styles.subTitle}> My Statistics</Text>
             <View style={{ flexDirection: 'row',alignSelf:'center'}}>
@@ -152,14 +130,13 @@ return(
                 <Foundation style={styles.graphIcon} name="graph-trend" />
                 <Text style={styles.statisticTxt}>{"Statistics"}</Text>
             </TouchableOpacity>
+                <Spinner
+                    visible={userState.is_loading}
+                    textContent={'Loading...'}
+                    textStyle={styles.spinnerTextStyle}
+                />
 
-        {/*    <TouchableOpacity style={styles.statistics}
-                              onPress={()=>{navigation.navigate('assistanceStatistics')}}
-            >
-                <Ionicons style={styles.graphIcon}name="md-done-all"  />
-                <Text style={styles.statisticTxt}>{"Future Approved"}</Text>
-            </TouchableOpacity>*/}
-</View>
+            </View>
 
         </Spacer>
     </View>
@@ -169,6 +146,9 @@ return(
 };
 
 const styles = StyleSheet.create({
+    spinnerTextStyle: {
+        color: '#FFF'
+    },
     titleText:{textAlign: 'center',color:'#80B28B',fontWeight: 'bold',fontSize:40,margin:10,textShadowRadius:7,textShadowColor:'#2F4730'},
     subTitle:{fontWeight:'bold',color:'#2F4730',fontSize: 20,textAlign:'center', textDecorationLine: 'underline',
         padding: 5,textShadowRadius:20,textShadowColor:'#FFF'},

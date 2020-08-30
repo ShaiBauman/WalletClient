@@ -114,6 +114,7 @@ const expenseByCategory = dispatch => async (email) => {
 
 export const {Provider, Context} = createDataContext(
     statisticsReducer,
-    { approveVsAll, approvedVsDenied, MonthlyBalance, MoneyISaved },
+    { myWalletMembers, approveVsAll, approvedVsDenied, MonthlyBalance, MoneyISaved, expenseByCategory,
+        infoAboutFriend},
     {approveVsAll:0, approvedVsDenied:0, MonthlyBalance:0, MoneyISaved:0}
 );

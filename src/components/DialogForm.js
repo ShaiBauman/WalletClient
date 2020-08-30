@@ -6,6 +6,7 @@ import {
     Dialog,
     Portal,
     Provider,
+    Modal,
     TextInput,
 } from 'react-native-paper';
 
@@ -28,10 +29,12 @@ const DialogForm = ({title, setFunc, myList})=> {
 
 
         return (
-            <Provider>
+
                 <View>
-                    <TouchableOpacity onPress={() => setIsDialogVisible(true)}><Text style={styles.button}>{title}</Text></TouchableOpacity>
-                    <Portal>
+                    <Provider>
+                        <Portal>
+
+
                         <Dialog
                             visible={isDialogVisible}
                             onDismiss={() => setIsDialogVisible(false)}>
@@ -60,9 +63,14 @@ const DialogForm = ({title, setFunc, myList})=> {
                                 <Button onPress={() => AddItem(val1, val2, setFunc)}>Done</Button>
                             </Dialog.Actions>
                         </Dialog>
-                    </Portal>
+                        </Portal>
+                    </Provider>
+                            <TouchableOpacity onPress={() => setIsDialogVisible(true)}>
+                                <Text style={styles.button}>{title}</Text>
+                            </TouchableOpacity>
+
                 </View>
-            </Provider>
+
         );
     };
 
