@@ -2,6 +2,7 @@ import AsyncStorage from '@react-native-community/async-storage';
 import createDataContext from "./createDataContext";
 import serverApi from "../api/serverApi";
 import {navigate} from "../navigationRef";
+import {Alert} from "react-native";
 
 const userReducer = (state, action)=>{
     switch(action.type)
@@ -11,12 +12,14 @@ const userReducer = (state, action)=>{
         case 'log_in':
             return {...state,errorMessage: '', id: action.payload["_id"], myUser: action.payload};
        case 'add_error':
+           Alert.alert("", action.payload);
             return {...state, errorMessagePassword: action.payload};
         case 'clear_error_message':
             return {...state, errorMessage: '',errorMessagePassword:''};
         case 'clear_error_message_password_recovery':
             return {...state, errorMessagePassword: ''};
         case 'entrance_error':
+            Alert.alert("", action.payload);
             return {...state, errorMessage: action.payload};
         case 'sign_out':
             return {myUser: {}, id:'', errorMessage: '', errorMessagePassword:'',
@@ -166,13 +169,18 @@ const verificationPasswordAnswer = dispatch => async (email, answer) =>{
     {
         dispatch({type: 'loading', payload: true})
        const response = await serverApi.post('/user/verificationPasswordAnswer', {email, answer});
-           dispatch({type: 'answer_password', payload: response.data})
-            if(!response.data)
-                dispatch({type: 'add_error', payload: 'Wrong answer, try again'})
+        console.log("response.data" + response.data)
+        if (!response.data) {
+            dispatch({type: 'add_error', payload: 'Wrong answer, try again'})
+            dispatch({type: 'answer_password', payload: response.data})
+        } else if (response.data) {
+            dispatch({type: 'answer_password', payload: response.data})
+        }
         dispatch({type: 'loading', payload: false})
     }
     catch (e) {
-        dispatch({type:'add_error', payload:'Something went wrong'});
+        dispatch({type: 'add_error', payload: 'Email Not Found In Our System. Please Sign In First'})
+        dispatch({type: 'answer_password', payload: false})
         dispatch({type: 'loading', payload: false})
     }
 };
