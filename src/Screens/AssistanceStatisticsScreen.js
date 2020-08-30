@@ -93,21 +93,25 @@ const AssistanceStatisticsScreen = ()=>{
         )
     }
 
+    let drop = []
+    if (JSON.stringify(friend) !== '[]') {
+        drop.push(<DropDownForm
+            data={friend}
+            title={"Choose A Friend"}
+            onSubmit={(friend) => {
+                infoAboutFriend(user_state.myUser.email, friend)
+            }
+            }
+        />)
+    }
+
     return(
         <View style={styles.container}>
             <Text style={styles.header}>My Statistics</Text>
 
             <View style={styles.chartsContainer}>
                 <ScrollView>
-                    <DropDownForm
-                        data={friend}
-                        title={"Choose A Friend"}
-                        onSubmit={(friend) => {
-                            console.log(friend+" friend")
-                            infoAboutFriend(user_state.myUser.email,friend)
-                        }
-                        }
-                    />
+                    {drop}
                     <Text style={styles.chartsTitle}>Balance requests</Text>
                     <View style={{backgroundColor: "E9D2B3"}}>
                         {chart}
