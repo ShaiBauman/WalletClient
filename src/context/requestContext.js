@@ -35,7 +35,7 @@ const requestReducer = (state, action)=>{
         case 'getRequestsByConfirmationStatus':
             return {...state,requests:action.payload};
         case 'delete_request':
-            return {...state, requests: state.requests.filter((req) => req["_id"] !== action.payload)}
+            return {...state, requests: state.allRequests.filter((req) => req["_id"] !== action.payload)}
         case 'changeApprovedToPaid':
             return {...state,
                 ApprovedReq: state.ApprovedReq.filter((req) => req["_id"] !== action.payload.req["_id"]),
